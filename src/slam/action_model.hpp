@@ -58,6 +58,11 @@ private:
     ////////// TODO: Add private member variables needed for you implementation ///////////////////
     float fwd_e;
     float turn_e;
+    float fwd_dist;
+    float turn_dist;
+    float a_dist;
+    pose_xyt_t last_pos;
+    pose_xyt_t cur_pos;
 };
 
 #endif // SLAM_ACTION_MODEL_HPP
