@@ -1,4 +1,4 @@
-#include <slam/action_model.hpp>
+#include <action_model.hpp>
 #include <lcmtypes/particle_t.hpp>
 #include <common/angle_functions.hpp>
 #include <cassert>

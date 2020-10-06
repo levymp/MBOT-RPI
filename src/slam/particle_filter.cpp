@@ -15,6 +15,10 @@ ParticleFilter::ParticleFilter(int numParticles)
 void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
 {
     ///////////// TODO: Implement your method for initializing the particles in the particle filter /////////////////
+    actionModel_ = new ActionModel(pose);
+    sensorModel_ = new SensorModel();
+    posteriorPose_ = pose;
+
 }
 
 
