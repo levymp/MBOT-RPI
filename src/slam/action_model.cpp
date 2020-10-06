@@ -58,5 +58,6 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 
 	sample = new_particle;
 
+
     return sample;
 }
