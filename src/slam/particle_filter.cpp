@@ -86,13 +86,13 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
     std::mt19937 gen(rd());
 
     std::vector<double> weights;
-    for(int i=0; i<posterior_.size(); i++){
-        weights.push_back(posterior_[i].weight)
+    for(unsigned int i=0; i<posterior_.size(); i++){
+        weights.push_back(posterior_[i].weight);
     }
 
     std::discrete_distribution<int> w_dist(weights.begin(), weights.end());
 
-    for(int i=0; i<posterior_.size(); i++){
+    for(unsigned int i=0; i<posterior_.size(); i++){
         prior.push_back = posterior_[w_dist(gen)];
     }
     
