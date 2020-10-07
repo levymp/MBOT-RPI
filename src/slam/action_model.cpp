@@ -7,12 +7,11 @@
 #include <random>
 
 
-ActionModel::ActionModel(const pose_xyt_t& init_pos)
+ActionModel::ActionModel(void)
 {
     //////////////// TODO: Handle any initialization for your ActionModel /////////////////////////
     turn_e = .01;
     fwd_e = .01;
-    cur_pos = init_pos;
 }
 
 
@@ -25,9 +24,9 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
 	float delt_x = odometry.x - last_pos.x;
 	float delt_y = odometry.y - last_pos.y;
 
-	u_pos[0] = sqrt(delt_x^2 + delt_y^2);
-	u_pos[1] = angle_diff(atan2(delt_y/delt_x), last_pos.theta);
-	u_pos[2] = angle_diff(odometry.theta, alpha);
+	u_pos[0] = sqrt(delt_x*delt_x + delt_y*delt_y);
+	u_pos[1] = angle_diff(atan2(delt_y,delt_x), last_pos.theta);
+	u_pos[2] = angle_diff(odometry.theta, u_pos[1]);
 
 	fwd_dist = u_pos[0]*fwd_e;
 	a_dist = u_pos[1]*turn_e;
@@ -54,9 +53,13 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 	float samp_fwd = u_pos[0] + fwd(gen);
 
 	particle_t new_particle;
-	new_particle.x = sample.x + samp_fwd*cos(sample.theta + samp_alpha);
-	new_particle.y = sample.y + samp_fwd*sin(sample.theta + samp_alpha);
-	new_particle.theta = sample.theta + samp_alpha + samp_dalpha;
+	new_particle.parent_pose = sample.poses;
+	new pose_xyt_t = npose;
+	new_particle.pose = npose;
+
+	new_particle.pose.x = sample.x + samp_fwd*cos(sample.theta + samp_alpha);
+	new_particle.pose.y = sample.y + samp_fwd*sin(sample.theta + samp_alpha);
+	new_particle.pose.theta = sample.theta + samp_alpha + samp_dalpha;
 
 	sample = new_particle;
 

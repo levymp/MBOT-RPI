@@ -61,7 +61,7 @@ private:
     float fwd_dist;
     float turn_dist;
     float a_dist;
-    float[3] u_pos;
+    float u_pos[3];
     pose_xyt_t last_pos;
     pose_xyt_t cur_pos;
 };
