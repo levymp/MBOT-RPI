@@ -121,11 +121,17 @@ std::vector<particle_t> ParticleFilter::computeNormalizedPosterior(const std::ve
     ///////////       particles in the proposal distribution
 
     std::vector<particle_t> posterior;
+    double tot_w = 0;
 
     for(unsigned int i=0; i<proposal.size(); i++){
         particle_t part = proposal[i];
         part.weight = sensorModel_.likelihood(proposal[i], laser, map);
+        tot_w += part.weight;
         posterior.push_back(part);
+    }
+
+    for(unsigned int i=0; i<proposal.size(); i++){
+        posterior.weight = posterior.weight/tot_w;
     }
 
     return posterior;
@@ -135,6 +141,8 @@ std::vector<particle_t> ParticleFilter::computeNormalizedPosterior(const std::ve
 pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& posterior)
 {
     //////// TODO: Implement your method for computing the final pose estimate based on the posterior distribution
+
+
     pose_xyt_t pose;
     return pose;
 }
