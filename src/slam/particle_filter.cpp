@@ -2,6 +2,7 @@
 #include <slam/occupancy_grid.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <cassert>
+#include <random>
 
 
 ParticleFilter::ParticleFilter(int numParticles)
@@ -78,8 +79,23 @@ particles_t ParticleFilter::particles(void) const
 std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
 {
     //////////// TODO: Implement your algorithm for resampling from the posterior distribution ///////////////////
-    
+
     std::vector<particle_t> prior;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    std::vector<double> weights;
+    for(int i=0; i<posterior_.size(); i++){
+        weights.push_back(posterior_[i].weight)
+    }
+
+    std::discrete_distribution<int> w_dist(weights.begin(), weights.end());
+
+    for(int i=0; i<posterior_.size(); i++){
+        prior.push_back = posterior_[w_dist(gen)];
+    }
+    
     return prior;
 }
 
