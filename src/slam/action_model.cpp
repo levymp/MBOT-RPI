@@ -53,13 +53,13 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 	float samp_fwd = u_pos[0] + fwd(gen);
 
 	particle_t new_particle;
-	new_particle.parent_pose = sample.poses;
-	new pose_xyt_t = npose;
+	new_particle.parent_pose = sample.pose;
+	pose_xyt_t npose = new pose_xyt_t;
 	new_particle.pose = npose;
 
-	new_particle.pose.x = sample.x + samp_fwd*cos(sample.theta + samp_alpha);
-	new_particle.pose.y = sample.y + samp_fwd*sin(sample.theta + samp_alpha);
-	new_particle.pose.theta = sample.theta + samp_alpha + samp_dalpha;
+	new_particle.pose.x = sample.pose.x + samp_fwd*cos(sample.pose.theta + samp_alpha);
+	new_particle.pose.y = sample.pose.y + samp_fwd*sin(sample.pose.theta + samp_alpha);
+	new_particle.pose.theta = sample.pose.theta + samp_alpha + samp_dalpha;
 
 	sample = new_particle;
 
