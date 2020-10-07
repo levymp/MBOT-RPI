@@ -54,15 +54,12 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 
 	particle_t new_particle;
 	new_particle.parent_pose = sample.pose;
-	pose_xyt_t npose = new pose_xyt_t;
+	pose_xyt_t npose;
 	new_particle.pose = npose;
 
 	new_particle.pose.x = sample.pose.x + samp_fwd*cos(sample.pose.theta + samp_alpha);
 	new_particle.pose.y = sample.pose.y + samp_fwd*sin(sample.pose.theta + samp_alpha);
 	new_particle.pose.theta = sample.pose.theta + samp_alpha + samp_dalpha;
 
-	sample = new_particle;
-
-
-    return sample;
+    return new_particle;
 }
