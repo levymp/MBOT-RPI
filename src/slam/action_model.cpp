@@ -1,4 +1,4 @@
-#include <action_model.hpp>
+#include <slam/action_model.hpp>
 #include <lcmtypes/particle_t.hpp>
 #include <common/angle_functions.hpp>
 #include <cassert>
@@ -7,24 +7,26 @@
 #include <random>
 
 
-ActionModel::ActionModel(void)
+ActionModel::ActionModel(const pose_xyt_t& init_pos)
 {
     //////////////// TODO: Handle any initialization for your ActionModel /////////////////////////
     turn_e = .01;
     fwd_e = .01;
+    cur_pos = init_pos;
 }
 
 
 bool ActionModel::updateAction(const pose_xyt_t& odometry)
 {
     ////////////// TODO: Implement code here to compute a new distribution of the motion of the robot ////////////////
+    last_pos = cur_pos;
 	cur_pos = odometry;
 
 	float delt_x = odometry.x - last_pos.x;
 	float delt_y = odometry.y - last_pos.y;
 
 	u_pos[0] = sqrt(delt_x^2 + delt_y^2);
-	u_pos[1] = angle_diff(atan2(delt_y/delt_x), lastp.theta);
+	u_pos[1] = angle_diff(atan2(delt_y/delt_x), last_pos.theta);
 	u_pos[2] = angle_diff(odometry.theta, alpha);
 
 	fwd_dist = u_pos[0]*fwd_e;
