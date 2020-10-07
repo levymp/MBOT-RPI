@@ -10,6 +10,7 @@ MovingLaserScan::MovingLaserScan(const lidar_t& scan,
                                  const pose_xyt_t&      endPose,
                                  int                    rayStride)
 {
+    // raystride makes it skip every other scan
     // Ensure a valid scan was received before processing the rays
     if(scan.num_ranges > 0)
     {
