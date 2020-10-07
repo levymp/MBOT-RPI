@@ -41,8 +41,8 @@ particle_t ActionModel::applyAction(const particle_t& sample)
     ////////////// TODO: Implement your code for sampling new poses from the distribution computed in updateAction //////////////////////
     // Make sure you create a new valid particle_t. Don't forget to set the new time and new parent_pose.
 
-	std::random_device rd;
-	std::mt19937 gen(rd);
+	std::random_device rd();
+	std::mt19937 gen(rd());
 
 	std::normal_distribution<float> turn1(0, a_dist);
 	std::normal_distribution<float> turn2(0, turn_dist);
