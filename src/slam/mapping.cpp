@@ -71,7 +71,9 @@ void Mapping::scoreRay(const adjusted_ray_t &ray, OccupancyGrid &map){
             int y = rayStart.y;
 
             while(x != rayCell.x || y != rayCell.y){
-                decreaseCellOdds(x, y, map);
+                if(map.isCellInGrid(x, y)) {
+                    decreaseCellOdds(x, y, map);
+                }
                 int e2 = 2 * err;
                 if(e2 >= -dy){
                     err -= dy;
@@ -105,11 +107,11 @@ void Mapping::decreaseCellOdds(const int x, const int y, OccupancyGrid &map){
     if(!initialized_){
         // do nothing;
     }
-    else if(map(x,y) - kMissOdds_ > -127){
+    else if(map(x,y) - kMissOdds_ > -128){
         map(x,y) -= kMissOdds_;  
     }
     else{
-        map(x,y) = -127;
+        map(x,y) = -128;
     }
 
 }
