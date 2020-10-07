@@ -104,6 +104,11 @@ std::vector<particle_t> ParticleFilter::computeProposalDistribution(const std::v
 {
     //////////// TODO: Implement your algorithm for creating the proposal distribution by sampling from the ActionModel
     std::vector<particle_t> proposal;
+
+    for(unsigned int i=0; i<prior.size(); i++){
+        proposal.push_back(actionModel_.applyAction(prior[i]));
+    }
+    
     return proposal;
 }
 
@@ -114,7 +119,15 @@ std::vector<particle_t> ParticleFilter::computeNormalizedPosterior(const std::ve
 {
     /////////// TODO: Implement your algorithm for computing the normalized posterior distribution using the 
     ///////////       particles in the proposal distribution
+
     std::vector<particle_t> posterior;
+
+    for(unsigned int i=0; i<proposal.size(); i++){
+        particle_t part = proposal[i];
+        part.weight = sensorModel_.likelihood(proposal[i], laser, map);
+        posterior.push_back(part);
+    }
+
     return posterior;
 }
 
