@@ -39,6 +39,15 @@ private:
     const int8_t kMissOdds_;
     
     //////////////////// TODO: Add any private members needed for your occupancy grid mapping algorithm ///////////////
+    // helper variables
+    bool initialized_;
+    pose_xyt_t previousPose_;
+    
+    // scoring funcitons
+    void scoreEndpoint(const adjusted_ray_t& ray, OccupancyGrid& map);
+    void scoreRay(const adjusted_ray_t& ray, OccupancyGrid& map);
+    void increaseCellOdds(int x, int y, OccupancyGrid& map);
+    void decreaseCellOdds(int x, int y, OccupancyGrid& map);
 };
 
 #endif // SLAM_MAPPING_HPP
