@@ -29,7 +29,7 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
 
 	float delt_x = odometry.x - last_pos.x;
 	float delt_y = odometry.y - last_pos.y;
-	float delt_t = angle_diff(odometry.theta - last_pos.theta);
+	float delt_t = angle_diff(odometry.theta,last_pos.theta);
 	float direction = 1;
 
 	u_pos[0] = sqrt(delt_x*delt_x + delt_y*delt_y);
