@@ -83,7 +83,7 @@ void Mapping:: increaseCellOdds(int x, int y, OccupancyGrid& map)
 
 void Mapping:: decreaseCellOdds(int x, int y, OccupancyGrid& map)
 {
-    if(initialized_ && map(x,y) > -127)
+    if(initialized_ && map(x,y) + 127 > -127)
     {
         map(x, y) -= kMissOdds_;
     }
