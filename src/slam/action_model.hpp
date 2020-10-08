@@ -57,6 +57,7 @@ private:
     
     ////////// TODO: Add private member variables needed for you implementation ///////////////////
     bool inited;
+    bool moved;
     float fwd_e;
     float turn_e;
     float fwd_dist;
