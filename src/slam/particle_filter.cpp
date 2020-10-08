@@ -134,15 +134,26 @@ std::vector<particle_t> ParticleFilter::computeNormalizedPosterior(const std::ve
         posterior[i].weight = posterior[i].weight/tot_w;
     }
 
-    return posterior;
+    return posterior
 }
 
 
 pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& posterior)
 {
     //////// TODO: Implement your method for computing the final pose estimate based on the posterior distribution
+    float avgx = 0;
+    float avgy = 0;
+    for(unsigned int i = 0; i<posterior.size(); i++){
+        avgx += posterior[i].pose.x;
+        avgy += posterior[i].pose.y;
+    }
 
+    avgx = avgx/posterior.size();
+    avgy = avgy/posterior.size();
 
     pose_xyt_t pose;
+    pose.x = avgx;
+    pose.y = avgy;
+
     return pose;
 }
