@@ -53,7 +53,7 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
 	a_dist = sqrt(u_pos[1]*turn_e);
     turn_dist = sqrt(u_pos[2]*turn_e);
 
-    moved = true
+    moved = true;
     return true;
 }
 
@@ -73,14 +73,14 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 		float samp_fwd = u_pos[0] + fwd(gen);
 
 		
-		new_particle.utime = utime;
+		new_particle.pose.utime = utime;
 		new_particle.parent_pose = sample.pose;
 		new_particle.pose.x = sample.pose.x + samp_fwd*cos(sample.pose.theta + samp_alpha);
 		new_particle.pose.y = sample.pose.y + samp_fwd*sin(sample.pose.theta + samp_alpha);
 		new_particle.pose.theta = wrap_to_pi(sample.pose.theta + samp_alpha + samp_dalpha);
 	} else {
 
-		new_particle.utime = utime;
+		new_particle.pose.utime = utime;
 		new_particle.parent_pose = sample.pose;
 		new_particle.pose.x = sample.pose.x;
 		new_particle.pose.y = sample.pose.y;
