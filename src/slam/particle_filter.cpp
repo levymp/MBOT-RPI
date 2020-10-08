@@ -23,7 +23,7 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
         p.pose.x = pose.x;
         p.pose.y = pose.y;
         p.pose.theta = pose.theta;
-        p.pose.utime = utime;
+        p.pose.utime = pose.utime;
         p.parent_pose = p.pose;
         p.weight = sw;
     }
