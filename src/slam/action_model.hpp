@@ -56,14 +56,16 @@ public:
 private:
     
     ////////// TODO: Add private member variables needed for you implementation ///////////////////
+    bool inited;
     float fwd_e;
     float turn_e;
     float fwd_dist;
     float turn_dist;
     float a_dist;
     float u_pos[3];
+    uint64_t utime;
     pose_xyt_t last_pos;
-    pose_xyt_t cur_pos;
+    std::mt19937 gen;
 };
 
 #endif // SLAM_ACTION_MODEL_HPP
