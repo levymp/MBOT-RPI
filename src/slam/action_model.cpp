@@ -12,7 +12,6 @@ ActionModel::ActionModel(void)
     //////////////// TODO: Handle any initialization for your ActionModel /////////////////////////
     turn_e = .01;
     fwd_e = .01;
-    u_pos = {0, 0, 0};
 
     std::random_device rd;
 	gen = std::mt19937(rd());
