@@ -17,6 +17,16 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
 {
     ///////////// TODO: Implement your method for initializing the particles in the particle filter ////////////////
     posteriorPose_ = pose;
+    double sw = 1.0/kNumParticles_;
+
+    for(auto& p : posterior_){
+        p.pose.x = pose.x;
+        p.pose.y = pose.y;
+        p.pose.theta = pose.theta;
+        p.pose.utime = utime;
+        p.parent_pose = p.pose;
+        p.weight = sw;
+    }
 }
 
 
