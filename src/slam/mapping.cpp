@@ -71,7 +71,7 @@ void Mapping::scoreRay(const adjusted_ray_t& ray, OccupancyGrid& map)
 
 void Mapping:: increaseCellOdds(int x, int y, OccupancyGrid& map)
 {
-    if(initialized_ && map(x,y) < 127)
+    if(initialized_ && 127 - map(x,y) >= kHitOdds_)
     {
         map(x, y) += kHitOdds_;
     }
@@ -83,12 +83,12 @@ void Mapping:: increaseCellOdds(int x, int y, OccupancyGrid& map)
 
 void Mapping:: decreaseCellOdds(int x, int y, OccupancyGrid& map)
 {
-    if(initialized_ && map(x,y) + 127 > -127)
+    if(initialized_ && 128 + map(x,y) > kMissOdds_)
     {
         map(x, y) -= kMissOdds_;
     }
-    else if(initialized_ && map(x,y) <= -127)
+    else if(initialized_)
     {
-        map(x, y) = -127;
+        map(x, y) = -128;
     }
 }

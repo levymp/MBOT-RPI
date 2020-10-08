@@ -17,3 +17,4 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
     
     return 1.0;
 }
+ 
