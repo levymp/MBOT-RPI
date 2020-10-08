@@ -1,8 +1,12 @@
 #ifndef SLAM_MAPPING_HPP
 #define SLAM_MAPPING_HPP
 
+#include <common/grid_utils.hpp>
+#include <slam/moving_laser_scan.hpp>
+#include <slam/occupancy_grid.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <cstdint>
+#include <numeric>
 
 class OccupancyGrid;
 class lidar_t;
