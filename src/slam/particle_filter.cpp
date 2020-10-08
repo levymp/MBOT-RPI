@@ -134,7 +134,7 @@ std::vector<particle_t> ParticleFilter::computeNormalizedPosterior(const std::ve
         posterior[i].weight = posterior[i].weight/tot_w;
     }
 
-    return posterior
+    return posterior;
 }
 
 
