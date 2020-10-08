@@ -56,21 +56,22 @@ void Mapping::scoreRay(const adjusted_ray_t &ray, OccupancyGrid &map){
     
     if(ray.range < kMaxLaserDistance_){
         Point<float> rayStart = global_position_to_grid_position(ray.origin, map);
-        Point<int> rayCell;
+        Point<int> rayStartCell = global_position_to_grid_cell(ray.origin, map);
+        Point<int> rayEndCell;
 
-        rayCell.x = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + rayStart.x);
-        rayCell.y = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + rayStart.y);
+        rayEndCell.x = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + rayStart.x);
+        rayEndCell.y = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + rayStart.y);
 
-        if(map.isCellInGrid(rayCell.x, rayCell.y)){
-            int dx = abs(rayCell.x - rayStart.x);
-            int dy = abs(rayCell.y - rayStart.y);
-            int sx = (rayStart.x < rayCell.x) ? 1 : -1;
-            int sy = (rayStart.y < rayCell.y) ? 1 : -1;
+        if(map.isCellInGrid(rayEndCell.x, rayEndCell.y)){
+            int dx = std::abs(rayEndCell.x - rayStartCell.x);
+            int dy = std::abs(rayEndCell.y - rayStartCell.y);
+            int sx = (rayStartCell.x < rayEndCell.x) ? 1 : -1;
+            int sy = (rayStartCell.y < rayEndCell.y) ? 1 : -1;
             int err = dx - dy;
-            int x = rayStart.x;
-            int y = rayStart.y;
+            int x = rayStartCell.x;
+            int y = rayStartCell.y;
 
-            while(x != rayCell.x || y != rayCell.y){
+            while(x != rayEndCell.x || y != rayEndCell.y){
                 if(map.isCellInGrid(x, y)) {
                     decreaseCellOdds(x, y, map);
                 }
