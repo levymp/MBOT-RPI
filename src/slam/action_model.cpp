@@ -35,18 +35,24 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
 	float direction = 1;
 
 	u_pos[0] = sqrt(delt_x*delt_x + delt_y*delt_y);
+	u_pos[1] = angle_diff(atan2(delt_y,delt_x), last_pos.theta);
 
-	if(isnan(atan2(delt_y, delt_x))){
-		u_pos[1] = last_pos.theta;
-	} else {
-		u_pos[1] = angle_diff(atan2(delt_y,delt_x), last_pos.theta);
-	}
 
 	if(fabs(u_pos[1]) > M_PI_2){
 		u_pos[1] = angle_diff(M_PI, u_pos[1]);
 		direction = -1;
 	}
 	u_pos[2] = angle_diff(delt_t, u_pos[1]);
+
+	if(isnan(u_pos[0])){
+		printf("Ahhhhh 0\n");
+	}
+	if(isnan(u_pos[1])){
+		printf("Ahhhhh 1\n");
+	}
+	if(isnan(u_pos[2])){
+		printf("Ahhhhh 2\n");
+	}
 
 	if(delt_x == 0 && delt_y == 0 && delt_t == 0){
 		moved = false;
