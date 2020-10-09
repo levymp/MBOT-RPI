@@ -3,6 +3,7 @@
 #include <common/angle_functions.hpp>
 #include <cassert>
 #include <cmath>
+#include <unistd.h>
 #include <iostream>
 #include <random>
 
