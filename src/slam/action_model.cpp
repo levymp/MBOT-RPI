@@ -44,16 +44,6 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
 	}
 	u_pos[2] = angle_diff(delt_t, u_pos[1]);
 
-	if(isnan(u_pos[0])){
-		printf("Ahhhhh 0\n");
-	}
-	if(isnan(u_pos[1])){
-		printf("Ahhhhh 1\n");
-	}
-	if(isnan(u_pos[2])){
-		printf("Ahhhhh 2\n");
-	}
-
 	if(delt_x == 0 && delt_y == 0 && delt_t == 0){
 		moved = false;
 		return false;
@@ -85,6 +75,15 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 		float samp_dalpha = u_pos[2] + turn2(gen);
 		float samp_fwd = u_pos[0] + fwd(gen);
 
+			if(isnan(samp_alpha)){
+				printf("Ahhhhh 0\n");
+			}
+			if(isnan(samp_dalpha)){
+				printf("Ahhhhh 1\n");
+			}
+			if(isnan(samp_fwd)){
+				printf("Ahhhhh 2\n");
+			}
 		
 		new_particle.pose.utime = utime;
 		new_particle.parent_pose = sample.pose;
