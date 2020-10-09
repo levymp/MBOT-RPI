@@ -47,7 +47,6 @@ pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
         posteriorPose_ = estimatePosteriorPose(posterior_);
     }
     
-    posteriorPose_.theta = odometry.theta;
     posteriorPose_.utime = odometry.utime;
     
     return posteriorPose_;
@@ -162,7 +161,9 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
         avgx += posterior[i].pose.x;
         avgy += posterior[i].pose.y;
         avgt += posterior[i].pose.theta + M_PI;
+        posterior[i].pose.theta;
     }
+    sleep(1);
 
     avgx = avgx/posterior.size();
     avgy = avgy/posterior.size();
