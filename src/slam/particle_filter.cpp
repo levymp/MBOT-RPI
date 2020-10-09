@@ -103,7 +103,7 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
     std::discrete_distribution<int> w_dist(weights.begin(), weights.end());
 
     for(auto& p : posterior_){
-        prior.push_back(p[w_dist(gen)]);
+        prior.push_back(posterior_[w_dist(gen)]);
     }
     
     return prior;
@@ -116,7 +116,7 @@ std::vector<particle_t> ParticleFilter::computeProposalDistribution(const std::v
 
     std::vector<particle_t> proposal;
 
-    for(auto& p : prior){
+    for(autow& p : prior){
         proposal.push_back(actionModel_.applyAction(p));
     }
     
