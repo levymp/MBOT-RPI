@@ -29,8 +29,8 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 		if(lods > 20){
 			rayscore += 1;
 		}
-		if(ray.range >= 4.9f && lods < 10){
-			rayscore += 5;
+		if(ray.range >= 5.0f && lods < 10){
+			rayscore += 8;
 		}
 		score += rayscore;
 	}
