@@ -27,35 +27,8 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 			rayscore += 5;
 		}
 
-		if(map.isCellInGrid(rayCellx, rayCelly)){
-            int dx = std::abs(rayCellx - ray.origin.x);
-            int dy = std::abs(rayCelly - ray.origin.y);
-            int sx = (ray.origin.x < rayCellx) ? 1 : -1;
-            int sy = (ray.origin.y < rayCelly) ? 1 : -1;
-            int err = dx - dy;
-            int x = ray.origin.x;
-            int y = ray.origin.y;
-
-            while(x != rayCellx || y != rayCelly){
-                if(map.isCellInGrid(x, y)) {
-                    if(lods < 10){
-						rayscore += 1;
-					}
-                }
-                int e2 = 2 * err;
-                if(e2 >= -dy){
-                    err -= dy;
-                    x += sx;
-                }
-                if(e2 <= dx){
-                    err += dx;
-                    y += sy;
-                }
-            }
-        }
-
 		if(ray.range >= 5.0f && lods < 10){
-			rayscore += 8;
+			rayscore += 5;
 		}
 		score += rayscore;
 	}
