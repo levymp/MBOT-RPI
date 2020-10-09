@@ -27,6 +27,7 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
         p.parent_pose = p.pose;
         p.weight = sw;
     }
+    printf("New pose init %f %f\n",posterior_[0].pose.x, posterior_[0].pose.y);
 }
 
 
