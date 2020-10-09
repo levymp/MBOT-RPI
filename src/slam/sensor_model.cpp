@@ -18,15 +18,19 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 	MovingLaserScan mvscan(scan, sample.parent_pose, sample.pose);
 
 	for(const auto& ray : mvscan){
-		float rayscore = 0;
+		float rayscore = 1;
 		int rayCellx = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + ray.origin.x* map.cellsPerMeter());
         int rayCelly = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + ray.origin.y* map.cellsPerMeter());
 		float lods = map.logOdds(rayCellx, rayCelly);
+
 		if(lods > 60){
 			rayscore += 5;
 		}
 		if(lods > 20){
-			rayscore += 2;
+			rayscore += 1;
+		}
+		if(ray.range >= 4.9f && lods < 10){
+			rayscore += 5;
 		}
 		score += rayscore;
 	}
