@@ -38,10 +38,10 @@ pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
     // Only update the particles if motion was detected. If the robot didn't move, then
     // obviously don't do anything.
     bool hasRobotMoved = actionModel_.updateAction(odometry);
+    auto prior = resamplePosteriorDistribution();
     
     if(hasRobotMoved)
     {
-        auto prior = resamplePosteriorDistribution();
         auto proposal = computeProposalDistribution(prior);
         posterior_ = computeNormalizedPosterior(proposal, laser, map);
         posteriorPose_ = estimatePosteriorPose(posterior_);
@@ -165,11 +165,11 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
 
     avgx = avgx/posterior.size();
     avgy = avgy/posterior.size();
-    avgt = avgt*2/posterior.size()- M_PI;
+    avgt = avgt/posterior.size() - M_PI;
 
     pose_xyt_t pose;
-    pose.x = avgx*2;
-    pose.y = avgy*2;
+    pose.x = avgx;
+    pose.y = avgy;
     pose.theta = avgt;
 
     return pose;
