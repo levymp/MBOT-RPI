@@ -243,7 +243,6 @@ void OccupancyGridSLAM::initializePosesIfNeeded(void)
         currentPose_.utime  = currentScan_.times.back();
         haveInitializedPoses_ = true;
         
-        printf("New pose init %f %f\n",previousPose_.x, previousPose_.y);
         filter_.initializeFilterAtPose(previousPose_);
     }
     

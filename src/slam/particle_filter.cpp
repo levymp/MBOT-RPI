@@ -1,6 +1,7 @@
 #include <slam/particle_filter.hpp>
 #include <slam/occupancy_grid.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
+#include <unistd.h>
 #include <cassert>
 #include <random>
 
@@ -27,7 +28,6 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
         p.parent_pose = p.pose;
         p.weight = sw;
     }
-    printf("New pose init %f %f\n",posterior_[0].pose.x, posterior_[0].pose.y);
 }
 
 
@@ -58,13 +58,16 @@ pose_xyt_t ParticleFilter::updateFilterActionOnly(const pose_xyt_t&      odometr
     // obviously don't do anything.
     bool hasRobotMoved = actionModel_.updateAction(odometry);
     
+    printf("New pose init %f %f\n",posterior_[0].pose.x, posterior_[0].pose.y);
+    pause(1);
     if(hasRobotMoved)
     {
         //auto prior = resamplePosteriorDistribution();
         auto proposal = computeProposalDistribution(posterior_);
         posterior_ = proposal;
     }
-    
+    printf("New pose init %f %f\n",posterior_[0].pose.x, posterior_[0].pose.y);
+    pause(1);
     posteriorPose_ = odometry;
     
     return posteriorPose_;
