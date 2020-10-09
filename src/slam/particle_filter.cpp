@@ -165,11 +165,11 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
 
     avgx = avgx/posterior.size();
     avgy = avgy/posterior.size();
-    avgt = avgt/posterior.size() - M_PI;
+    avgt = avgt/(posterior.size()/2) - M_PI;
 
     pose_xyt_t pose;
-    pose.x = avgx;
-    pose.y = avgy;
+    pose.x = avgx/2;
+    pose.y = avgy/2;
     pose.theta = avgt;
 
     return pose;
