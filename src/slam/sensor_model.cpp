@@ -16,18 +16,18 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
     ///////////// TODO: Implement your sensor model for calculating the likelihood of a particle given a laser scan //////////
 	float score;
 	MovingLaserScan mvscan(scan, sample.parent_pose, sample.pose);
-	auto ray = mvscan.begin();
-	while(ray != mvscan.end()){
+
+	for(const auto& ray : mvscan){
 		float rayscore = 0;
-		float lods = map.logOdds(ray->origin.x + ray->range*cos(ray->theta), ray->origin.y + ray->range*sin(ray->theta));
+		float lods = map.logOdds(ray.origin.x + ray.range*cos(ray.theta), ray.origin.y + ray.range*sin(ray.theta));
 		if(lods > 60){
 			rayscore += 5;
 		}
 		if(lods > 20){
-			rayscore += 1;
+			rayscore += 2;
 		}
 		score += rayscore;
-		ray += 5;
 	}
+
     return score;
 }
