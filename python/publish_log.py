@@ -25,8 +25,6 @@ import os
 # # stop time 
 # p_time.send_signal(signal.SIGINT)
 
-
-
 def post_log(file_name):
     file = open('../static/' + file_name, 'rb')
     payload = {'logfile': file}
