@@ -3,6 +3,7 @@
 #include <common/angle_functions.hpp>
 #include <cassert>
 #include <cmath>
+#include <math.h>
 #include <unistd.h>
 #include <iostream>
 #include <random>
@@ -87,7 +88,15 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 		new_particle.pose.theta = sample.pose.theta;
 	}
 
-	printf("New pose gen %f %f\n",new_particle.pose.x, new_particle.pose.y);
-    sleep(1);
+	if(isnan(new_particle.pose.x)){
+		new_particle.pose.x = 0;
+	}
+	if(isnan(new_particle.pose.y)){
+		new_particle.pose.y = 0;
+	}
+	if(isnan(new_particle.pose.theta)){
+		new_particle.pose.theta = 0;
+	}
+
     return new_particle;
 }
