@@ -117,6 +117,7 @@ std::vector<particle_t> ParticleFilter::computeProposalDistribution(const std::v
     std::vector<particle_t> proposal;
 
     for(auto& p : prior){
+        printf("New particle %f %f\n",p.pose.x, p.pose.y);
         proposal.push_back(actionModel_.applyAction(p));
     }
     
