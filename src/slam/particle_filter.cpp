@@ -59,7 +59,7 @@ pose_xyt_t ParticleFilter::updateFilterActionOnly(const pose_xyt_t&      odometr
     bool hasRobotMoved = actionModel_.updateAction(odometry);
     
     printf("New pose init %f %f\n",posterior_[0].pose.x, posterior_[0].pose.y);
-    pause(1);
+    sleep(1);
     if(hasRobotMoved)
     {
         //auto prior = resamplePosteriorDistribution();
@@ -67,7 +67,7 @@ pose_xyt_t ParticleFilter::updateFilterActionOnly(const pose_xyt_t&      odometr
         posterior_ = proposal;
     }
     printf("New pose init %f %f\n",posterior_[0].pose.x, posterior_[0].pose.y);
-    pause(1);
+    sleep(1);
     posteriorPose_ = odometry;
     
     return posteriorPose_;
