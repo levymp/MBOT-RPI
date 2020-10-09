@@ -50,19 +50,9 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
     last_pos = odometry;
     utime = odometry.utime;
 
-	fwd_dist = sqrt(u_pos[0]*fwd_e);
-	a_dist = sqrt(u_pos[1]*turn_e);
-    turn_dist = sqrt(u_pos[2]*turn_e);
-
-    			if(isnan(fwd_dist)){
-				printf("Ahhhhh 0\n");
-			}
-			if(isnan(a_dist)){
-				printf("Ahhhhh 1\n");
-			}
-			if(isnan(turn_dist)){
-				printf("Ahhhhh 2\n");
-			}
+	fwd_dist = sqrt(fabs(u_pos[0]*fwd_e));
+	a_dist = sqrt(fabs(u_pos[1]*turn_e));
+    turn_dist = sqrt(fabs(u_pos[2]*turn_e));
 
     moved = true;
     return true;
