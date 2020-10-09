@@ -7,13 +7,10 @@ import os
 
 # start the timesync
 p_time = subprocess.Popen(['timesync'], cwd=os.path.abspath("../bin"))
-HOST = ""
-COMMAND = 
+# HOST = ""
+# COMMAND = 
 # start mobile bot
-p_mobilebot = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],
-
-)
-
+# p_mobilebot = subprocess.Popen(["ssh", "%s" % HOST, COMMAND])
 
 # start the logger
 p_logger = subprocess.Popen(['lcm-logger', "../static/log_test", "-i", "-q"])
