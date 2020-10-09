@@ -85,6 +85,6 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 		new_particle.pose.y = sample.pose.y;
 		new_particle.pose.theta = sample.pose.theta;
 	}
-	printf("New particle %f %f\n",new_particle.poses.x, new_particle.poses.y);
+	printf("New particle %f %f\n",new_particle.pose.x, new_particle.pose.y);
     return new_particle;
 }
