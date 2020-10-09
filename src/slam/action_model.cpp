@@ -54,6 +54,16 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
 	a_dist = sqrt(u_pos[1]*turn_e);
     turn_dist = sqrt(u_pos[2]*turn_e);
 
+    			if(isnan(fwd_dist)){
+				printf("Ahhhhh 0\n");
+			}
+			if(isnan(a_dist)){
+				printf("Ahhhhh 1\n");
+			}
+			if(isnan(turn_dist)){
+				printf("Ahhhhh 2\n");
+			}
+
     moved = true;
     return true;
 }
@@ -70,13 +80,9 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 		std::normal_distribution<float> turn2(0, turn_dist);
 		std::normal_distribution<float> fwd(0, fwd_dist);
 
-		float samp_alpha;
-		float samp_dalpha;
-		float samp_fwd;
-
-		while(isnan(samp_alpha)) samp_alpha = u_pos[1] + turn1(gen);
-		while(isnan(samp_dalpha)) samp_dalpha = u_pos[2] + turn2(gen);
-		while(isnan(samp_fwd)) samp_fwd = u_pos[0] + fwd(gen);
+		float samp_alpha = u_pos[1] + turn1(gen);
+		float samp_dalpha = u_pos[2] + turn2(gen);
+		float samp_fwd = u_pos[0] + fwd(gen);
 		
 		new_particle.pose.utime = utime;
 		new_particle.parent_pose = sample.pose;
