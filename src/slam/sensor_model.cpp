@@ -21,7 +21,7 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 		float rayscore = 1;
 		int rayEndCellx = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + ray.origin.x* map.cellsPerMeter());
         int rayEndCelly = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + ray.origin.y* map.cellsPerMeter());
-		float lods = map.logOdds(rayCellx, rayCelly);
+		float lods = map.logOdds(rayEndCellx, rayEndCelly);
 
 		if(lods > 60 && ray.range < 5.0f){
 			rayscore += 5;
@@ -39,8 +39,8 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
         if(map.isCellInGrid(rayEndCellx, rayEndCelly)){
             int dx = std::abs(rayEndCellx - rayStartCell.x);
             int dy = std::abs(rayEndCelly - rayStartCell.y);
-            int sx = (rayStartCellx < rayEndCellx) ? 1 : -1;
-            int sy = (rayStartCelly < rayEndCelly) ? 1 : -1;
+            int sx = (rayStartCell.x < rayEndCellx) ? 1 : -1;
+            int sy = (rayStartCell.y < rayEndCelly) ? 1 : -1;
             int err = dx - dy;
             int x = rayStartCell.x;
             int y = rayStartCell.y;
