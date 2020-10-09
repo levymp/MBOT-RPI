@@ -36,12 +36,12 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
 
 	u_pos[0] = sqrt(delt_x*delt_x + delt_y*delt_y);
 
-	if(isnan(atan2(delt_y, delt_x)){
+	if(isnan(atan2(delt_y, delt_x))){
 		u_pos[1] = last_pos.theta;
 	} else {
 		u_pos[1] = angle_diff(atan2(delt_y,delt_x), last_pos.theta);
 	}
-	
+
 	if(fabs(u_pos[1]) > M_PI_2){
 		u_pos[1] = angle_diff(M_PI, u_pos[1]);
 		direction = -1;
