@@ -47,6 +47,7 @@ pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
         posteriorPose_ = estimatePosteriorPose(posterior_);
     }
     
+    posteriorPose_.theta = odometry.theta;
     posteriorPose_.utime = odometry.utime;
     
     return posteriorPose_;
