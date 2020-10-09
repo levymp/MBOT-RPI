@@ -155,10 +155,12 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     //////// TODO: Implement your method for computing the final pose estimate based on the posterior distribution
     float avgx = 0;
     float avgy = 0;
+    float avgt = 0;
+
     for(unsigned int i = 0; i<posterior.size(); i++){
         avgx += posterior[i].pose.x;
         avgy += posterior[i].pose.y;
-        avgt += posterior[i].theta + M_PI;
+        avgt += posterior[i].pose.theta + M_PI;
     }
 
     avgx = avgx/posterior.size();
