@@ -88,6 +88,6 @@ particle_t ActionModel::applyAction(const particle_t& sample)
 	}
 
 	printf("New pose gen %f %f\n",new_particle.pose.x, new_particle.pose.y);
-    sleep(.01);
+    sleep(.1);
     return new_particle;
 }
