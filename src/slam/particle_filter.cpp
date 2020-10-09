@@ -162,6 +162,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
         avgy += posterior[i].pose.y;
         avgt += posterior[i].pose.theta + M_PI;
         posterior[i].pose.theta;
+        printf("theta: %f", posterior[i].pose.theta);
     }
     sleep(1);
 
