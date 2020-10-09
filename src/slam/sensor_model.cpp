@@ -19,7 +19,7 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 	auto ray = mvscan.begin();
 	while(ray != mvscan.end()){
 		float rayscore = 0;
-		float lods = map.logOdds(ray.origin.x + ray.range*cos(ray.theta), ray.origin.y + ray.range*sin(ray.theta));
+		float lods = map.logOdds(ray->origin.x + ray->range*cos(ray->theta), ray->origin.y + ray->range*sin(ray->theta));
 		if(lods > 60){
 			rayscore += 5;
 		}
