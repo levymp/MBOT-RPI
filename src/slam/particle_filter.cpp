@@ -1,6 +1,7 @@
 #include <slam/particle_filter.hpp>
 #include <slam/occupancy_grid.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
+#include <common/angle_functions.hpp>
 #include <unistd.h>
 #include <cassert>
 #include <random>
@@ -160,11 +161,9 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     for(unsigned int i = 0; i<posterior.size(); i++){
         avgx += posterior[i].pose.x;
         avgy += posterior[i].pose.y;
-        avgt += posterior[i].pose.theta + M_PI;
+        avgt += posterior[i].pose.theta;
         posterior[i].pose.theta;
-        printf("theta: %f", posterior[i].pose.theta);
     }
-    sleep(1);
 
     avgx = avgx/posterior.size();
     avgy = avgy/posterior.size();
