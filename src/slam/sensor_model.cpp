@@ -37,9 +37,6 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 		Point<float> rayStart = global_position_to_grid_position(ray.origin, map);
         Point<int> rayStartCell = global_position_to_grid_cell(ray.origin, map);
 
-        rayEndCellx = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + rayStart.x);
-        rayEndCelly = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + rayStart.y);
-
         if(map.isCellInGrid(rayEndCell.x, rayEndCell.y)){
             int dx = std::abs(rayEndCell.x - rayStartCell.x);
             int dy = std::abs(rayEndCell.y - rayStartCell.y);
