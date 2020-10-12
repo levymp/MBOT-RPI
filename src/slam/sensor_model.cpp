@@ -19,9 +19,13 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 
 	for(const auto& ray : mvscan){
 		float rayscore = 1;
-		int rayEndCellx = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + ray.origin.x* map.cellsPerMeter());
-        int rayEndCelly = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + ray.origin.y* map.cellsPerMeter());
-		float lods = map.logOdds(rayEndCellx, rayEndCelly);
+        Point<float> rayE;
+        rayE.x = ray.range * std::cos(ray.theta) + ray.origin.x;
+        rayE.y = ray.range * std::sin(ray.theta)+ ray.origin.y;
+        Point<float> rayEnd = global_position_to_grid_position(rayE, map);
+		Point<int> rayEndCell = global_position_to_grid_position(rayE, map);
+
+		float lods = map.logOdds(rayEndCell.x, rayEndCell.y);
 
 		if(lods > 60 && ray.range < 5.0f){
 			rayscore += 5;
@@ -36,16 +40,16 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
         rayEndCellx = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + rayStart.x);
         rayEndCelly = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + rayStart.y);
 
-        if(map.isCellInGrid(rayEndCellx, rayEndCelly)){
-            int dx = std::abs(rayEndCellx - rayStartCell.x);
-            int dy = std::abs(rayEndCelly - rayStartCell.y);
+        if(map.isCellInGrid(rayEndCell.x, rayEndCell.y)){
+            int dx = std::abs(rayEndCell.x - rayStartCell.x);
+            int dy = std::abs(rayEndCell.y - rayStartCell.y);
             int sx = (rayStartCell.x < rayEndCellx) ? 1 : -1;
             int sy = (rayStartCell.y < rayEndCelly) ? 1 : -1;
             int err = dx - dy;
             int x = rayStartCell.x;
             int y = rayStartCell.y;
 
-            while(x != rayEndCellx || y != rayEndCelly){
+            while(x != rayEndCell.x || y != rayEndCell.y){
                 if(map.isCellInGrid(x, y)) {
                     if(lods < 10){
 						rayscore += 5;
