@@ -32,10 +32,10 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 		float lods = map.logOdds(rayEndCell.x, rayEndCell.y);
 
 		if(lods > 60 && ray.range < 5.0f){
-			rayscore += 5;
+			rayscore += 100;
 		}
 		if(ray.range >= 5.0f && lods < 10){
-			rayscore += 5;
+			rayscore += 100;
 		}
 
         if(map.isCellInGrid(rayEndCell.x, rayEndCell.y)){
@@ -50,7 +50,7 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
             while(x != rayEndCell.x || y != rayEndCell.y){
                 if(map.isCellInGrid(x, y)) {
                     if(lods < 10){
-						rayscore += 1;
+						rayscore += 10;
 					}
                 }
                 int e2 = 2 * err;
