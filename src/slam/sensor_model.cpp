@@ -18,7 +18,7 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 	MovingLaserScan mvscan(scan, sample.parent_pose, sample.pose);
 
 	for(const auto& ray : mvscan){
-		float rayscore = 1;
+		float rayscore = .01;
         Point<float> rayE;
         rayE.x = ray.range * std::cos(ray.theta) + ray.origin.x;
         rayE.y = ray.range * std::sin(ray.theta)+ ray.origin.y;
@@ -50,7 +50,7 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
             while(x != rayEndCell.x || y != rayEndCell.y){
                 if(map.isCellInGrid(x, y)) {
                     if(lods < 10){
-						rayscore += 10;
+						rayscore += 1;
 					}
                 }
                 int e2 = 2 * err;
