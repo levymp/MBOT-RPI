@@ -40,8 +40,8 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
         if(map.isCellInGrid(rayEndCell.x, rayEndCell.y)){
             int dx = std::abs(rayEndCell.x - rayStartCell.x);
             int dy = std::abs(rayEndCell.y - rayStartCell.y);
-            int sx = (rayStartCell.x < rayEndCellx) ? 1 : -1;
-            int sy = (rayStartCell.y < rayEndCelly) ? 1 : -1;
+            int sx = (rayStartCell.x < rayEndCell.x) ? 1 : -1;
+            int sy = (rayStartCell.y < rayEndCell.y) ? 1 : -1;
             int err = dx - dy;
             int x = rayStartCell.x;
             int y = rayStartCell.y;
