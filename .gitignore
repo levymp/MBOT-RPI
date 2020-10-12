@@ -11,7 +11,11 @@ lcmtypes/*.hpp
 lcmtypes/*.h
 lcmtypes/*.py
 lcmtypes/*.o
-
+python/lcmtypes/*.c
+python/lcmtypes/*.hpp
+python/lcmtypes/*.h
+python/lcmtypes/*.py
+python/lcmtypes/*.o
 #######################################
 # LCM
 #######################################
