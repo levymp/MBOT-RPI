@@ -24,6 +24,8 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
         rayE.y = ray.range * std::sin(ray.theta)+ ray.origin.y;
         Point<float> rayEnd = global_position_to_grid_position(rayE, map);
 		Point<int> rayEndCell = global_position_to_grid_position(rayE, map);
+        Point<float> rayStart = global_position_to_grid_position(ray.origin, map);
+        Point<int> rayStartCell = global_position_to_grid_cell(ray.origin, map);
         rayEndCell.x = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + rayStart.x);
         rayEndCell.y = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + rayStart.y);
 
@@ -35,10 +37,7 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 		if(ray.range >= 5.0f && lods < 10){
 			rayscore += 5;
 		}
-
-		Point<float> rayStart = global_position_to_grid_position(ray.origin, map);
-        Point<int> rayStartCell = global_position_to_grid_cell(ray.origin, map);
-
+        
         if(map.isCellInGrid(rayEndCell.x, rayEndCell.y)){
             int dx = std::abs(rayEndCell.x - rayStartCell.x);
             int dy = std::abs(rayEndCell.y - rayStartCell.y);
