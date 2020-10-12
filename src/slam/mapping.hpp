@@ -7,6 +7,8 @@
 class OccupancyGrid;
 class lidar_t;
 
+struct adjusted_ray_t;
+
 /**
 * Mapping implements the occupancy grid mapping algorithm. 
 */
@@ -32,6 +34,12 @@ public:
     */
     void updateMap(const lidar_t& scan, const pose_xyt_t& pose, OccupancyGrid& map);
 
+    void scoreEndpoint(const adjusted_ray_t &ray, OccupancyGrid &map);
+    void scoreRay(const adjusted_ray_t &ray, OccupancyGrid &map);
+
+    void increaseCellOdds(const int x, const int y, OccupancyGrid &map);
+    void decreaseCellOdds(const int x, const int y, OccupancyGrid &map);
+
 private:
     
     const float  kMaxLaserDistance_;
@@ -39,6 +47,9 @@ private:
     const int8_t kMissOdds_;
     
     //////////////////// TODO: Add any private members needed for your occupancy grid mapping algorithm ///////////////
+    pose_xyt_t previousPose_;
+    int initialized_;
+
 };
 
 #endif // SLAM_MAPPING_HPP
