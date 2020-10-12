@@ -10,8 +10,8 @@ sys.path.append("lcmtypes")
 import lcm
 from lcmtypes import mbot_motor_command_t
 
-LIN_VEL_CMD = .75
-ANG_VEL_CMD = 3.5
+LIN_VEL_CMD = 1.5
+ANG_VEL_CMD = 6.28
 
 lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
 pygame.init()
@@ -27,7 +27,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     screen.fill([0,0,0])
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = image.swapaxes(0,1)
-    image = cv2.flip(image, 0)
+    image = cv2.flip(image, -1)
     image = pygame.surfarray.make_surface(image)
     screen.blit(image, (0,0))
     pygame.display.update()

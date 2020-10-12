@@ -16,9 +16,6 @@ lcmtypes/*.o
 # LCM
 #######################################
 *.jlp
-
-# ignore python lcmtypes
-python/lcmtypes/*
 lcmtypes/
 
 #######################################
@@ -288,5 +285,3 @@ srp_md/src/srp_md/ui/pyqt_format.py
 
 # Botlab data folder
 botlab-data
-
-python/mbotdefs.py
