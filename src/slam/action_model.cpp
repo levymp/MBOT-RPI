@@ -12,7 +12,7 @@
 ActionModel::ActionModel(void)
 {
     //////////////// TODO: Handle any initialization for your ActionModel /////////////////////////
-    turn_e = .2;
+    turn_e = .5;
     fwd_e = .02;
 
 	inited = false;
