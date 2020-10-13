@@ -50,7 +50,7 @@ def main():
     p_time = subprocess.Popen(['./timesync'], cwd=os.path.abspath("../bin"), stdin=subprocess.PIPE)
 
     # get user input of what is going on
-    description = input('RUN DESCRIPTION: ')
+    
 
     # path to temporary file
     temp_file_path = '../static/log_temp.log'
@@ -58,9 +58,11 @@ def main():
     # delete temp file if it's still there
     if os.path.exists(temp_file_path):
         os.remove(temp_file_path)
-    
+
+    description = input('RUN DESCRIPTION: ')
+
     # start the logger
-    p_logger = subprocess.Popen(['lcm-logger', temp_file_path, "-q"], stdin=subprocess.PIPE)
+    p_logger = subprocess.Popen(['lcm-logger', temp_file_path, '-q', '-f'], stdin=subprocess.PIPE)
     
     print('LOGGER & TIME SYNC STARTED!')
 
@@ -69,6 +71,7 @@ def main():
         try:
             time.sleep(1)
         except KeyboardInterrupt:
+            print('PUBLISHING LOG! (DON\'T PRESS ^C again)')
             # stop the log file
             p_logger.send_signal(signal.SIGINT)
             # stop time 
@@ -76,7 +79,9 @@ def main():
             # post the log
             r = post_log(BOTNAME, description, '../static/log_temp.log')
             if not isinstance(r, int):
-                print(r)
+                print('POSTED FILE RunId = ' + str(r['runId']))
+            else:
+                print('UNABLE TO POST FILE... PUBLISH MANUALLY BEFORE NEXT RUN!')
 
             # exit
             exit(0)
