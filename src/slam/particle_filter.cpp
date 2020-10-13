@@ -189,7 +189,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
         if(sqrt(dx*dx + dy*dy) < avg_range*1.5){
             pavgx += posterior[i].pose.x;
             pavgy += posterior[i].pose.y;
-            n++:
+            n++;
         }
     }
 
