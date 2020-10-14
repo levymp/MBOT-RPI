@@ -104,7 +104,7 @@ public:
             // Convert odometry to the global coordinates
             pose_xyt_t pose = currentPose();
             
-            double targetHeading = std::atan2(target.y - pose.y, target.x - pose.x);
+            double targetHeading = -std::atan2(target.y - pose.y, target.x - pose.x);
             double error = angle_diff(targetHeading, pose.theta);
             std::cout << "targetHeading: " << targetHeading << ", pose Theta: " << pose.theta << std::endl;
             std::cout << "Angle error:" << error << '\n';
