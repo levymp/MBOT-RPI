@@ -118,9 +118,9 @@ public:
 
                     float turnspeed = 0.0;
                     if (error > 0) {
-                        turnspeed = -kTurnSpeed;
-                    } else {
                         turnspeed = kTurnSpeed;
+                    } else {
+                        turnspeed = -kTurnSpeed;
                     }
 
                     if (std::abs(error) < 0.1) {
