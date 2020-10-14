@@ -104,14 +104,14 @@ public:
             // Convert odometry to the global coordinates
             pose_xyt_t pose = currentPose();
             
-            double targetHeading = std::atan2(pose.y - target.y, pose.x -target.x);
+            double targetHeading = std::atan2(target.y - pose.y, target.x - pose.x);
             double error = angle_diff(targetHeading, pose.theta);
             std::cout << "targetHeading: " << targetHeading << ", pose Theta: " << pose.theta << std::endl;
             std::cout << "Angle error:" << error << '\n';
 
             if(state_ == TURN)
             {
-                if(std::abs(error) > 0.05) // turn in place until pointed approximately at the target
+                if(std::abs(error) > 0.005) // turn in place until pointed approximately at the target
                 {
 
                     cmd.trans_v = 0; //set translational velocity to 0
