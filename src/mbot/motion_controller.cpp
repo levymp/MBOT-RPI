@@ -111,7 +111,7 @@ public:
 
             if(state_ == TURN)
             {
-                if(std::abs(error) > 0.005) // turn in place until pointed approximately at the target
+                if(std::abs(error) > 0.05) // turn in place until pointed approximately at the target
                 {
 
                     cmd.trans_v = 0; //set translational velocity to 0
