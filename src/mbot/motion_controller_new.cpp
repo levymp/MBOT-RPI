@@ -31,6 +31,20 @@ float clamp_speed(float speed)
     return speed;
 }
 
+float clamp_speed(float speed, float value)
+{
+    if(speed < -value)
+    {
+        return -value;
+    }
+    else if(speed > value)
+    {
+        return value;
+    }
+    
+    return speed;
+}
+
 
 class MotionController
 {
@@ -67,16 +81,10 @@ public:
     {
         //////////// TODO: Implement your feedback controller here. //////////////////////
         
-        const float kPGain = 10.0f;
-        const float kDGain = 0.00005f;
-        const float kIGain = 0.05f;
-
-        const float kPTurnGain = 5.0f;
-        const float kDesiredSpeed = 0.2f;
-        const float kMinSpeed = 0.1f;
-        const float kTurnSpeed = 2.5f;
-        const float kTurnMaxSpeed = 0.6f;
-        const float slowDownDistance = 0.05f;
+        
+        const float kd = 0.5f; // distance coefficients
+        const float kb = -0.25f; // goal pose coefficient
+        const float ka = 1.75*(2.0/3.14*kd - 1.66*kb); // heading coefficient
         
         mbot_motor_command_t cmd;
 
@@ -89,7 +97,6 @@ public:
         {
 		    std::cout << "TARGET REACHED\n";
             bool haveTarget = assignNextTarget();
-            
             if(!haveTarget)
             {
                 std::cout << "COMPLETED PATH!\n";
@@ -105,92 +112,21 @@ public:
             pose_xyt_t pose = currentPose();
             
             double targetHeading = std::atan2(target.y - pose.y, target.x - pose.x);
-            double error = angle_diff(targetHeading, pose.theta);
+            double alpha = angle_diff(targetHeading, pose.theta);
+            double beta = -1.0*targetHeading;
             std::cout << "targetHeading: " << targetHeading << ", pose Theta: " << pose.theta << std::endl;
-            std::cout << "Angle error:" << error << '\n';
+            std::cout << "Alpha:" << alpha << '\n';
+            
+            float distToGoal = std::sqrt(std::pow(target.x - pose.x, 2.0f) + std::pow(target.y - pose.y, 2.0f));
+            std::cout << "distToGoal: " << distToGoal << '\n';
 
-            if(state_ == TURN)
-            {
-                if(std::abs(error) > 0.005) // turn in place until pointed approximately at the target
-                {
+            // Euler integrate equations assuming 20Hz sampling rate 
+            //distToGoal = -kd*distToGoal*cos(alpha)*(1.0/20.0);
+            //alpha = (-kd*sin(alpha) - ka*alpha - kb*beta)*(1.0/20.0);
+            //beta = -kd*sin(alpha)*(1.0/20.0);
 
-                    cmd.trans_v = 0; //set translational velocity to 0
-
-                    float turnspeed = 0.0;
-                    if (error > 0) {
-                        turnspeed = kTurnSpeed;
-                    } else {
-                        turnspeed = -kTurnSpeed;
-                    }
-
-                    if (std::abs(error) < 0.1) {
-                        // kick in PID close to end
-                        double deltaError = error - lastError_;
-                        totalError_ += error;
-                        lastError_ = error;
-
-                        turnspeed = (error * kPGain) + (deltaError * kDGain) + (totalError_ * kIGain);
-                        if (turnspeed >= 0) {
-                            turnspeed = std::min(turnspeed, kTurnMaxSpeed);
-                        } else {
-                            turnspeed = std::max(turnspeed, -kTurnMaxSpeed);
-                        }
-                    }
-
-                    // Turn left if the target is to the left
-                    if(error > 0.0)
-                    {
-                        std::cout << "Turning left\n";
-                    }
-                    // Turn right if the target is to the right
-                    else // if(error < 0.0)
-                    {
-                        std::cout << "Turning right\n";
-                    }
-                    cmd.trans_v = 0.0f;
-                    cmd.angular_v = turnspeed;
-
-                }
-                else
-                {
-                    std::cout << "Entering DRIVE state.\n";
-                    cmd.trans_v = 0;
-                    cmd.angular_v = 0;
-                    totalError_ = 0;
-                    lastError_ = 0;
-		            state_ = DRIVE;
-                }
-            }
-            else if(state_ == DRIVE) // Use feedback to drive to the target once approximately pointed in the correct direction
-            {
-                double speed = kDesiredSpeed;
-
-                float distToGoal = std::sqrt(std::pow(target.x - pose.x, 2.0f) + std::pow(target.y - pose.y, 2.0f));
-                
-                if (distToGoal < slowDownDistance) {
-                    speed = kMinSpeed;
-                }
-
-                //go slower if the angle error is greater
-		        speed *= std::cos(error);
-                //don't go backwards
-                speed = std::max(0.0f, float(speed));
-
-                cmd.trans_v = speed;
-
-                //pid control the angular v based on angle error
-                cmd.angular_v = error * kPTurnGain;
-                //angular velocity must not exceed 1.5 the desired turnspeed
-                if (cmd.angular_v >= 0.0) {
-                    cmd.angular_v = std::min(std::abs(cmd.angular_v), kTurnMaxSpeed * 1.5f);
-                } else {
-                    cmd.angular_v = -std::min(std::abs(cmd.angular_v), kTurnMaxSpeed * 1.5f);
-                }
-		}
-            else
-            {
-                std::cerr << "ERROR: MotionController: Entered unknown state: " << state_ << '\n';
-            }
+            cmd.trans_v = clamp_speed(kd*distToGoal);
+            cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.5);
         }
         
         return cmd;
@@ -273,8 +209,8 @@ private:
 
     bool haveReachedTarget(void)
     {
-        const float kPosTolerance = 0.1f;
-	    const float kFinalPosTolerance = 0.05f;
+        const float kPosTolerance = 0.05f;
+	    const float kFinalPosTolerance = 0.025f;
 
         //tolerance for intermediate waypoints can be more lenient
     	float tolerance = (targets_.size() == 1) ? kFinalPosTolerance : kPosTolerance;
@@ -295,8 +231,9 @@ private:
         
         float xError = std::abs(target.x - pose.x);
         float yError = std::abs(target.y - pose.y);
-        
-        return (state_ == DRIVE) && (xError < tolerance) && (yError < tolerance);
+        float thetaError = std::abs(target.theta - pose.theta);
+
+        return (xError < tolerance) && (yError < tolerance) && (thetaError < 0.1);
     }
     
     bool assignNextTarget(void)
