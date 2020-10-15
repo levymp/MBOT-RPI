@@ -156,21 +156,51 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     //////// TODO: Implement your method for computing the final pose estimate based on the posterior distribution
     float avgx = 0;
     float avgy = 0;
-    float avgt = 0;
+    float avgvx = 0;
+    float avgvy = 0;
 
     for(unsigned int i = 0; i<posterior.size(); i++){
         avgx += posterior[i].pose.x;
         avgy += posterior[i].pose.y;
-        avgt = avgt + M_PI;
+        avgvx += cos(posterior[i].pose.theta);
+        avgvy += sin(posterior[i].pose.theta);
     }
 
     avgx = avgx/posterior.size();
     avgy = avgy/posterior.size();
-    avgt = avgt/posterior.size() - M_PI;
+
+    float avg_range = 0;
+
+    for(unsigned int i = 0; i<posterior.size(); i++){
+        float dx = posterior[i].pose.x-avgx;
+        float dy = posterior[i].pose.y-avgy;
+        avg_range += sqrt(dx*dx + dy*dy);
+    }
+
+    avg_range = avg_range/posterior.size();
+
+    float pavgx = 0;
+    float pavgy = 0;
+    int n = 0;
+
+    for(unsigned int i = 0; i<posterior.size(); i++){
+        float dx = posterior[i].pose.x-avgx;
+        float dy = posterior[i].pose.y-avgy;
+        if(sqrt(dx*dx + dy*dy) <= avg_range){
+            pavgx += posterior[i].pose.x;
+            pavgy += posterior[i].pose.y;
+            n++;
+        }
+    }
+
+    pavgx = pavgx/n;
+    pavgy = pavgy/n;
+
+    float avgt = atan2(avgvy,avgvx);
 
     pose_xyt_t pose;
-    pose.x = avgx;
-    pose.y = avgy;
+    pose.x = pavgx;
+    pose.y = pavgy;
     pose.theta = avgt;
 
     return pose;
