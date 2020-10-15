@@ -1,5 +1,5 @@
 #!/bin/bash
 pkill slam
-pkill motion_controll
+pkill motion_controller_new
 pkill timesync
 pkill rplidar_driver
