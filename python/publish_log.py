@@ -50,7 +50,7 @@ def main():
     # p_time = subprocess.Popen(['./timesync'], cwd=os.path.abspath("../bin"), stdin=subprocess.PIPE)
 
     # path to temporary file
-    temp_file_path = '../static/log_temp.log'
+    temp_file_path = '../data/log_temp.log'
 
     # delete temp file if it's still there
     if os.path.exists(temp_file_path):
