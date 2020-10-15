@@ -50,7 +50,7 @@ def main():
     # p_time = subprocess.Popen(['./timesync'], cwd=os.path.abspath("../bin"), stdin=subprocess.PIPE)
 
     # path to temporary file
-    temp_file_path = '../data/log_temp.log'
+    temp_file_path = '../static/log_temp.log'
 
     # delete temp file if it's still there
     if os.path.exists(temp_file_path):
@@ -72,7 +72,7 @@ def main():
             # stop the log file
             p_logger.send_signal(signal.SIGINT)
             # post the log
-            r = post_log(BOTNAME, description, '../static/log_temp.log')
+            r = post_log(BOTNAME, description, temp_file_path)
             if not isinstance(r, int):
                 print('POSTED FILE RunId : ' + str(r['runId']))
             else:
