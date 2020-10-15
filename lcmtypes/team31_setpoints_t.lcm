@@ -1,0 +1,8 @@
+struct team31_setpoints_t
+{
+    int64_t utime;
+
+    float left_velocity;
+    float right_velocity;
+
+}
