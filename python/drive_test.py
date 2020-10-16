@@ -24,7 +24,7 @@ drive_command.angular_v = 0.0
 
 turn_command = mbot_motor_command_t()
 turn_command.trans_v = 0.0
-turn_command.angular_v = 3.1415/2.0 #turn 180 in 2s
+turn_command.angular_v = -3.1415/2.0 #turn 180 in 2s
 
 lc.publish("MBOT_MOTOR_COMMAND",drive_command.encode())
 sleep(2.0)

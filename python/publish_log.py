@@ -50,7 +50,7 @@ def main():
     # start the timesync
     # p_time = subprocess.Popen(['./timesync'], cwd=os.path.abspath("../bin"), stdin=subprocess.PIPE)
 
-    channels_to_watch = "MBOT_ODOMETRY|MBOT_ENCODERS|MBOT_IMU|MBOT_STATE|MBOT_SETPOINTS|SLAM_POSE|TRUE_POSE|MBOT_MOTOR_COMMAND"
+    channels_to_watch = "ODOMETRY|MBOT_ENCODERS|MBOT_IMU|MBOT_STATE|MBOT_SETPOINTS|SLAM_POSE|TRUE_POSE|MBOT_MOTOR_COMMAND"
     # path to temporary file
     temp_file_path = '../static/log_temp.log'
 
