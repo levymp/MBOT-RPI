@@ -1,4 +1,5 @@
 #! /usr/bin/ python3
+import sys
 import requests
 import subprocess
 import time
@@ -49,6 +50,7 @@ def main():
     # start the timesync
     # p_time = subprocess.Popen(['./timesync'], cwd=os.path.abspath("../bin"), stdin=subprocess.PIPE)
 
+    channels_to_watch = "MBOT_ODOMETRY|MBOT_ENCODERS|MBOT_IMU|MBOT_STATE|MBOT_SETPOINTS|SLAM_POSE|TRUE_POSE|MBOT_MOTOR_COMMAND"
     # path to temporary file
     temp_file_path = '../static/log_temp.log'
 
@@ -59,7 +61,10 @@ def main():
     description = input('RUN DESCRIPTION: ')
 
     # start the logger
-    p_logger = subprocess.Popen(['lcm-logger', temp_file_path, '-q', '-f'], stdin=subprocess.PIPE)
+    if(sys.argv > 1):
+        p_logger = subprocess.Popen(['lcm-logger', temp_file_path, '-c', channels_to_watch, '-q', '-f'], stdin=subprocess.PIPE)
+    else: 
+        p_logger = subprocess.Popen(['lcm-logger', temp_file_path, '-q', '-f'], stdin=subprocess.PIPE)
     
     print('LOGGER STARTED!')
 
