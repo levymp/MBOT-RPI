@@ -14,32 +14,29 @@ from lcmtypes import timestamp_t
 
 lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
 
+
+drive_command = mbot_motor_command_t()
+drive_command.trans_v = 0.5 #go 0.25m in 1s
+drive_command.angular_v = 0.0
+
+# turn_command = mbot_motor_command_t()
+# turn_command.trans_v = 0.0
+# turn_command.angular_v = 3.1415/2.0 #turn 180 in 2s
+
+
+# stop command
 stop_command = mbot_motor_command_t()
 stop_command.trans_v = 0.0
 stop_command.angular_v = 0.0
 
-drive_command = mbot_motor_command_t()
-drive_command.trans_v = 0.25 #go 0.25m in 1s
-drive_command.angular_v = 0.0
+straight = 10
+turn = 1
 
-turn_command = mbot_motor_command_t()
-turn_command.trans_v = 0.0
-turn_command.angular_v = -3.1415/2.0 #turn 180 in 2s
+# for i in range(3):
+lc.publish("MBOT_MOTOR_COMMAND", drive_command.encode())
+sleep(straight)
+    # lc.publish("MBOT_MOTOR_COMMAND", turn_command.encode())
+    # sleep(turn)
 
-lc.publish("MBOT_MOTOR_COMMAND",drive_command.encode())
-sleep(2.0)
-lc.publish("MBOT_MOTOR_COMMAND",turn_command.encode())
-sleep(1.0)
-lc.publish("MBOT_MOTOR_COMMAND",drive_command.encode())
-sleep(2.0)
-lc.publish("MBOT_MOTOR_COMMAND",turn_command.encode())
-sleep(1.0)
-lc.publish("MBOT_MOTOR_COMMAND",drive_command.encode())
-sleep(2.0)
-lc.publish("MBOT_MOTOR_COMMAND",turn_command.encode())
-sleep(1.0)
-lc.publish("MBOT_MOTOR_COMMAND",drive_command.encode())
-sleep(2.0)
-lc.publish("MBOT_MOTOR_COMMAND",turn_command.encode())
-sleep(1.0)
-lc.publish("MBOT_MOTOR_COMMAND",stop_command.encode())
+# stop 
+lc.publish("MBOT_MOTOR_COMMAND", stop_command.encode())
