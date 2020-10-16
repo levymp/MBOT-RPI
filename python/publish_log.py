@@ -61,7 +61,7 @@ def main():
     description = input('RUN DESCRIPTION: ')
 
     # start the logger
-    if(sys.argv > 1):
+    if(length(sys.argv) > 1):
         p_logger = subprocess.Popen(['lcm-logger', temp_file_path, '-c', channels_to_watch, '-q', '-f'], stdin=subprocess.PIPE)
     else: 
         p_logger = subprocess.Popen(['lcm-logger', temp_file_path, '-q', '-f'], stdin=subprocess.PIPE)
