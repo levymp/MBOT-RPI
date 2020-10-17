@@ -8,10 +8,60 @@ robot_path_t search_for_path(pose_xyt_t start,
                              const SearchParams& params)
 {
     ////////////////// TODO: Implement your A* search here //////////////////////////
-    
+    // initialize
+    // path to be returned
     robot_path_t path;
     path.utime = start.utime;
-    path.path.push_back(start);    
+    // append start to first element
+    path.path.push_back(start);
+
+    // we will have one priority struct
+    // visit queue min heap
+    // visited is a list of objects 
+        // objects contain 
+            // grid point (point int)
+            // f_score (float)
+            // parent (index at list to value)
+            // distance
+
+
+
+    // convert start/goal to object
+
+    // create visit queue with start in it (with f_cost)
+    // min heap
+
+    // while visit queue not empty
+        // cur_node = dequeue visit_queue
+        
+
+        // if cur_node == goal 
+            // return path
+        // visited == true for that node 
+
+        // go through list of all neighbors
+            // if in visit queue
+                // calc new cost 
+                // if new_cost < cur_cost:
+                    // reassign cost
+            // else
+                // add to visit_queue (create object)
+                // calculate fscore
+
+
+
+    path.path.push_back()
+
+    
+
+
+
+
+
+
     path.path_length = path.path.size();
     return path;
 }
+
+
+float distance()
