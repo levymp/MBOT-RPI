@@ -12,28 +12,33 @@ robot_path_t search_for_path(pose_xyt_t start,
     // path to be returned
     robot_path_t path;
     path.utime = start.utime;
-    // append start to first element
-    path.path.push_back(start);
+    
+    // append start to first element of path
+    // path.path.push_back(start);
+
+    // add start to list of points
+    visited.push_back(Grid_Astar())
+
+    // add that value to the priority queue
+
 
     // we will have one priority struct
     // visit queue min heap
     // visited is a list of objects 
         // objects contain 
             // grid point (point int)
+            // distance
             // f_score (float)
             // parent (index at list to value)
-            // distance
-
-
 
     // convert start/goal to object
+
 
     // create visit queue with start in it (with f_cost)
     // min heap
 
     // while visit queue not empty
         // cur_node = dequeue visit_queue
-        
 
         // if cur_node == goal 
             // return path
@@ -53,9 +58,6 @@ robot_path_t search_for_path(pose_xyt_t start,
     path.path.push_back()
 
     
-
-
-
 
 
 
