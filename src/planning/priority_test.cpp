@@ -83,6 +83,13 @@ int main()
     static const float arr[] = {5.2, 9.8, -3, 50, 64.5, 10004, 50 };
     std::vector <float> priorities (arr, arr + sizeof(arr)/sizeof(arr[0]));
     
+    for(int i=0; i < priorities.size(), i++)
+    {
+        std::cout << priorities[i] << "\t"
+    }
+    std::cout << std::endl;
+
+
     // starting index for stored_nodes
     int m = stored_nodes.size();
     for(int i =0; i < priorities.size(); i++ )
