@@ -295,8 +295,9 @@ private:
         
         float xError = std::abs(target.x - pose.x);
         float yError = std::abs(target.y - pose.y);
+        float tError = std::abs(target.theta - pose.theta);
         
-        return (state_ == DRIVE) && (xError < tolerance) && (yError < tolerance);
+        return (state_ == DRIVE) && (xError < tolerance) && (yError < tolerance) && (tError < tolerance);
     }
     
     bool assignNextTarget(void)
