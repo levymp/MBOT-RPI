@@ -1,4 +1,4 @@
-#include "priority.hpp"
+#include <planning/priority.hpp>
 #include <iostream>
 
 int main()
@@ -49,10 +49,10 @@ int main()
     // make heap
     std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
     
-    std::cout << "TESTING PRIORITY MIN HEAP" << std::endl; 
+    std::cout << "TESTING PRIORITY MIN HEAP" << std::endl;
     for(int i= 0; i < (int)visit_q.size(); i++)
     {
-        std::cout << visit_q[i]->priority << '\t' << visit_q[i]->distance << '\t' << i << std::endl; 
+        std::cout << visit_q[i]->priority << '\t' << visit_q[i]->distance << '\t' << i << std::endl;
     }
 
     // pop heap (moves min value to the back)
