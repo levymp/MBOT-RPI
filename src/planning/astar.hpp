@@ -14,7 +14,7 @@ struct Grid_Astar
     float distance;                 //< The distance to the start via path through parent
     float priority;                 //< priority of the node based on fscore
     bool visited;                   //< flag for whether node has been visited
-    int i;                          //< index of list of Grid_Astar Objects
+    Grid_Astar* parent;                 //< Parent
     Grid_Astar()
 }
 
