@@ -1,5 +1,5 @@
 #include <planning/astar.hpp>
-#include <planning/obstacle_distance_grid.hpp>
+
 
 
 robot_path_t search_for_path(pose_xyt_t start, 
@@ -17,7 +17,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     // path.path.push_back(start);
 
     // add start to list of points
-    visited.push_back(Grid_Astar())
+    // visited.push_back(Grid_Astar())
 
     // add that value to the priority queue
 
@@ -55,7 +55,7 @@ robot_path_t search_for_path(pose_xyt_t start,
 
 
 
-    path.path.push_back()
+    // path.path.push_back()
 
     
 
@@ -66,4 +66,4 @@ robot_path_t search_for_path(pose_xyt_t start,
 }
 
 
-float distance()
+// float distance()

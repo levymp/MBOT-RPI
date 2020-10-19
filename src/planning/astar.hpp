@@ -3,23 +3,16 @@
 
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
+#include <planning/obstacle_distance_grid.hpp>
 
 
 class ObstacleDistanceGrid;
 
 
-struct Grid_Astar
-{
-    Point<double> grid_position;    //< The location in grid position
-    float distance;                 //< The distance to the start via path through parent
-    float priority;                 //< priority of the node based on fscore
-    bool visited;                   //< flag for whether node has been visited
-    Grid_Astar* parent;                 //< Parent
-    Grid_Astar()
-}
 
 
-std::vector<Grid_Astar> visited;
+
+
 
 
 
