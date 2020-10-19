@@ -9,8 +9,7 @@ LIBPLANNING_OBJS = \
 	motion_planner.o \
 	obstacle_distance_grid.o \
 	astar.o \
-	frontiers.o \
-	priority_test.o
+	frontiers.o 
 
 $(LIB_PLANNING): $(LIBPLANNING_OBJS) $(LIBDEPS)
 	@echo "    $@"
@@ -18,9 +17,9 @@ $(LIB_PLANNING): $(LIBPLANNING_OBJS) $(LIBDEPS)
 
 BIN_DIST_TEST  = $(BIN_PATH)/obstacle_distance_grid_test
 BIN_ASTAR_TEST = $(BIN_PATH)/astar_test
-BIN_PRIORITY_TEST = $(BIN_PATH)/priority_test
 BIN_GRID_GENERATOR = $(BIN_PATH)/grid_generator
 BIN_EXPLORATION = $(BIN_PATH)/exploration
+BIN_PRIORITY_TEST = $(BIN_PATH)/priority_test
 
 ALL = $(BIN_DIST_TEST) $(BIN_ASTAR_TEST) $(BIN_GRID_GENERATOR) $(BIN_EXPLORATION) $(BIN_PRIORITY_TEST) $(LIB_PLANNING)
 
