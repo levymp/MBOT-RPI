@@ -1,4 +1,4 @@
-#include <planning/priority.hpp>
+#include <priority.hpp>
 #include <iostream>
 
 int main()
