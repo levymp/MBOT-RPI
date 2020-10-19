@@ -16,6 +16,13 @@ void ObstacleDistanceGrid::setDistances(const OccupancyGrid& map)
     resetGrid(map);
     
     ///////////// TODO: Implement an algorithm to mark the distance to the nearest obstacle for every cell in the map.
+    
+    // Create list to visit
+    // Go through and mark obstacle cells (+ log odds?) as 1
+        // rm from list?
+    // While list not empty
+        // if zero and neighbor > 3 
+
 }
 
 
