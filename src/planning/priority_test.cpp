@@ -41,7 +41,7 @@ int main()
     std::vector<Grid_Astar*> visit_q;
     
     
-    for(int i = 0; i < stored_nodes.size(); i++)
+    for(int i = 0; i < (int)stored_nodes.size(); i++)
     {
         visit_q.push_back(&stored_nodes[i]);
     }
@@ -50,7 +50,7 @@ int main()
     std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
     
     std::cout << "TESTING PRIORITY MIN HEAP" << std::endl; 
-    for(int i= 0; i < visit_q.size(); i++)
+    for(int i= 0; i < (int)visit_q.size(); i++)
     {
         std::cout << visit_q[i]->priority << '\t' << visit_q[i]->distance << '\t' << i << std::endl; 
     }
@@ -59,7 +59,7 @@ int main()
     std::pop_heap(visit_q.begin(), visit_q.end(), compare_priority());
 
     std::cout << "AFTER POP HEAP" << std::endl; 
-    for(int i= 0; i < visit_q.size(); i++)
+    for(int i= 0; i < (int)visit_q.size(); i++)
     {
         std::cout << visit_q[i]->priority << '\t' << visit_q[i]->distance << '\t' << i << std::endl; 
     }
@@ -83,16 +83,16 @@ int main()
     static const float arr[] = {5.2, 9.8, -3, 50, 64.5, 10004, 50 };
     std::vector <float> priorities (arr, arr + sizeof(arr)/sizeof(arr[0]));
     
-    for(int i=0; i < priorities.size(), i++)
+    for(int i=0; i < (int)priorities.size(); i++)
     {
-        std::cout << priorities[i] << "\t"
+        std::cout << priorities[i] << "\t";
     }
     std::cout << std::endl;
 
 
     // starting index for stored_nodes
     int m = stored_nodes.size();
-    for(int i =0; i < priorities.size(); i++ )
+    for(int i =0; i < (int)priorities.size(); i++ )
     {
         stored_nodes.push_back(Grid_Astar());
         stored_nodes[m].priority = priorities[i];
