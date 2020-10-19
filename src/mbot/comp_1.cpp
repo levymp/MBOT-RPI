@@ -24,14 +24,6 @@ int main(int argc, char** argv)
     path.path.resize(numTimes * 8);
     
     pose_xyt_t nextPose;
-    
-    nextPose.x = .75*square_size;
-    nextPose.y = 0.0f;
-    nextPose.theta = 0.0;
-    for(int n = 0; n < numTimes; ++n)
-    {
-        path.path[4*n] = nextPose;
-    }
 
     nextPose.x = square_size;
     nextPose.y = 0.0f;
@@ -42,50 +34,27 @@ int main(int argc, char** argv)
     }
     
     nextPose.x = square_size;
-    nextPose.y = .75*square_size;
-    nextPose.theta = M_PI_2;
+    nextPose.y = square_size;
+    nextPose.theta = -M_PI;
     for(int n = 0; n < numTimes; ++n)
     {
         path.path[4*n + 2] = nextPose;
     }
-    nextPose.x = square_size;
+
+    nextPose.x = 0.0f;
     nextPose.y = square_size;
-    nextPose.theta = -M_PI;
+    nextPose.theta = -M_PI_2;
     for(int n = 0; n < numTimes; ++n)
     {
         path.path[4*n + 3] = nextPose;
     }
     
-    nextPose.x = .25*square_size;
-    nextPose.y = square_size;
-    nextPose.theta = -M_PI;
-    for(int n = 0; n < numTimes; ++n)
-    {
-        path.path[4*n + 4] = nextPose;
-    }
-
-    nextPose.x = 0.0f;
-    nextPose.y = square_size;
-    nextPose.theta = -M_PI_2;
-    for(int n = 0; n < numTimes; ++n)
-    {
-        path.path[4*n + 5] = nextPose;
-    }
-    
-    nextPose.x = 0.0f;
-    nextPose.y = 0.75*square_size;
-    nextPose.theta = -M_PI_2;
-    for(int n = 0; n < numTimes; ++n)
-    {
-        path.path[4*n + 6] = nextPose;
-    }
-
     nextPose.x = 0.0f;
     nextPose.y = 0.0f;
     nextPose.theta = -M_PI_2;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n + 7] = nextPose;
+        path.path[4*n + 4] = nextPose;
     }
     
     // Return to original heading after completing all circuits
