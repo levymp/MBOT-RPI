@@ -10,7 +10,8 @@ LIBPLANNING_OBJS = \
 	obstacle_distance_grid.o \
 	astar.o \
 	frontiers.o \
-	priority.o 
+	priority_test.o
+	# priority.o 
 
 $(LIB_PLANNING): $(LIBPLANNING_OBJS) $(LIBDEPS)
 	@echo "    $@"
@@ -21,9 +22,9 @@ BIN_ASTAR_TEST = $(BIN_PATH)/astar_test
 BIN_PRIORITY_TEST = $(BIN_PATH)/priority_test
 BIN_GRID_GENERATOR = $(BIN_PATH)/grid_generator
 BIN_EXPLORATION = $(BIN_PATH)/exploration
-BIN_PRIORITY = $(BIN_PATH)/priority
+# BIN_PRIORITY = $(BIN_PATH)/priority
 
-ALL = $(BIN_DIST_TEST) $(BIN_ASTAR_TEST) $(BIN_GRID_GENERATOR) $(BIN_EXPLORATION) $(BIN_PRIORITY) $(BIN_PRIORITY_TEST) $(LIB_PLANNING)
+ALL = $(BIN_DIST_TEST) $(BIN_ASTAR_TEST) $(BIN_GRID_GENERATOR) $(BIN_EXPLORATION) $(BIN_PRIORITY_TEST) $(LIB_PLANNING)
 
 all: $(ALL)
 
@@ -47,9 +48,9 @@ $(BIN_EXPLORATION): exploration.o exploration_main.o $(LIBDEPS) $(LIB_PLANNING)
 	@echo "    $@"
 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(CXXFLAGS) $(LDFLAGS)
 
-$(BIN_PRIORITY): priority.o $(LIBDEPS) $(LIB_PLANNING)
-	@echo "    $@"
-	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(LDFLAGS) $(CXXFLAGS)
+# $(BIN_PRIORITY): priority.o $(LIBDEPS) $(LIB_PLANNING)
+# 	@echo "    $@"
+# 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(LDFLAGS) $(CXXFLAGS)
 
 $(BIN_PRIORITY_TEST): priority_test.o $(LIBDEPS) $(LIB_PLANNING)
 	@echo "    $@"
