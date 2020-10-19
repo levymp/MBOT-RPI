@@ -56,12 +56,6 @@ $(BIN_PRIORITY_TEST): priority_test.o $(LIBDEPS) $(LIB_PLANNING)
 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(LDFLAGS) $(CXXFLAGS)
 
 
-
-
-
-priority: $(BIN_PRIORITY) $(BIN_PRIORITY_TEST)
-
-
 clean:
 	@rm -f *.o *~ *.a
 	@rm -f $(ALL)
