@@ -107,10 +107,6 @@ int main()
         std::cout << min -> priority << std::endl;
     }
 
-
-
-
-
     return 0;
 }
 

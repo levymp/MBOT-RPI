@@ -34,3 +34,6 @@ void enqueue(std::vector<Grid_Astar*> &visit_q, Grid_Astar* new_grid)
     // reheap
     std::push_heap(visit_q.begin(), visit_q.end(), compare_priority());
 }
+int main(){
+    return 0
+}
