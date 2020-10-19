@@ -21,7 +21,7 @@ BIN_PRIORITY_TEST = $(BIN_PATH)/priority_queue_test
 BIN_GRID_GENERATOR = $(BIN_PATH)/grid_generator
 BIN_EXPLORATION = $(BIN_PATH)/exploration
 
-ALL = $(BIN_DIST_TEST) $(BIN_ASTAR_TEST) $(BIN_GRID_GENERATOR) $(BIN_EXPLORATION) $(LIB_PLANNING) 
+ALL = $(BIN_DIST_TEST) $(BIN_ASTAR_TEST) $(BIN_GRID_GENERATOR) $(BIN_EXPLORATION) $(LIB_PLANNING) $(BIN_PRIORITY_TEST)
 
 all: $(ALL)
 
@@ -50,6 +50,8 @@ $(BIN_EXPLORATION): exploration.o exploration_main.o $(LIBDEPS) $(LIB_PLANNING)
 $(BIN_PRIORITY_TEST): priority_queue_test.o $(LIBDEPS) $(LIB_PLANNING)
 	@echo "    $@"
 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(LDFLAGS) $(CXXFLAGS)
+
+priority: $(BIN_PRIORITY_TEST)
 
 
 clean:
