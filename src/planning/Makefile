@@ -51,11 +51,6 @@ $(BIN_PRIORITY_TEST): priority_queue_test.o $(LIBDEPS) $(LIB_PLANNING)
 	@echo "    $@"
 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(LDFLAGS) $(CXXFLAGS)
 
-priority:
-$(BIN_PRIORITY_TEST): priority_queue_test.o $(LIBDEPS) $(LIB_PLANNING)
-	@echo "    $@"
-	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(LDFLAGS) $(CXXFLAGS)
-
 
 clean:
 	@rm -f *.o *~ *.a
