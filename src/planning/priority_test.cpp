@@ -38,7 +38,7 @@ int main()
     std::cout << "SIZE: " <<stored_nodes.size() << std::endl; 
 
     // test out min heap
-
+    std::vector<Grid_Astar*> visit_q;
     
     
     for(int i = 0; i < stored_nodes.size(); i++)

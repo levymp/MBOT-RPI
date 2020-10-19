@@ -26,7 +26,7 @@ struct compare_priority {
     }
 };
 
-std::vector<Grid_Astar*> visit_q;
+
 
 void print_struct(Grid_Astar Grid_Astar_value);
 Grid_Astar* dequeue(std::vector<Grid_Astar*> &visit_q );
