@@ -39,6 +39,7 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
 	if(fabs(u_pos[1]) > M_PI_2){
 		u_pos[1] = angle_diff(M_PI, u_pos[1]);
 		direction = -1;
+		u_pos[0] = u_pos[0]*direction;
 	}
 	u_pos[2] = angle_diff(delt_t, u_pos[1]);
 
@@ -50,7 +51,7 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
     last_pos = odometry;
     utime = odometry.utime;
 
-	fwd_dist = direction*sqrt(fabs(u_pos[0]*fwd_e));
+	fwd_dist = sqrt(fabs(u_pos[0]*fwd_e));
 	a_dist = sqrt(fabs(u_pos[1]*turn_e));
     turn_dist = sqrt(fabs(u_pos[2]*turn_e));
 
