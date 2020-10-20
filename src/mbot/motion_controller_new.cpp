@@ -130,7 +130,6 @@ public:
 
             if(!(abs(alpha) < M_PI_2)){
                 cmd.trans_v *= -1.0;
-                cmd.angular_v *= -1.0;
             }
         }
         
