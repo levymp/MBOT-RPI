@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 
     nextPose.x = 0.0f;
     nextPose.y = square_size;
-    nextPose.theta = -M_PI_2;
+    nextPose.theta = M_PI;
     for(int n = 0; n < numTimes; ++n)
     {
         path.path[8*n + 6] = nextPose;
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
     
     nextPose.x = 0.0f;
     nextPose.y = 0.0f;
-    nextPose.theta = 0;
+    nextPose.theta = 0.0f;
     for(int n = 0; n < numTimes; ++n)
     {
         path.path[8*n + 8] = nextPose;
