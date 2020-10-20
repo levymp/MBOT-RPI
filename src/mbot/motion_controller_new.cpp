@@ -82,7 +82,7 @@ public:
         //////////// TODO: Implement your feedback controller here. //////////////////////
         
         
-        const float kd = 0.75f; // distance coefficients
+        const float kd = 0.5f; // distance coefficients
         const float kb = -0.2f; // goal pose coefficient
         const float ka = 1.75*(2.0/3.14*kd - 1.66*kb); // heading coefficient
         
