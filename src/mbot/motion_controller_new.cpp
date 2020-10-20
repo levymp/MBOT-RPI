@@ -127,6 +127,11 @@ public:
 
             cmd.trans_v = clamp_speed(kd*distToGoal);
             cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.5);
+
+            if(!(abs(alpha) < M_PI_2)){
+                cmd.trans_v *= -1.0;
+                cmd.angular_v *= -1.0;
+            }
         }
         
         return cmd;
