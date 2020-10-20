@@ -110,7 +110,7 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
             temp_pt.x = frontiers[i].cells[j].x;
             temp_pt.y = frontiers[i].cells[j].y;
 
-            Dis = sqrtf(powf(robotPose.x - temp_pt.x, 2) + powf(robotPose.y - temp_pt.y));
+            Dis = sqrtf(powf(robotPose.x - temp_pt.x, 2) + powf(robotPose.y - temp_pt.y, 2));
 
             if (Dis < min_Dis) {
                 min_Dis = Dis;
@@ -130,9 +130,9 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
     bool Target_found = false;
     int num_of_angles = 72;
     float angle_increment = 2 * M_PI / num_of_angles;
-    float radius_init = 0.05 // in meters
+    float radius_init = 0.05; // in meters
 
-    for (radius = radius_init; ; radius += 0.05) {
+    for (float radius = radius_init; ; radius += 0.05) {
 
         for (int i = 0; i < num_of_angles; i++) {
             float angle = i * angle_increment;
@@ -140,8 +140,8 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
             new_point.x = Target_frontier_point.x + radius * cosf(angle);
             new_point.y = Target_frontier_point.y + radius * sinf(angle);
 
-            if (new_point.x >= 0 && new_point.x < map.width_ * map.metersPerCell_ 
-                && new_point.y >= 0 && new_point.y <= map.height_ * map.metersPerCell_) {
+            if (new_point.x >= 0 && new_point.x < map.widthInMeters()
+                && new_point.y >= 0 && new_point.y < map.heightInMeters()) {
                 // cirle_points.push_back(new_point);
                 Point<int> new_cell = global_position_to_grid_cell(new_point, map);
                 if (map(new_cell.x, new_cell.y) < 0) {
@@ -159,8 +159,8 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
     }
 
     pose_xyt_t Target_pose;
-    Target_pose.x = new_point.x;
-    Target_pose.y = new_point.y;
+    Target_pose.x = Target_point.x;
+    Target_pose.y = Target_point.y;
 
     if (planner.isValidGoal(Target_pose)) {
         robot_path_t path = planner.planPath(robotPose, Target_pose);
