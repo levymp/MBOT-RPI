@@ -84,7 +84,7 @@ public:
         
         const float kd = 0.75f; // distance coefficients
         const float kb = -0.5f; // goal pose coefficient
-        const float ka = 1.75*(2.0/3.14*kd - 1.66*kb); // heading coefficient
+        const float ka = .5; // heading coefficient
         
         mbot_motor_command_t cmd;
 
