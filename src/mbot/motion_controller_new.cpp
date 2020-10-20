@@ -83,7 +83,7 @@ public:
         
         
         const float kd = 0.75f; // distance coefficients
-        const float kb = -.5f; // goal pose coefficient
+        const float kb = -.005f; // goal pose coefficient
         const float ka = 3; // heading coefficient
         
         mbot_motor_command_t cmd;
@@ -113,9 +113,6 @@ public:
             
             double targetHeading = std::atan2(target.y - pose.y, target.x - pose.x);
             double alpha = angle_diff(targetHeading, pose.theta);
-            if(alpha > M_PI){
-                alpha = alpha - 2*M_PI;
-            }
             double beta = -1.0*targetHeading;
             std::cout << "targetHeading: " << targetHeading << ", pose Theta: " << pose.theta << std::endl;
             std::cout << "Alpha:" << alpha << '\n';
