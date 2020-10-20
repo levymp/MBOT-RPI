@@ -50,7 +50,7 @@ bool ActionModel::updateAction(const pose_xyt_t& odometry)
     last_pos = odometry;
     utime = odometry.utime;
 
-	fwd_dist = sqrt(fabs(u_pos[0]*fwd_e));
+	fwd_dist = direction*sqrt(fabs(u_pos[0]*fwd_e));
 	a_dist = sqrt(fabs(u_pos[1]*turn_e));
     turn_dist = sqrt(fabs(u_pos[2]*turn_e));
 
