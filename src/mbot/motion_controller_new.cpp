@@ -214,7 +214,7 @@ private:
 
     bool haveReachedTarget(void)
     {
-        const float kPosTolerance = 0.1f;
+        const float kPosTolerance = 0.05f;
 	    const float kFinalPosTolerance = 0.025f;
 
         //tolerance for intermediate waypoints can be more lenient
@@ -238,7 +238,7 @@ private:
         float yError = std::abs(target.y - pose.y);
         float thetaError = std::abs(target.theta - pose.theta);
 
-        return (xError < tolerance) && (yError < tolerance) && (thetaError < tolerance);
+        return (xError < tolerance) && (yError < tolerance) && (thetaError < 0.1);
     }
     
     bool assignNextTarget(void)
