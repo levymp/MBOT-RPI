@@ -82,7 +82,7 @@ public:
         //////////// TODO: Implement your feedback controller here. //////////////////////
         
         const float kd = 0.6f; // distance coefficients
-        const float kb = -0.02f; // goal pose coefficient
+        const float kb = -0.2f; // goal pose coefficient
         const float ka = .02; // heading coefficient
         
         mbot_motor_command_t cmd;
