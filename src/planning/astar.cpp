@@ -3,16 +3,29 @@
 #include <iostream>
 
 
-int append_node(std::vector<Grid_Astar*> &visit_q)
+int append_node(std::vector<Grid_Astar*> &stored_nodes)
 {
-    int i = (int) visit_q.size();
-    visit_q.push_back(Grid_Astar());
+    int i = (int) stored_nodes.size();
+    stored_nodes.push_back(Grid_Astar());
     return i; 
 }
 
 void get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, const ObstacleDistanceGrid& distances)
 {
-    cur_node -> grid_position
+    Point<int> cur_position = cur_node -> grid_position;
+    std::vector<int> neighbors;
+    int i, j; 
+    for(i= -1, j=-1; i <= 1 && j <= 1; i++, j++)
+    {
+        int node_index = append_node(stored_nodes);
+        // stored_nodes[node_index].grid_position = 
+        
+    }
+
+
+
+
+
 
 }
 
@@ -43,7 +56,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     int end = append_node(stored_nodes);
     
     // set distance to start and grid_position
-    stored_nodes[start].distance = 0;
+    stored_nodes[start].distance = 0; 
     stored_nodes[start].grid_position = global_position_to_grid_cell(Point<double>(start.x, start.y), distances);
     // set goal node
     stored_nodes[end].grid_position = global_position_to_grid_cell(Point<double>(end.x, end.y), distances)

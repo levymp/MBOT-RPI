@@ -26,6 +26,9 @@ struct SearchParams
                                     ///< for cellDistance > minDistanceToObstacle && cellDistance < maxDistanceWithCost
 };
 
+int append_node(std::vector<Grid_Astar*> &stored_nodes);
+void get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, const ObstacleDistanceGrid& distances);
+
 
 /**
 * search_for_path uses an A* search to find a path from the start to goal poses. The search assumes a circular robot
