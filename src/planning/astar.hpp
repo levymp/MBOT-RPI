@@ -9,14 +9,6 @@
 class ObstacleDistanceGrid;
 
 
-
-
-
-
-
-
-
-
 /**
 * SearchParams defines the parameters to use when searching for a path. See associated comments for details
 */
