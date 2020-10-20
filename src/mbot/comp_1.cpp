@@ -16,7 +16,7 @@ int main(int argc, char** argv)
         numTimes = std::atoi(argv[1]);
     }
     
-    float square_size = 1.5f;
+    float square_size = 1.0f;
 
     std::cout << "Commanding robot to drive around " << square_size << "m square " << numTimes << " times.\n";
     
