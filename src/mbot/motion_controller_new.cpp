@@ -127,9 +127,10 @@ public:
 
             cmd.trans_v = clamp_speed(kd*distToGoal);
             cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.5);
-
+            
             if(distToGoal < .025){
                 cmd.trans_v = 0;
+                alpha = angle_diff(target.theta, pose.theta);
                 cmd.angular_v = clamp_speed(ka*alpha, .5);
             }
 
