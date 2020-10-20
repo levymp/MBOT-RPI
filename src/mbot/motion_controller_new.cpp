@@ -81,9 +81,10 @@ public:
     {
         //////////// TODO: Implement your feedback controller here. //////////////////////
         
-        const float kd = 0.6f; // distance coefficients
+        
+        const float kd = 0.75f; // distance coefficients
         const float kb = -0.2f; // goal pose coefficient
-        const float ka = .2; // heading coefficient
+        const float ka = 1.75*(2.0/3.14*kd - 1.66*kb); // heading coefficient
         
         mbot_motor_command_t cmd;
 
@@ -119,12 +120,13 @@ public:
             float distToGoal = std::sqrt(std::pow(target.x - pose.x, 2.0f) + std::pow(target.y - pose.y, 2.0f));
             std::cout << "distToGoal: " << distToGoal << '\n';
 
+            // Euler integrate equations assuming 20Hz sampling rate 
+            //distToGoal = -kd*distToGoal*cos(alpha)*(1.0/20.0);
+            //alpha = (-kd*sin(alpha) - ka*alpha - kb*beta)*(1.0/20.0);
+            //beta = -kd*sin(alpha)*(1.0/20.0);
+
             cmd.trans_v = clamp_speed(kd*distToGoal);
             cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.5);
-            
-            if(!(abs(alpha) < M_PI_2)){
-                cmd.trans_v *= -1.0;
-            }
         }
         
         return cmd;
