@@ -238,7 +238,7 @@ private:
         float yError = std::abs(target.y - pose.y);
         float thetaError = std::abs(target.theta - pose.theta);
 
-        return (xError < tolerance) && (yError < tolerance) && (thetaError < (tolerance/10));
+        return (xError < tolerance) && (yError < tolerance) && (thetaError < tolerance);
     }
     
     bool assignNextTarget(void)
