@@ -120,13 +120,12 @@ public:
             float distToGoal = std::sqrt(std::pow(target.x - pose.x, 2.0f) + std::pow(target.y - pose.y, 2.0f));
             std::cout << "distToGoal: " << distToGoal << '\n';
 
-            // Euler integrate equations assuming 20Hz sampling rate 
-            //distToGoal = -kd*distToGoal*cos(alpha)*(1.0/20.0);
-            //alpha = (-kd*sin(alpha) - ka*alpha - kb*beta)*(1.0/20.0);
-            //beta = -kd*sin(alpha)*(1.0/20.0);
-
             cmd.trans_v = clamp_speed(kd*distToGoal);
             cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.5);
+            
+            if(!(abs(alpha) < M_PI_2)){
+                cmd.trans_v *= -1.0;
+            }
         }
         
         return cmd;
