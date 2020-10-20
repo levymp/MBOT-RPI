@@ -27,7 +27,7 @@ struct SearchParams
 };
 
 int append_node(std::vector<Grid_Astar*> &stored_nodes);
-void get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, const ObstacleDistanceGrid& distances);
+void get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes);
 
 
 /**
