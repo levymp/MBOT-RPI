@@ -3,8 +3,10 @@
 
 #include <common/point.hpp>
 #include <vector>
-
+#include <queue>
+#include <stdbool.h>
 class OccupancyGrid;
+
 
 
 /**
@@ -38,7 +40,7 @@ public:
     float cellsPerMeter(void) const { return cellsPerMeter_; }
     
     Point<float> originInGlobalFrame(void) const { return globalOrigin_; }
-    
+
     /**
     * setDistances sets the obstacle distances stored in the grid based on the provided occupancy grid map of the
     * environment.
@@ -70,9 +72,14 @@ public:
     float& operator()(int x, int y) { return cells_[cellIndex(x, y)]; }
     
 private:
-    
+    struct location{
+        int x; // x cell
+        int y; // y cell
+        location(): x(-1), y(-1){};
+        location(int i, int j): x(i), y(j){}
+    };
     std::vector<float> cells_;          ///< The actual grid -- stored in row-major order
-    
+    std::vector<int> visited_;
     int width_;                 ///< Width of the grid in cells
     int height_;                ///< Height of the grid in cells
     float metersPerCell_;       ///< Side length of a cell
@@ -87,6 +94,12 @@ private:
     
     // Allow private write-access to cells
     float& distance(int x, int y) { return cells_[cellIndex(x, y)]; }
+    int& visited(int x, int y) { return visited_[cellIndex(x, y)]; }
+
+    float getMinScore(const OccupancyGrid &map, int x, int y);
+    void addNeighbors(const OccupancyGrid &map, int x, int y, std::queue<location>* visit);
+    bool isCellScored(const OccupancyGrid &map, int x, int y);
+    bool isCellUnscored(const OccupancyGrid &map, int x, int y);
 };
 
 #endif // PLANNING_OBSTACLE_DISTANCE_GRID_HPP
