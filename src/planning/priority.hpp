@@ -10,12 +10,13 @@
 
 struct Grid_Astar
 {
-    Point<double> grid_position;    //< The location in grid position
+    Point<double> cell_pos;    //< The location in grid position
     float distance;                 //< The distance to the start via path through parent
     float priority;                 //< priority of the node based on fscore
     bool visited;                   //< flag for whether node has been visited
+    bool in_visit_queue;             //< flag for whether node is in the visit queue
     Grid_Astar* parent;                 //< Parent
-    Grid_Astar(): grid_position(0,0), distance(10000000), priority(-5), visited(false), parent(NULL){} //< initialization
+    Grid_Astar(): cell_pos(0,0), distance(10000000), priority(-5), visited(false), in_visit_queue(false), parent(NULL){} //< initialization
 };
 
 

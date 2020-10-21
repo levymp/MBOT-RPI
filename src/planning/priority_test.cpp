@@ -17,7 +17,7 @@ int main()
     // Check changing values
     std::cout << "CHANING VALUES" << std::endl;
     Grid_Astar& tmp = stored_nodes[0];
-    tmp.grid_position = Point<int>(1, 1);
+    tmp.cell_pos = Point<int>(1, 1);
     tmp.distance = 540;
     tmp.priority = 1.2;
     tmp.visited = true;
