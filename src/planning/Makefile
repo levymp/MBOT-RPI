@@ -6,11 +6,12 @@ LIBDEPS  = $(call libdeps, $(LDFLAGS))
 
 LIB_PLANNING = $(LIB_PATH)/libplanning.a
 LIBPLANNING_OBJS = \
+	astar.o \
 	motion_planner.o \
 	obstacle_distance_grid.o \
-	astar.o \
 	frontiers.o \
 	priority_test.o 
+	
 
 $(LIB_PLANNING): $(LIBPLANNING_OBJS) $(LIBDEPS)
 	@echo "    $@"
@@ -45,7 +46,7 @@ $(BIN_EXPLORATION): exploration.o exploration_main.o $(LIBDEPS) $(LIB_PLANNING)
 	@echo "    $@"
 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(CXXFLAGS) $(LDFLAGS)
 
-$(BIN_PRIORITY_TEST): priority.o priority_test.o $(LIBDEPS) $(LIB_PLANNING)
+$(BIN_PRIORITY_TEST): priority_test.o priority.o $(LIBDEPS) $(LIB_PLANNING)
 	@echo "    $@"
 	@$(CXX) -o $@ $^ $(LIB_PLANNING) $(LDFLAGS) $(CXXFLAGS)
 

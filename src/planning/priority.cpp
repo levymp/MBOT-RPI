@@ -5,7 +5,7 @@ void print_struct(Grid_Astar Grid_Astar_value){
     std::cout << "DISTANCE: "<< Grid_Astar_value.distance << std::endl;
     std::cout << "PRIORITY: "<< Grid_Astar_value.priority << std::endl;
     std::cout << "VISITED: "<< Grid_Astar_value.visited << std::endl;
-    std::cout << "POINT: "<< Grid_Astar_value.grid_position << std::endl;
+    std::cout << "POINT: "<< Grid_Astar_value.cell_pos << std::endl;
     std::cout << "PARENT: "<< Grid_Astar_value.parent << std::endl;
     
 }

@@ -4,6 +4,8 @@
 #include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <planning/obstacle_distance_grid.hpp>
+#include <planning/priority.hpp>
+#include <common/grid_utils.hpp>
 
 
 class ObstacleDistanceGrid;
@@ -26,8 +28,10 @@ struct SearchParams
                                     ///< for cellDistance > minDistanceToObstacle && cellDistance < maxDistanceWithCost
 };
 
-int append_node(std::vector<Grid_Astar*> &stored_nodes);
-void get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes);
+int append_node(std::vector<Grid_Astar> &stored_nodes);
+float euc_distance(Point<int> p1, Point<int> p2);
+robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node);
+std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, std::vector<Grid_Astar*> &visit_q);
 
 
 /**

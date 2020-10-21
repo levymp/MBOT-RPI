@@ -5,7 +5,8 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
-#include <planning/astar.hpp>
+#include <common/point.hpp>
+// #include <planning/astar.hpp>
 
 
 struct Grid_Astar
@@ -32,6 +33,6 @@ struct compare_priority {
 void print_struct(Grid_Astar Grid_Astar_value);
 Grid_Astar* dequeue(std::vector<Grid_Astar*> &visit_q );
 void enqueue(std::vector<Grid_Astar*> &visit_q, Grid_Astar* new_grid);
-
+void heap(std::vector<Grid_Astar*> &visit_q);
 
 #endif // PRIORITY_ASTAR_HPP
