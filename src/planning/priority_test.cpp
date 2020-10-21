@@ -106,6 +106,11 @@ int main()
         Grid_Astar* min = dequeue(visit_q);
         std::cout << min -> priority << std::endl;
     }
+    ObstacleDistanceGrid distances;
+
+    neighbors = get_neighbors(cur_node, stored_nodes, visit_q, const &distances);
+
+
 
     return 0;
 }

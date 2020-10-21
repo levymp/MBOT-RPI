@@ -6,12 +6,11 @@ LIBDEPS  = $(call libdeps, $(LDFLAGS))
 
 LIB_PLANNING = $(LIB_PATH)/libplanning.a
 LIBPLANNING_OBJS = \
-	astar.o \
 	motion_planner.o \
 	obstacle_distance_grid.o \
 	frontiers.o \
-	priority_test.o 
-	
+	astar.o \
+	priority.o
 
 $(LIB_PLANNING): $(LIBPLANNING_OBJS) $(LIBDEPS)
 	@echo "    $@"

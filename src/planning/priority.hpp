@@ -17,7 +17,7 @@ struct Grid_Astar
     bool visited;                   //< flag for whether node has been visited
     bool in_visit_queue;             //< flag for whether node is in the visit queue
     Grid_Astar* parent;                 //< Parent
-    Grid_Astar(): cell_pos(0,0), distance(10000000), priority(-5), visited(false), in_visit_queue(false), parent(NULL){} //< initialization
+    Grid_Astar(): cell_pos(0,0), distance(10000000.0), priority(5000000.0), visited(false), in_visit_queue(false), parent(nullptr){} //< initialization
 };
 
 
@@ -27,8 +27,6 @@ struct compare_priority {
         return ((lhs -> priority) >= (rhs -> priority));
     }
 };
-
-
 
 void print_struct(Grid_Astar Grid_Astar_value);
 Grid_Astar* dequeue(std::vector<Grid_Astar*> &visit_q );
