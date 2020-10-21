@@ -75,7 +75,8 @@ private:
     struct location{
         int x; // x cell
         int y; // y cell
-        location(): x(-1), y(-1){}
+        location(): x(-1), y(-1){};
+        location(int i, int j): x(i), y(j){}
     };
     std::vector<float> cells_;          ///< The actual grid -- stored in row-major order
     std::vector<int> visited_;

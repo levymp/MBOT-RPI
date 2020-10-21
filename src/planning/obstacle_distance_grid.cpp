@@ -38,44 +38,17 @@ float ObstacleDistanceGrid::getMinScore(const OccupancyGrid &map, int x, int y){
     // If the cell hasn't been scored yet, mark it as something really high
     //  Otherwise, adjust its distance score to properly compare to scores of neighbor cells
     float min_score = (distance(x,y) > 0) ? distance(x,y)-metersPerCell() : 1000;
-    
-    // Neighbor cell locations
-    location north, south, east, west, northeast, southeast, southwest, northwest;
-    north.x = x; north.y = y-1;
-    south.x = x; south.y = y+1;
-    east.x = x+1; east.y = y;
-    west.x = x-1; west.y = y;
-    northeast.x = east.x; northeast.y = north.y;
-    southeast.x = east.x; southeast.y = south.y;
-    southwest.x = west.x; southwest.y = south.y;
-    northwest.x = west.x; northwest.y = north.y; // # Kanye 2020 
-    
-    // For a neighbor that has been previously scored & isn't an obstacle
-    //  check if there is an obstacle closer to us than our previous best estimate
-    if(isCellScored(map, north.x,north.y) && distance(north.x,north.y) < min_score){
-        min_score = distance(north.x,north.y);
-    }
-    if(isCellScored(map,south.x,south.y) && distance(south.x,south.y) < min_score){
-        min_score = distance(south.x,south.y);
-    }
-    if(isCellScored(map,east.x,east.y) && distance(east.x,east.y) < min_score){;
-        min_score = distance(east.x,east.y);
-    }
-    if(isCellScored(map,west.x,west.y) && distance(west.x,west.y) < min_score){
-        min_score = distance(west.x,west.y);
-    }
-    // Check diagonals
-    if(isCellScored(map,northeast.x,northeast.y) && distance(northeast.x,northeast.y) < min_score){
-        min_score = distance(northeast.x,northeast.y);
-    }
-    if(isCellScored(map,southeast.x,southeast.y) && distance(southeast.x,southeast.y) < min_score){
-        min_score = distance(southeast.x,southeast.y);
-    }
-    if(isCellScored(map,southwest.x,southwest.y) && distance(southwest.x,southwest.y) < min_score){;
-        min_score = distance(southwest.x,southwest.y);
-    }
-    if(isCellScored(map,northwest.x,northwest.y) && distance(northwest.x,northwest.y) < min_score){
-        min_score = distance(northwest.x,northwest.y);
+
+     /* Go through neighbors and skip current cell
+     *  For a valid cell, that is in free space, and has been visited:
+     *  update distance score IF it is closer to an obstacle than previous min
+     */
+    for(int row = y-1; row <= y+1; row++){
+        for(int col = x-1; col <= x+1; col++){
+            if(!(row == y && col == x) && isCellScored(map, col, row) && distance(col,row) < min_score){
+                min_score = distance(col,row);
+            }
+        }
     }
 
     // If there are no scored neighbors, default to scoring this as close to an obstacles
@@ -93,63 +66,33 @@ float ObstacleDistanceGrid::getMinScore(const OccupancyGrid &map, int x, int y){
 void ObstacleDistanceGrid::addNeighbors(const OccupancyGrid &map, int x, int y, std::queue<location>* visit){
     float prescore = (map.logOdds(x,y) >= 0) ? metersPerCell() : 0; // initialize obstacle neighbors to metersPerCell()
 
-    // Easy access to neighbor locations
-    // FUTURE: can move this to a for-loop now that it is verified to work
-    location north, south, east, west, northeast, southeast, southwest, northwest;
-    north.x = x; north.y = y-1;
-    south.x = x; south.y = y+1;
-    east.x = x+1; east.y = y;
-    west.x = x-1; west.y = y;
-    northeast.x = east.x; northeast.y = north.y;
-    southeast.x = east.x; southeast.y = south.y;
-    southwest.x = west.x; southwest.y = south.y;
-    northwest.x = west.x; northwest.y = north.y; // # Kanye 2020 
-
-    // For a valid cell, that is in free space, and has not been visited yet:
-    //  update distance score IF it is right next to a obstacle
-    //  add it to our visit queue
-    if(isCellUnscored(map, north.x,north.y)){
-        distance(north.x,north.y) = prescore;
-        visit->push(north);
-    }
-    if(isCellUnscored(map, south.x,south.y)){
-        distance(south.x,south.y) = prescore;
-        visit->push(south);
-    }
-    if(isCellUnscored(map, east.x,east.y)){
-        distance(east.x,east.y) = prescore;
-        visit->push(east);
-    }
-    if(isCellUnscored(map, west.x,west.y)){
-        distance(west.x,west.y) = prescore;
-        visit->push(west);
+    /*  Go through neighbors and skip current cell
+     *  For a valid cell, that is in free space, and has not been visited yet:
+     *  update distance score IF it is right next to a obstacle
+     *  add it to our visit queue
+     */
+    for(int row = y-1; row <= y+1; row++){
+        for(int col = x-1; col <= x+1; col++){
+            if(!(row == y && col == x) && isCellUnscored(map, col, row)){
+                distance(col,row) = prescore;
+                location tmp(col,row);
+                visit->push(tmp);
+            }
+        }
     }
 
-    // Check diagonals
-    if(isCellUnscored(map, northeast.x,northeast.y)){
-        distance(northeast.x,northeast.y) = prescore;
-        visit->push(northeast);
-    }
-    if(isCellUnscored(map, southeast.x,southeast.y)){
-        distance(southeast.x,southeast.y) = prescore;
-        visit->push(southeast);
-    }
-    if(isCellUnscored(map, southwest.x,southwest.y)){;
-        distance(southwest.x,southwest.y) = prescore;
-        visit->push(southwest);
-    }
-    if(isCellUnscored(map, northwest.x,northwest.y)){
-        distance(northwest.x,northwest.y) = prescore;
-        visit->push(northwest);
-    }
-    
 }
 
 void ObstacleDistanceGrid::setDistances(const OccupancyGrid& map)
 {
     resetGrid(map);
-    
-    ///////////// TODO: Implement an algorithm to mark the distance to the nearest obstacle for every cell in the map.
+    // Reset visited and distance vectors
+    for(int x = 0; x < width_; x++){
+        for(int y = 0; y < height_; y++){
+            distance(x,y) = 0.0f;
+            visited(x,y) = false;
+        }
+    }
     
     std::queue<location> visit;    // locations to visit
 
@@ -161,7 +104,7 @@ void ObstacleDistanceGrid::setDistances(const OccupancyGrid& map)
     // back to them
     for(int x = 0; x < w; x++){
         for(int y = 0; y < h; y++){
-            if(visited(x,y) == true){
+            if(visited(x,y)){
                 continue;
             }
             location cur_loc;
@@ -227,11 +170,11 @@ void ObstacleDistanceGrid::resetGrid(const OccupancyGrid& map)
     cellsPerMeter_ = map.cellsPerMeter();
     globalOrigin_ = map.originInGlobalFrame();
     
-    // // If the grid is already the correct size, nothing needs to be done
-    // if((width_ == map.widthInCells()) && (height_ == map.heightInCells()))
-    // {
-    //     return;
-    // }
+    // If the grid is already the correct size, nothing needs to be done
+    if((width_ == map.widthInCells()) && (height_ == map.heightInCells()))
+    {
+        return;
+    }
     
     // Otherwise, resize the vector that is storing the data
     width_ = map.widthInCells();
@@ -239,10 +182,5 @@ void ObstacleDistanceGrid::resetGrid(const OccupancyGrid& map)
     
     cells_.resize(width_ * height_);
     visited_.resize(width_ * height_);
-    for(int x = 0; x < width_; x++){
-        for(int y = 0; y < height_; y++){
-            distance(x,y) = 0.0f;
-            visited(x,y) = false;
-        }
-    }
+    
 }
