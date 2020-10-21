@@ -107,9 +107,9 @@ void ObstacleDistanceGrid::setDistances(const OccupancyGrid& map)
             if(visited(x,y)){
                 continue;
             }
-            location cur_loc;
-            cur_loc.x = x;
-            cur_loc.y = y;
+            location cur_loc(x,y);
+            // cur_loc.x = x;
+            // cur_loc.y = y;
             if(map.logOdds(x,y) >= 0){
                 distance(x,y) = 0.0f;
                 visited(x,y) = true;
