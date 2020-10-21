@@ -17,7 +17,7 @@ bool ObstacleDistanceGrid::isCellScored(const OccupancyGrid &map, int x, int y){
 }
 
 /*
- * Check if a cell is unscored (e.g., something in the grid and in free-space, and not visited)
+ * Check if a cell is unscored (e.g., something in the grid and in free-space, and not scored)
  */
 bool ObstacleDistanceGrid::isCellUnscored(const OccupancyGrid &map, int x, int y){
     return isCellInGrid(x,y) && map.logOdds(x,y) < 0 && distance(x,y) == 0;
@@ -25,12 +25,21 @@ bool ObstacleDistanceGrid::isCellUnscored(const OccupancyGrid &map, int x, int y
 
 /*
  * Return the min score from all the neighbors
+ * 
+ * this is the distance from nearest obstacle
  */
 float ObstacleDistanceGrid::getMinScore(const OccupancyGrid &map, int x, int y){
+    
+    // If the cell is an obstacle, it's score is 0
     if(map.logOdds(x,y) >= 0){
         return 0;
     }
+
+    // If the cell hasn't been scored yet, mark it as something really high
+    //  Otherwise, adjust its distance score to properly compare to scores of neighbor cells
     float min_score = (distance(x,y) > 0) ? distance(x,y)-metersPerCell() : 1000;
+    
+    // Neighbor cell locations
     location north, south, east, west, northeast, southeast, southwest, northwest;
     north.x = x; north.y = y-1;
     south.x = x; south.y = y+1;
@@ -40,7 +49,9 @@ float ObstacleDistanceGrid::getMinScore(const OccupancyGrid &map, int x, int y){
     southeast.x = east.x; southeast.y = south.y;
     southwest.x = west.x; southwest.y = south.y;
     northwest.x = west.x; northwest.y = north.y; // # Kanye 2020 
-    // Check NSEW
+    
+    // For a neighbor that has been previously scored & isn't an obstacle
+    //  check if there is an obstacle closer to us than our previous best estimate
     if(isCellScored(map, north.x,north.y) && distance(north.x,north.y) < min_score){
         min_score = distance(north.x,north.y);
     }
@@ -66,12 +77,24 @@ float ObstacleDistanceGrid::getMinScore(const OccupancyGrid &map, int x, int y){
     if(isCellScored(map,northwest.x,northwest.y) && distance(northwest.x,northwest.y) < min_score){
         min_score = distance(northwest.x,northwest.y);
     }
+
+    // If there are no scored neighbors, default to scoring this as close to an obstacles
+    // o/w mark the distance as our best estimate + metersPerCell() offset
     min_score = (min_score == 1000) ? metersPerCell() : (min_score+metersPerCell()); // return at least metersPerCell() for a cell that is in free space
     return min_score;
 }
 
+/*
+ *  Add all box neighbors of a given cell to the visit queue
+ *  
+ *  This checks to see that neighbors are in free-space, and haven't been scored already.
+ *  Also, for the initial neighbors of obstacles, this will initialize their distance to metersPerCell()
+ */
 void ObstacleDistanceGrid::addNeighbors(const OccupancyGrid &map, int x, int y, std::queue<location>* visit){
-    float prescore = (map.logOdds(x,y) >= 0) ? metersPerCell() : 0;
+    float prescore = (map.logOdds(x,y) >= 0) ? metersPerCell() : 0; // initialize obstacle neighbors to metersPerCell()
+
+    // Easy access to neighbor locations
+    // FUTURE: can move this to a for-loop now that it is verified to work
     location north, south, east, west, northeast, southeast, southwest, northwest;
     north.x = x; north.y = y-1;
     south.x = x; south.y = y+1;
@@ -81,10 +104,10 @@ void ObstacleDistanceGrid::addNeighbors(const OccupancyGrid &map, int x, int y, 
     southeast.x = east.x; southeast.y = south.y;
     southwest.x = west.x; southwest.y = south.y;
     northwest.x = west.x; northwest.y = north.y; // # Kanye 2020 
+
     // For a valid cell, that is in free space, and has not been visited yet:
-    //  calculated distance score
-    //  mark as visited
-    //  visit its neighboring cells
+    //  update distance score IF it is right next to a obstacle
+    //  add it to our visit queue
     if(isCellUnscored(map, north.x,north.y)){
         distance(north.x,north.y) = prescore;
         visit->push(north);
@@ -133,8 +156,9 @@ void ObstacleDistanceGrid::setDistances(const OccupancyGrid& map)
     int w = map.widthInCells();
     int h = map.heightInCells();
     
-    // Loop through all grid points, and mark if they are occupied or not
-    // If not occupied, store them to visit later
+    // Loop through all grid points, and mark if they are occupied
+    // If something is occupied, add its freespace neighbors to a visit queue so we can come
+    // back to them
     for(int x = 0; x < w; x++){
         for(int y = 0; y < h; y++){
             if(visited(x,y) == true){
@@ -150,33 +174,42 @@ void ObstacleDistanceGrid::setDistances(const OccupancyGrid& map)
             }
         }
     }
-    // std::cout << (visit.size()) << std::endl;
+
+    // Now start to loop through all the free-space cells
+    // This will start with neighbors of obstacles, and branch out from there
     while(!visit.empty()){
+
+        // Get curent cell location data
         location cur_loc = visit.front();
         int x = cur_loc.x;
         int y = cur_loc.y;
 
-        // std::cout << "debug post location " << std::endl;
+        // Make sure that we haven't visited this cell before
+        // if we have, skip this & remove it from the visit queue
         if(!visited(x,y)){
-            // std::cout << "debug inside if statement" << std::endl;
             visited(x,y) = true;
+
+            // If we haven't scored this node already, calculate its score
+            //      This mainly comes in for the initial set of obstacle neighbors
             distance(x,y) = (distance(x,y) > 0) ? distance(x,y) : getMinScore(map,x,y);
-            visit.pop();
-            addNeighbors(map, x, y, &visit);
+            visit.pop(); // we've visited this cell, so can remove
+            addNeighbors(map, x, y, &visit); // add this cell's neighbors to our visit queue
         }
         else{
             visit.pop();
         }
     }
-    int num_unvisited = 0;
-    for(int x = 0; x < w; x++){
-        for(int y = 0; y < h; y++){
-            if(visited(x,y) == false){
-                num_unvisited++;
-            }
-        }
-    }
-    std::cout << num_unvisited << " unvisited cells found" << std:: endl;
+
+    // // Useful to debug; double checking we visited all the cells
+    // int num_unvisited = 0;
+    // for(int x = 0; x < w; x++){
+    //     for(int y = 0; y < h; y++){
+    //         if(visited(x,y) == false){
+    //             num_unvisited++;
+    //         }
+    //     }
+    // }
+    // std::cout << num_unvisited << " unvisited cells found" << std:: endl;
 
 }
 
