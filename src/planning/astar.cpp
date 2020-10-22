@@ -66,8 +66,10 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
 
         // go to next node
         node = node -> parent;
+        path.path_length++;
     }
     path.path.insert(path.path.begin(), start);
+    path.path_length++;
     return path;
 }
 
@@ -160,10 +162,10 @@ robot_path_t search_for_path(pose_xyt_t start,
 
     // setup stored_nodes
     std::vector<Grid_Astar> stored_nodes;
-    
+    stored_nodes.reserve(distances.heightInCells()*distances.widthInCells());
     // setup visit queue
     std::vector<Grid_Astar*> visit_q;
-    
+    visit_q.reserve(distances.heightInCells()*distances.widthInCells());
     // add start/end to list of points
     int start_idx, goal_idx; 
     start_idx = append_node(stored_nodes);
@@ -192,6 +194,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     Grid_Astar* cur_node; 
     cur_node = &stored_nodes[start_idx];
     
+    Point<double> verification_point = Point<double>(-2.65,5);
     while(!visit_q.empty() && cur_node -> cell_pos != stored_nodes[goal_idx].cell_pos)
     {
         // dequeue min heap
@@ -214,7 +217,7 @@ robot_path_t search_for_path(pose_xyt_t start,
         {
             // find new distance to start
             new_dist = cur_node -> distance + euc_distance(cur_node -> cell_pos, (*neighbor)-> cell_pos);
-            
+
             // if new distance is less than currently assigned distance
             if((*neighbor)->distance > new_dist){
                 // assign new parent
@@ -235,6 +238,17 @@ robot_path_t search_for_path(pose_xyt_t start,
                         std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
                     }
                 }
+
+                
+            }
+
+            if(std::abs(distance_between_points(grid_position_to_global_position(Point<double>((*neighbor) -> cell_pos), distances), verification_point)) < 0.01){
+                std::cout << "!!!!!!!!NEIGHBOR FOUND!!!!" << std::endl;
+                Grid_Astar* p = (*neighbor) -> parent;
+                std::cout << "!!!!!!!!Got pointer to parent \t cell pos:" << p->cell_pos << std::endl;
+                Point<double> p_pos = grid_position_to_global_position(Point<double>(p->cell_pos), distances);
+                std::cout << "!!!!!!!!Got parent position" << std::endl;
+                std::cout << "!!!!!!!!PARENT POSITION: " << p_pos << std::endl;
             }
             // (*neighbor)->in_visit_queue = true;
             // enqueue(visit_q, (*neighbor));
@@ -252,7 +266,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     // check if we're at the goal
     if(cur_node -> cell_pos == stored_nodes[goal_idx].cell_pos){
         std::cout << "*******---MAKING PATH!---*******" << std::endl;
-        return makepath(start, goal, cur_node, distances);
+        return return_path = makepath(start, goal, cur_node, distances);
     }else{
         // did not find a valid path!
         // returning same pose 
@@ -263,4 +277,5 @@ robot_path_t search_for_path(pose_xyt_t start,
         path.utime = start.utime;
         return path;
     }
+    
 }

@@ -20,7 +20,7 @@ bool ObstacleDistanceGrid::isCellScored(const OccupancyGrid &map, int x, int y){
  * Check if a cell is unscored (e.g., something in the grid and in free-space, and not scored)
  */
 bool ObstacleDistanceGrid::isCellUnscored(const OccupancyGrid &map, int x, int y){
-    return isCellInGrid(x,y) && map.logOdds(x,y) < 0 && distance(x,y) == 0;
+    return isCellInGrid(x,y) && map.logOdds(x,y) < 0 && distance(x,y) == 1000;
 }
 
 /*
@@ -89,7 +89,7 @@ void ObstacleDistanceGrid::setDistances(const OccupancyGrid& map)
     // Reset visited and distance vectors
     for(int x = 0; x < width_; x++){
         for(int y = 0; y < height_; y++){
-            distance(x,y) = 0.0f;
+            distance(x,y) = 1000.0f;
             visited(x,y) = false;
         }
     }
