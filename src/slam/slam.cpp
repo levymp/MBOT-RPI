@@ -76,6 +76,7 @@ void OccupancyGridSLAM::runSLAM(void)
         {
             // Then run an iteration of our SLAM algorithm
             runSLAMIteration();
+            map_.saveToFile("prevrun.map")
         }
         // Otherwise, do a quick spin while waiting for data rather than using more complicated condition variable.
         else
