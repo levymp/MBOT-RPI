@@ -242,8 +242,13 @@ void OccupancyGridSLAM::initializePosesIfNeeded(void)
         currentPose_ = previousPose_;
         currentPose_.utime  = currentScan_.times.back();
         haveInitializedPoses_ = true;
-        
-        filter_.initializeFilterAtPose(previousPose_);
+        if(mode_ != localization_only){
+            filter_.initializeFilterAtPose(previousPose_);
+        }else{
+            filter_.initializeFilterAtPoseMap(previousPose_, map_);
+        }
+        std::cout << "inited in slam.cpp\n";
+        sleep(3);
     }
     
     assert(haveInitializedPoses_);
