@@ -31,6 +31,43 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
     }
 }
 
+void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const OccupancyGrid& map)
+{
+    ///////////// TODO: Implement your method for initializing the particles in the particle filter ////////////////
+    posteriorPose_ = pose;
+    double sw = 1.0/kNumParticles_;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    int w = map.widthInCells();
+    int h = map.heightInCells();
+    vector<int[]> emptyCells;
+
+    for(int i = 0; i<w; i++){
+        for(int j = 0; j<h; j++){
+            if(map.logOdds(i, j) < 0){
+                Point<int> a;
+                a.x = i;
+                a.y = j;
+                emptyCells.push_back(a);
+            }
+        }
+    }
+
+    std::uniform_int_distribution<int> dist(0, emptyCells.size());
+
+    for(auto& p : posterior_){
+        Point<int> empty = emptyCells[dist(gen)];
+        p.pose.x = empty.x*map.metersPerCell();
+        p.pose.y = empty.y*map.metersPerCell();
+        p.pose.theta = pose.theta;
+        p.pose.utime = pose.utime;
+        p.parent_pose = p.pose;
+        p.weight = sw;
+    }
+
+}
+
 
 pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
                                         const lidar_t& laser,
