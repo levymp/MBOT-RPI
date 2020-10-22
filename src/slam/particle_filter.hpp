@@ -44,6 +44,7 @@ public:
     * \param    pose            Initial pose of the robot
     */
     void initializeFilterAtPose(const pose_xyt_t& pose);
+    void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const OccupancyGrid& map);
     
     /**
     * updateFilter increments the state estimated by the particle filter. The filter update uses the most recent
