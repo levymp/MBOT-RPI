@@ -99,7 +99,7 @@ pose_xyt_t ParticleFilter::updateFilterGuess(const pose_xyt_t&      odometry,
 {
 
     auto prior = resamplePosteriorDistribution();
-    auto proposal = prior;
+    auto proposal = computeProposalDistribution(prior);
     posterior_ = computeNormalizedPosterior(proposal, laser, map);
     posteriorPose_ = estimatePosteriorPose(posterior_);
     

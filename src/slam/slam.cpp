@@ -267,6 +267,7 @@ void OccupancyGridSLAM::updateLocalization(void)
 
         if(mode_ == localization_only && currentPose_.x == previousPose_.x && currentPose_.y == previousPose_.y){
             currentPose_  = filter_.updateFilterGuess(currentOdometry_, currentScan_, map_);
+            sleep(3);
         }
         
         auto particles = filter_.particles();
@@ -280,7 +281,7 @@ void OccupancyGridSLAM::updateLocalization(void)
 
 void OccupancyGridSLAM::updateMap(void)
 {
-    if(mode_ != localization_only || mode_ != action_only)
+    if(mode_ != localization_only)
     {
         // Process the map
         mapper_.updateMap(currentScan_, currentPose_, map_);
