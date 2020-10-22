@@ -167,6 +167,7 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
 
     std::random_device rd;
     std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(0, emptyCells.size());
 
     std::vector<double> weights;
     for(auto& p : posterior_){
