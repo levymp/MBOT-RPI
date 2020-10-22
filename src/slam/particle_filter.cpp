@@ -2,6 +2,7 @@
 #include <slam/occupancy_grid.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <common/angle_functions.hpp>
+#include <common/grid_utils.hpp>
 #include <unistd.h>
 #include <cassert>
 #include <random>
