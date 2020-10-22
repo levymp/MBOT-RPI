@@ -59,8 +59,8 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
 
     for(auto& p : posterior_){
         Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
-        p.pose.x = empty.x*map.metersPerCell();
-        p.pose.y = empty.y*map.metersPerCell();
+        p.pose.x = empty.x;
+        p.pose.y = empty.y;
         p.pose.theta = pose.theta;
         p.pose.utime = pose.utime;
         p.parent_pose = p.pose;
