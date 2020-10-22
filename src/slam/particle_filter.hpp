@@ -46,6 +46,7 @@ public:
     */
     void initializeFilterAtPose(const pose_xyt_t& pose);
     void initializeFilterAtPoseMap(const pose_xyt_t& pose, const OccupancyGrid& map);
+    void addNoise(const OccupancyGrid& map);
     
     /**
     * updateFilter increments the state estimated by the particle filter. The filter update uses the most recent
@@ -98,7 +99,6 @@ private:
     std::vector<particle_t> computeNormalizedPosterior(const std::vector<particle_t>& proposal,
                                                        const lidar_t& laser,
                                                        const OccupancyGrid&   map);
-    void addNoise(const OccupancyGrid& map);
     pose_xyt_t estimatePosteriorPose(const std::vector<particle_t>& posterior);
 };
 
