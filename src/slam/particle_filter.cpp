@@ -57,7 +57,7 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
     std::uniform_int_distribution<int> dist(0, emptyCells.size());
 
     for(auto& p : posterior_){
-        Point<int> empty = emptyCells[dist(gen)];
+        Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
         p.pose.x = empty.x*map.metersPerCell();
         p.pose.y = empty.y*map.metersPerCell();
         p.pose.theta = pose.theta;
