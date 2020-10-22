@@ -41,7 +41,7 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
 
     int w = map.widthInCells();
     int h = map.heightInCells();
-    std::vector<int[]> emptyCells;
+    std::vector<Point<int>> emptyCells;
 
     for(int i = 0; i<w; i++){
         for(int j = 0; j<h; j++){
