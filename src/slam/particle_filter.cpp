@@ -78,14 +78,13 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
     std::uniform_int_distribution<int> dist(0, emptyCells.size());
 
     for(int i = 0; i<posterior_.size(); i++){
-        if(i%6 == 0){
+        if(i%10 == 0){
             Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
             posterior_[i].pose.x = empty.x;
             posterior_[i].pose.y = empty.y;
         }
     }
 }
-
 
 
 
