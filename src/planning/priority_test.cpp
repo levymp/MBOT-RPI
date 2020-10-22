@@ -1,5 +1,6 @@
 #include <planning/priority.hpp>
 #include <iostream>
+#include <planning/astar.hpp>
 
 int main()
 {
@@ -106,9 +107,21 @@ int main()
         Grid_Astar* min = dequeue(visit_q);
         std::cout << min -> priority << std::endl;
     }
-    ObstacleDistanceGrid distances;
+    
+    // std::cout << "\n###############\n" << "INITIAL POINT:\n";
+    // print_struct(stored_nodes[0]);
+    // std::cout << "\n###############\n";
 
-    neighbors = get_neighbors(cur_node, stored_nodes, visit_q, const &distances);
+
+    // std::vector<Grid_Astar*> neighbors;
+    // neighbors = get_neighbors(&stored_nodes[0], stored_nodes, visit_q);
+    // for(int i = 0; i < (int)neighbors.size(); i++){
+    //     std::cout << "NEIGHBOR " << i << " " << neighbors[i] -> cell_pos <<  std::endl;
+        
+    // }
+
+
+
 
 
 
