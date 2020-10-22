@@ -245,7 +245,13 @@ int8_t Exploration::executeExploringMap(bool initialize)
     */
     
     /////////////////////////////// End student code ///////////////////////////////
+
     
+    if(currentPath_.path.size() < 1){
+        frontiers = find_map_frontiers(map, &robotPose, minFrontierLength);
+        currentPath_ = find_path_to_frontiers(frontiers);
+    } 
+
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
     status.utime = utime_now();
@@ -302,7 +308,9 @@ int8_t Exploration::executeReturningHome(bool initialize)
     *       (2) currentPath_.path_length > 1  :  currently following a path to the home pose
     */
     
-
+    if(currentPath_.path.size() < 1){
+        currentPath_ = A*(homePose_);
+    }
 
     /////////////////////////////// End student code ///////////////////////////////
     
