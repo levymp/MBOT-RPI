@@ -13,15 +13,19 @@ int main(int argc, char** argv)
 	lcm::LCM lcmInstance(MULTICAST_URL);
 
     cmd.trans_v = 0.0f;
-    cmd.angular_v = .2f;
+    cmd.angular_v = .3f;
     lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
 
-    sleep(3);
+    sleep(5);
+
+    cmd.trans_v = 0.1f;
+    cmd.angular_v = 0.0f;
+	lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
+
+	sleep(5);
 
     cmd.trans_v = 0.0f;
     cmd.angular_v = 0.0f;
-
-
 	lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
 
     return 0;
