@@ -1,6 +1,7 @@
 #include <common/lcm_config.h>
 #include <mbot/mbot_channels.h>
 #include <lcmtypes/robot_path_t.hpp>
+#include <lcmtypes/mbot_motor_command_t.hpp>
 #include <lcm/lcm-cpp.hpp>
 #include <iostream>
 #include <unistd.h>
