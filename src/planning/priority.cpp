@@ -10,7 +10,7 @@ void print_struct(Grid_Astar Grid_Astar_value){
 }
 
 // assumes that the visit_q is already a min heap
-Grid_Astar* dequeue(std::vector<Grid_Astar*> &visit_q )
+Grid_Astar* dequeue(std::vector<Grid_Astar*> &visit_q)
 {
     // move min to the back
     std::pop_heap(visit_q.begin(), visit_q.end(), compare_priority());

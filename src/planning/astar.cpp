@@ -13,8 +13,8 @@ int append_node(std::vector<Grid_Astar> &stored_nodes)
 float euc_distance(Point<int> p1, Point<int> p2)
 {
     float dx, dy;
-    dx = pow((p2.x - p1.x), 2);
-    dy = pow((p2.y - p1.y), 2);
+    dx = pow(((double)p2.x - p1.x), 2);
+    dy = pow(((double)p2.y - p1.y), 2);
     return sqrt(dx + dy);
 }
 
@@ -34,7 +34,9 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
     future_pose = goal;
 
     Point<double> global_position;
-
+    
+    // initialize path length
+    path.path_length = 0;
     
     // go through all nodes
     while(node != nullptr)
@@ -57,6 +59,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
         if((node -> parent)){
             std::cout << current_pose.x << '\t' << current_pose.y << '\t' << current_pose.theta << '\t' << node -> priority << '\t' << node -> visited << '\t'<< node -> distance <<std::endl;
             path.path.insert(path.path.begin(), current_pose);
+            path.path_length++;  
         }
         // set future to current
         future_pose = current_pose;
