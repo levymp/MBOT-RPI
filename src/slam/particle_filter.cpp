@@ -75,6 +75,7 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
     std::vector<particle_t> noise;
     std::random_device rd;
     std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(0, emptyCells.size());
 
     for(int i = 0; i<posterior_.size(); i++){
         if(i%6 == 0){
@@ -167,7 +168,6 @@ std::vector<particle_t> ParticleFilter::resamplePosteriorDistribution(void)
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(0, emptyCells.size());
 
     std::vector<double> weights;
     for(auto& p : posterior_){
