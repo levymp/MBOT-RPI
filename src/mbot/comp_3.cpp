@@ -10,6 +10,7 @@
 int main(int argc, char** argv)
 {
 	mbot_motor_command_t cmd;
+	lcm::LCM lcmInstance(MULTICAST_URL);
 
     cmd.trans_v = 0.0f;
     cmd.angular_v = .2f;
@@ -20,7 +21,7 @@ int main(int argc, char** argv)
     cmd.trans_v = 0.0f;
     cmd.angular_v = 0.0f;
 
-    lcm::LCM lcmInstance(MULTICAST_URL);
+
 	lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
 
     return 0;
