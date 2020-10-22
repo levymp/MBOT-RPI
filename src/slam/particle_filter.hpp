@@ -84,6 +84,7 @@ public:
 private:
     
     std::vector<particle_t> posterior_;     // The posterior distribution of particles at the end of the previous update
+    std::vector<Point<int>> emptyCells;
     pose_xyt_t posteriorPose_;              // Pose estimate associated with the posterior distribution
     
     ActionModel actionModel_;   // Action model to apply to particles on each update
@@ -96,6 +97,7 @@ private:
     std::vector<particle_t> computeNormalizedPosterior(const std::vector<particle_t>& proposal,
                                                        const lidar_t& laser,
                                                        const OccupancyGrid&   map);
+    void addNoise(const OccupancyGrid& map);
     pose_xyt_t estimatePosteriorPose(const std::vector<particle_t>& posterior);
 };
 

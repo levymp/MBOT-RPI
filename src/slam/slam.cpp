@@ -264,6 +264,9 @@ void OccupancyGridSLAM::updateLocalization(void)
         }
         else{
             currentPose_  = filter_.updateFilter(currentOdometry_, currentScan_, map_);
+            if(mode_ == localization_only){
+                filter_.addNoise(map_);
+            }
         }
         
         auto particles = filter_.particles();

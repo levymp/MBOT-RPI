@@ -42,7 +42,6 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
 
     int w = map.widthInCells();
     int h = map.heightInCells();
-    std::vector<Point<int>> emptyCells;
 
     for(int i = 0; i<w; i++){
         for(int j = 0; j<h; j++){
@@ -70,6 +69,23 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
     std::cout << "Inited particles\n";
 
 }
+
+void ParticleFilter::addNoise(const OccupancyGrid& map)
+{
+    std::vector<particle_t> noise;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    for(int i = 0; i<posterior_.size(); i++){
+        if(i%6 == 0){
+            Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
+            posterior_[i].pose.x = empty.x;
+            posterior_[i].pose.y = empty.y;
+        }
+    }
+}
+
+
 
 
 pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
