@@ -264,7 +264,7 @@ void OccupancyGridSLAM::updateLocalization(void)
         }
         else{
             currentPose_  = filter_.updateFilter(currentOdometry_, currentScan_, map_);
-            if(mode_ == localization_only){
+            if(mode_ == localization_only && currentPose_.x != previousPose_.x && currentPose_.y != previousPose_.y){
                 filter_.addNoise(map_);
             }
         }
