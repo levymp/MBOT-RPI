@@ -66,6 +66,8 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
         p.weight = sw;
     }
 
+    std::cout << "Inited particles\n";
+
 }
 
 
