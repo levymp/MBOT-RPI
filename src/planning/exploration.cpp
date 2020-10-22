@@ -246,12 +246,6 @@ int8_t Exploration::executeExploringMap(bool initialize)
     
     /////////////////////////////// End student code ///////////////////////////////
 
-    
-    if(currentPath_.path.size() < 1){
-        frontiers = find_map_frontiers(map, &robotPose, minFrontierLength);
-        currentPath_ = find_path_to_frontiers(frontiers);
-    } 
-
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
     status.utime = utime_now();
