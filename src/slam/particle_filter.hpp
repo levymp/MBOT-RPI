@@ -67,6 +67,10 @@ public:
     */
     pose_xyt_t updateFilterActionOnly(const pose_xyt_t&      odometry);
 
+    pose_xyt_t updateFilterGuess(const pose_xyt_t&      odometry,
+                                        const lidar_t& laser,
+                                        const OccupancyGrid&   map);
+
     /**
     * poseEstimate retrieves the current pose estimate computed by the filter.
     */

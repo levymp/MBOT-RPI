@@ -93,6 +93,21 @@ pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
     return posteriorPose_;
 }
 
+pose_xyt_t ParticleFilter::updateFilterGuess(const pose_xyt_t&      odometry,
+                                        const lidar_t& laser,
+                                        const OccupancyGrid&   map)
+{
+
+    auto prior = resamplePosteriorDistribution();
+    auto proposal = prior;
+    posterior_ = computeNormalizedPosterior(proposal, laser, map);
+    posteriorPose_ = estimatePosteriorPose(posterior_);
+    
+    posteriorPose_.utime = odometry.utime;
+    
+    return posteriorPose_;
+}
+
 pose_xyt_t ParticleFilter::updateFilterActionOnly(const pose_xyt_t&      odometry)
 {
     // Only update the particles if motion was detected. If the robot didn't move, then
