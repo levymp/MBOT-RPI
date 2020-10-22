@@ -22,7 +22,13 @@ int main(int argc, char** argv)
     cmd.angular_v = 0.0f;
 	lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
 
-	sleep(5);
+	sleep(2);
+
+	cmd.trans_v = -0.1f;
+    cmd.angular_v = 0.0f;
+	lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
+
+	sleep(4);
 
     cmd.trans_v = 0.0f;
     cmd.angular_v = 0.0f;
