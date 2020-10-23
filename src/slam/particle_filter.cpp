@@ -253,6 +253,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     float pavgx = 0;
     float pavgy = 0;
     int n = 0;
+    int j = 0;
 
     for(unsigned int i = 0; i<posterior.size(); i++){
         float dx = posterior[i].pose.x-avgx;
@@ -262,12 +263,15 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
             pavgy += posterior[i].pose.y;
             n++;
         }
+        if(sqrt(dx*dx + dy*dy) <= avg_range*2){
+            j++;
+        }
     }
 
     pavgx = pavgx/n;
     pavgy = pavgy/n;
 
-    stability = ((float) n)/kNumParticles_;
+    stability = ((float) j)/kNumParticles_;
     printf("st: %f\n", stability);
 
     float avgt = atan2(avgvy,avgvx);
