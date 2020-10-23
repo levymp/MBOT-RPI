@@ -159,10 +159,10 @@ robot_path_t search_for_path(pose_xyt_t start,
 
     // setup stored_nodes
     std::vector<Grid_Astar> stored_nodes;
-    stored_nodes.reserve(distances.heightInCells()*distances.widthInCells());
+    stored_nodes.reserve(2*distances.heightInCells()*distances.widthInCells());
     // setup visit queue
     std::vector<Grid_Astar*> visit_q;
-    visit_q.reserve(distances.heightInCells()*distances.widthInCells());
+    visit_q.reserve(2*distances.heightInCells()*distances.widthInCells());
     // add start/end to list of points
     int start_idx, goal_idx; 
     start_idx = append_node(stored_nodes);
@@ -218,25 +218,18 @@ robot_path_t search_for_path(pose_xyt_t start,
             // if new distance is less than currently assigned distance
             if((*neighbor)->distance > new_dist){
                 // assign new parent
-                (*neighbor)->parent = cur_node;
                 
+
+                (*neighbor)->parent = cur_node;
                 // std::cout << (*neighbor)->parent->distance << " | " <<cur_node->distance << std::endl;
                 
                 // assign new distance
+                
                 (*neighbor)->distance = new_dist;
+                
                 // assign priority
                 // initially function of distance to start and end
                 (*neighbor)->priority = new_dist + euc_distance(stored_nodes[goal_idx].cell_pos, (*neighbor)-> cell_pos);
-
-                if((*neighbor)->in_visit_queue){
-                    if(!visit_q.empty()){
-                        // reheap because priority for node has changed
-                        // std::cout << "<---------- REHEAPING ---------->   SIZE " << visit_q.size() << std::endl;
-                        std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
-                    }
-                }
-
-                
             }
 
             if(std::abs(distance_between_points(grid_position_to_global_position(Point<double>((*neighbor) -> cell_pos), distances), verification_point)) < 0.01){
@@ -256,6 +249,13 @@ robot_path_t search_for_path(pose_xyt_t start,
                 (*neighbor)->in_visit_queue = true;
                 enqueue(visit_q, (*neighbor));
             }
+            if((*neighbor)->in_visit_queue){
+                    if(!visit_q.empty()){
+                        // reheap because priority for node has changed
+                        // std::cout << "<---------- REHEAPING ---------->   SIZE " << visit_q.size() << std::endl;
+                        std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
+                    }
+            }
         }
         neighbors.clear();
     }
@@ -263,7 +263,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     // check if we're at the goal
     if(cur_node -> cell_pos == stored_nodes[goal_idx].cell_pos){
         std::cout << "*******---MAKING PATH!---*******" << std::endl;
-        return return_path = makepath(start, goal, cur_node, distances);
+        return makepath(start, goal, cur_node, distances);
     }else{
         // did not find a valid path!
         // returning same pose 
