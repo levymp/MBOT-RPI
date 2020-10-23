@@ -14,14 +14,13 @@ from lcmtypes import timestamp_t
 
 lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
 
-
 drive_command = mbot_motor_command_t()
 drive_command.trans_v = 0.5 #go 0.25m in 1s
 drive_command.angular_v = 0.0
 
 # turn_command = mbot_motor_command_t()
 # turn_command.trans_v = 0.0
-# turn_command.angular_v = 3.1415/2.0 #turn 180 in 2s
+# turn_command.angular_v = 3.1415/2.0 # turn 180 in 2s
 
 
 # stop command
