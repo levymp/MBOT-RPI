@@ -245,6 +245,13 @@ int8_t Exploration::executeExploringMap(bool initialize)
     */
     
     /////////////////////////////// End student code ///////////////////////////////
+
+    // std::cout << "For debugging: pathReceived_:" << pathReceived_ << std::endl;
+    frontiers_ = find_map_frontiers(currentMap_, currentPose_, 1);
+    if (!frontiers_.empty()) {
+         currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
+    }
+    currentPath_.utime = utime_now();
     
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
@@ -255,6 +262,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
     // If no frontiers remain, then exploration is complete
     if(frontiers_.empty())
     {
+        std::cout << "For debugging: no frontier anymore! -- from exploration.cpp" << std::endl;
         status.status = exploration_status_t::STATUS_COMPLETE;
     }
     // Else if there's a path to follow, then we're still in the process of exploring
@@ -264,7 +272,9 @@ int8_t Exploration::executeExploringMap(bool initialize)
     }
     // Otherwise, there are frontiers, but no valid path exists, so exploration has failed
     else
-    {
+    {   
+        std::cout << "For debugging: there are frontiers, but no valid path exists" << std::endl;
+        std::cout << "For debugging: currentPath_.path.size() = " << currentPath_.path.size() << std::endl;
         status.status = exploration_status_t::STATUS_FAILED;
     }
     
@@ -301,8 +311,13 @@ int8_t Exploration::executeReturningHome(bool initialize)
     *       (1) dist(currentPose_, targetPose_) < kReachedPositionThreshold  :  reached the home pose
     *       (2) currentPath_.path_length > 1  :  currently following a path to the home pose
     */
-    
-
+    robot_path_t path;
+    path.path.resize(2);
+    path.path[0] = currentPose_;
+    path.path[1] = homePose_;
+    path.path_length = 2;
+    currentPath_ = path;
+    currentPath_.utime = utime_now();
 
     /////////////////////////////// End student code ///////////////////////////////
     
@@ -317,6 +332,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
     // If we're within the threshold of home, then we're done.
     if(distToHome <= kReachedPositionThreshold)
     {
+        std::cout << "For debugging: already closed to the home pose" << std::endl;
         status.status = exploration_status_t::STATUS_COMPLETE;
     }
     // Otherwise, if there's a path, then keep following it
@@ -327,6 +343,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
     // Else, there's no valid path to follow and we aren't home, so we have failed.
     else
     {
+        std::cout << "For debugging: no valid path and are not closed to home" << std::endl;
         status.status = exploration_status_t::STATUS_FAILED;
     }
     
@@ -337,7 +354,11 @@ int8_t Exploration::executeReturningHome(bool initialize)
     {
         return exploration_status_t::STATE_RETURNING_HOME;
     }
-    else // if(status.status == exploration_status_t::STATUS_FAILED)
+    else if(status.status = exploration_status_t::STATUS_COMPLETE)
+    {
+        return exploration_status_t::STATE_COMPLETED_EXPLORATION;
+    }
+    else //if(status.status == exploration_status_t::STATUS_FAILED)
     {
         return exploration_status_t::STATE_FAILED_EXPLORATION;
     }
