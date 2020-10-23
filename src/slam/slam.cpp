@@ -2,6 +2,7 @@
 #include <slam/slam_channels.h>
 #include <mbot/mbot_channels.h>
 #include <optitrack/optitrack_channels.h>
+#include <slam/moving_laser_scan.hpp>
 #include <unistd.h>
 #include <cassert>
 #include <chrono>
@@ -303,7 +304,6 @@ void OccupancyGridSLAM::updateMap(void)
 
 void OccupancyGridSLAM::exploreRandom(void)
 {
-    currentScan_
     float score = 0;
     MovingLaserScan mvscan(currentScan_, currentPose_.parent_pose, currentPose_.pose);
 
