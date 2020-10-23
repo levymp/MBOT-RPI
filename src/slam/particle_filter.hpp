@@ -47,7 +47,7 @@ public:
     void initializeFilterAtPose(const pose_xyt_t& pose);
     void initializeFilterAtPoseMap(const pose_xyt_t& pose, const OccupancyGrid& map);
     void addNoise(const OccupancyGrid& map);
-    
+
     /**
     * updateFilter increments the state estimated by the particle filter. The filter update uses the most recent
     * odometry estimate and laser scan along with the occupancy grid map to estimate the new pose of the robot.
@@ -91,6 +91,8 @@ private:
     
     ActionModel actionModel_;   // Action model to apply to particles on each update
     SensorModel sensorModel_;   // Sensor model to compute particle weights
+
+    float stability;
     
     int kNumParticles_;         // Number of particles to use for estimating the pose
     
