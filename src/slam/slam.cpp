@@ -1,6 +1,7 @@
 #include <slam/slam.hpp>
 #include <slam/slam_channels.h>
 #include <mbot/mbot_channels.h>
+#include <lcmtypes/mbot_motor_command_t.hpp>
 #include <optitrack/optitrack_channels.h>
 #include <slam/moving_laser_scan.hpp>
 #include <unistd.h>
@@ -317,6 +318,7 @@ void OccupancyGridSLAM::exploreRandom(void)
             }
         }
     }
+
     mbot_motor_command_t cmd;
     lcm::LCM lcmInstance(MULTICAST_URL);
 
