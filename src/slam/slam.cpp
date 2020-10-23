@@ -299,3 +299,35 @@ void OccupancyGridSLAM::updateMap(void)
 
     ++mapUpdateCount_;
 }
+
+
+void OccupancyGridSLAM::exploreRandom(void)
+{
+    currentScan_
+    float score = 0;
+    MovingLaserScan mvscan(currentScan_, currentPose_.parent_pose, currentPose_.pose);
+
+    bool fwdflg = false;
+    for(const auto& ray : mvscan){
+        if(ray.theta > -.02 || ray.theta < .02){
+            if(ray.range < 1.0f){
+                fwdflg = false;
+            else{
+                fwdflg = true;
+            }
+        }
+    }
+    mbot_motor_command_t cmd;
+    lcm::LCM lcmInstance(MULTICAST_URL);
+
+    if(fwdflg){
+        cmd.trans_v = 0.1f;
+        cmd.angular_v = 0.0f;  
+    }else{
+        cmd.trans_v = 0.0f;
+        cmd.angular_v = .3f;
+    }
+    
+    lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
+}
+

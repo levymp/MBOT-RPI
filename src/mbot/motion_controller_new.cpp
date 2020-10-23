@@ -302,6 +302,7 @@ int main(int argc, char** argv)
     lcmInstance.subscribe(MBOT_TIMESYNC_CHANNEL, &MotionController::handleTimesync, &controller);
 
     signal(SIGINT, exit);
+    bool zeroflg = false;
     
     while(true)
     {
@@ -310,7 +311,16 @@ int main(int argc, char** argv)
     	if(controller.timesync_initialized()){
             	mbot_motor_command_t cmd = controller.updateCommand();
 
-            	lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
+                if(cmd.angular_v != 0.0f || cmd.trans_v != 0.0f){
+                    zeroflg = false;
+                }
+                if(!zeroflg){
+            	   lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
+
+                    if(cmd.angular_v == 0.0f && cmd.trans_v == 0.0f){
+                        zeroflg = true;
+                    }
+                }
     	}
     }
     
