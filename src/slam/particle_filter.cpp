@@ -267,7 +267,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     pavgx = pavgx/n;
     pavgy = pavgy/n;
 
-    stability = n/kNumParticles_;
+    stability = ((float) n)/kNumParticles_;
     printf("st: %f\n", stability);
 
     float avgt = atan2(avgvy,avgvx);
