@@ -16,21 +16,21 @@ int main(int argc, char** argv)
         numTimes = std::atoi(argv[1]);
     }
     
-    float square_size = 0.75f;
+    float square_size = 1.0f;
 
     std::cout << "Commanding robot to drive around " << square_size << "m square " << numTimes << " times.\n";
     
     robot_path_t path;
-    path.path.resize(numTimes * 8);
+    path.path.resize(numTimes * 8 + 1);
     
     pose_xyt_t nextPose;
-    
-    nextPose.x = .75*square_size;
+
+    nextPose.x = square_size*.5;
     nextPose.y = 0.0f;
-    nextPose.theta = 0.0;
+    nextPose.theta = 0.0f;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n] = nextPose;
+        path.path[8*n + 1] = nextPose;
     }
 
     nextPose.x = square_size;
@@ -38,30 +38,31 @@ int main(int argc, char** argv)
     nextPose.theta = M_PI_2;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n + 1] = nextPose;
+        path.path[8*n + 2] = nextPose;
     }
-    
+
     nextPose.x = square_size;
-    nextPose.y = .75*square_size;
+    nextPose.y = square_size*.5;
     nextPose.theta = M_PI_2;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n + 2] = nextPose;
+        path.path[8*n + 3] = nextPose;
     }
+    
     nextPose.x = square_size;
     nextPose.y = square_size;
-    nextPose.theta = -M_PI;
+    nextPose.theta = M_PI;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n + 3] = nextPose;
+        path.path[8*n + 4] = nextPose;
     }
-    
-    nextPose.x = .25*square_size;
+
+    nextPose.x = square_size*.5;
     nextPose.y = square_size;
-    nextPose.theta = -M_PI;
+    nextPose.theta = M_PI;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n + 4] = nextPose;
+        path.path[8*n + 5] = nextPose;
     }
 
     nextPose.x = 0.0f;
@@ -69,23 +70,23 @@ int main(int argc, char** argv)
     nextPose.theta = -M_PI_2;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n + 5] = nextPose;
+        path.path[8*n + 6] = nextPose;
     }
-    
+
     nextPose.x = 0.0f;
-    nextPose.y = 0.75*square_size;
+    nextPose.y = square_size*.5;
     nextPose.theta = -M_PI_2;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n + 6] = nextPose;
+        path.path[8*n + 7] = nextPose;
     }
-
+    
     nextPose.x = 0.0f;
     nextPose.y = 0.0f;
-    nextPose.theta = -M_PI_2;
+    nextPose.theta = 0.0f;
     for(int n = 0; n < numTimes; ++n)
     {
-        path.path[4*n + 7] = nextPose;
+        path.path[8*n + 8] = nextPose;
     }
     
     // Return to original heading after completing all circuits

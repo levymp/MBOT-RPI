@@ -83,8 +83,8 @@ public:
         
         
         const float kd = 0.75f; // distance coefficients
-        const float kb = -0.2f; // goal pose coefficient
-        const float ka = 1.75*(2.0/3.14*kd - 1.66*kb); // heading coefficient
+        const float kb = -.005f; // goal pose coefficient
+        const float ka = 3; // heading coefficient
         
         mbot_motor_command_t cmd;
 
@@ -127,6 +127,16 @@ public:
 
             cmd.trans_v = clamp_speed(kd*distToGoal);
             cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.5);
+            
+            if(distToGoal < .025){
+                cmd.trans_v = 0;
+                alpha = angle_diff(target.theta, pose.theta);
+                cmd.angular_v = clamp_speed(ka*alpha, .5);
+            }
+
+            if(!(abs(alpha) < M_PI_2)){
+                cmd.trans_v *= -1.0;
+            }
         }
         
         return cmd;
@@ -209,7 +219,7 @@ private:
 
     bool haveReachedTarget(void)
     {
-        const float kPosTolerance = 0.05f;
+        const float kPosTolerance = 0.1f;
 	    const float kFinalPosTolerance = 0.025f;
 
         //tolerance for intermediate waypoints can be more lenient

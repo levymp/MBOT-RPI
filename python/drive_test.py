@@ -19,7 +19,7 @@ stop_command.trans_v = 0.0
 stop_command.angular_v = 0.0
 
 drive_command = mbot_motor_command_t()
-drive_command.trans_v = 0.25 #go 0.25m in 1s
+drive_command.trans_v = 0.5 #go 0.25m in 1s
 drive_command.angular_v = 0.0
 
 turn_command = mbot_motor_command_t()
