@@ -269,6 +269,9 @@ void OccupancyGridSLAM::updateLocalization(void)
             if(mode_ == localization_only && currentPose_.x != previousPose_.x && currentPose_.y != previousPose_.y){
                 filter_.addNoise(map_);
             }
+            if(mode_ == localization_only){
+                exploreRandom();
+            }
         }
         
         auto particles = filter_.particles();
