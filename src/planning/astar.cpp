@@ -119,10 +119,10 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
                         break;
                     }else{
                         // don't append to neighbors (already been visited)
+                        std::cout << "FOUND SOMETHING THAT HAS ALREADY BEEN VISITED\n";
                         k = -100;
                         break;
-                    }
-                    
+                    }   
                 }
                 // append counter
                 k++;
@@ -131,10 +131,12 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // assign grid position of neighbor
             // if iterator is not equal to end then just add pointer to current value
             if(it != stored_nodes.end()){
+                
                 neighbors.push_back(&(stored_nodes[k]));
             }
             // ensure that neighbor hasn't been visited before
             else if(k != -100){
+                std::cout << "UH OHHHH!!! WE DIDN'T FIND IN STORED NODES!\n";
                 // append a new Grid_Astar object to stored_nodes
                 int node_index = append_node(stored_nodes);
                 // write the position
@@ -145,6 +147,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
         }
     }
     // return list of index of neighbors
+    std::cout << "----FOUND " << neighbors.size() << "NEIGHBORS ----\n"<< std::endl; 
     return neighbors;
 }
 
@@ -162,46 +165,56 @@ robot_path_t search_for_path(pose_xyt_t start,
 
     // setup stored_nodes
     std::vector<Grid_Astar> stored_nodes;
+    // stored_nodes.reserve(distances.heightInCells() * distances.widthInCells());
 
-    // 
-    stored_nodes.reserve(distances.heightInCells() * distances.widthInCells());
+    // find start/goal cell position 
+    Point<int> start_pos, goal_pos, cur_pos;
 
-    // std::cout << "STORED NODES" << "BEFORE Loop ^" << "AFTER Loop..." << std::endl;
-    
-    // write all cell positions
-    int iind, jind;
-    for(iind= 0; iind < distances.widthInCells(); iind++ ){
+    // find start and goal position
+    start_pos = global_position_to_grid_cell(Point<double>(start.x, start.y), distances);
+    goal_pos = global_position_to_grid_cell(Point<double>(goal.x, goal.y), distances);
+
+
+    // start and end flag
+    bool start_flg = false; 
+    bool goal_flg = false; 
+
+    // indicies
+    int iind, jind, node_idx, start_idx, goal_idx;
+    node_idx = 0;
+    for(iind= 0; iind < distances.widthInCells(); iind++){
         for(jind= 0; jind < distances.heightInCells(); jind++){
-            stored_nodes.push_back(Grid_Astar(Point<int>(iind, jind)));
+            // write current position
+            cur_pos = Point<int>(iind, jind);
+            
+            // append to stored nodes
+            stored_nodes.push_back(Grid_Astar(cur_pos));
+            
+            // check if end or goal
+            if(cur_pos == start_pos){
+                // assign start values
+                // assign distance
+                start_flg = true; 
+                stored_nodes[node_idx].distance = 0;
+                stored_nodes[node_idx].parent = nullptr;
+                stored_nodes[node_idx].priority = euc_distance(start_pos, goal_pos);                
+                start_idx = node_idx;
+            }else if(cur_pos == goal_pos){
+                goal_flg = true;
+                goal_idx = node_idx;
+
+            }
+            // append index
+            node_idx++;
         }
     }
-    // std::cout << stored_nodes.size() << '\t' << stored_nodes.max_size() << '\t' << std::endl;
-
 
     // setup visit queue
     std::vector<Grid_Astar*> visit_q;
-    // std::cout << visit_q.size() << '\t' << visit_q.max_size() << '\t' << std::endl;
-
-    visit_q.reserve(distances.heightInCells()*distances.widthInCells());
-
-    // std::cout << "VISIT QUEUE" <<"BEFORE RESERVE ^" << "AFTER RESERVE..." << std::endl;
-    // std::cout << visit_q.size() << '\t' << visit_q.max_size() << '\t' << std::endl;
-
-    // add start/end to list of points
-    int start_idx, goal_idx; 
-    start_idx = append_node(stored_nodes);
-    goal_idx = append_node(stored_nodes);
-    
-    // set distance to start and cell_pos
-    stored_nodes[start_idx].distance = 0;
-    stored_nodes[start_idx].cell_pos = global_position_to_grid_cell(Point<double>(start.x, start.y), distances);
-    stored_nodes[start_idx].parent = nullptr;
-
-    // set goal node
-    stored_nodes[goal_idx].cell_pos = global_position_to_grid_cell(Point<double>(goal.x, goal.y), distances);
+    // visit_q.reserve(distances.heightInCells()*distances.widthInCells());
 
     // check if start/goal are in the grid
-    if(!distances.isCellInGrid(stored_nodes[start_idx].cell_pos.x, stored_nodes[start_idx].cell_pos.y) || !distances.isCellInGrid(stored_nodes[goal_idx].cell_pos.x, stored_nodes[goal_idx].cell_pos.y)){
+    if(!start_flg || !goal_flg || !distances.isCellInGrid(stored_nodes[start_idx].cell_pos.x, stored_nodes[start_idx].cell_pos.y) || !distances.isCellInGrid(stored_nodes[goal_idx].cell_pos.x, stored_nodes[goal_idx].cell_pos.y)){
         std::cout << "START/GOAL NOT IN GRID" << std::endl; 
     }else{
         // add start position to the empty priority queue
@@ -220,6 +233,12 @@ robot_path_t search_for_path(pose_xyt_t start,
     {
         // dequeue min heap
         cur_node = dequeue(visit_q);
+        std::cout << "------------CURRENT NODE:-----------\n";
+
+        print_struct(*cur_node);
+
+
+
         cur_node -> in_visit_queue = false;
 
         // check if node has been visited before (if it has then we don't need to do anything further)
@@ -232,12 +251,17 @@ robot_path_t search_for_path(pose_xyt_t start,
 
         // get neighbors 
         neighbors = get_neighbors(cur_node, stored_nodes, visit_q, distances);
+
         float new_dist;
         // std::cout << "-----GETTING NEIGHBORS-----" << std::endl;
         for(std::vector<Grid_Astar*>::iterator neighbor = neighbors.begin(); neighbor != neighbors.end(); ++neighbor)
         {
+            std::cout << "------NEIGHBOR FOR--------- " << cur_node -> cell_pos << std::endl;
+            print_struct(**neighbor);
+
             // find new distance to start
-            new_dist = cur_node -> distance + euc_distance(cur_node -> cell_pos, (*neighbor)-> cell_pos);
+            new_dist = cur_node -> distance;
+            new_dist += euc_distance(cur_node -> cell_pos, (*neighbor)-> cell_pos);
 
             // if new distance is less than currently assigned distance
             if((*neighbor)->distance > new_dist){
@@ -255,7 +279,7 @@ robot_path_t search_for_path(pose_xyt_t start,
                 if((*neighbor)->in_visit_queue){
                     if(!visit_q.empty()){
                         // reheap because priority for node has changed
-                        // std::cout << "<---------- REHEAPING ---------->   SIZE " << visit_q.size() << std::endl;
+                        std::cout << "<---------- REHEAPING ---------->   SIZE " << visit_q.size() << std::endl;
                         std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
                     }
                 }
@@ -274,7 +298,7 @@ robot_path_t search_for_path(pose_xyt_t start,
 
             if(!(*neighbor)->in_visit_queue){
                 // put in visit queue
-                // std::cout <<     "<----- ADDING TO VISIT QUEUE -----> SIZE " << visit_q.size() << std::endl;
+                std::cout <<     "<----- ADDING TO VISIT QUEUE -----> SIZE " << visit_q.size() <<std::endl;
                 (*neighbor)->in_visit_queue = true;
                 enqueue(visit_q, (*neighbor));
             }
