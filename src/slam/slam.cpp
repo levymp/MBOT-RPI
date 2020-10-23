@@ -305,7 +305,7 @@ void OccupancyGridSLAM::updateMap(void)
 void OccupancyGridSLAM::exploreRandom(void)
 {
     float score = 0;
-    MovingLaserScan mvscan(currentScan_, currentPose_.parent_pose, currentPose_.pose);
+    MovingLaserScan mvscan(currentScan_, previousPose_, currentPose_);
 
     bool fwdflg = false;
     for(const auto& ray : mvscan){
