@@ -313,7 +313,7 @@ void OccupancyGridSLAM::exploreRandom(void)
         if(ray.theta > -.02 || ray.theta < .02){
             if(ray.range < 1.0f){
                 fwdflg = false;
-            else{
+            }else{
                 fwdflg = true;
             }
         }
