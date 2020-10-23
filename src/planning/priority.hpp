@@ -18,6 +18,7 @@ struct Grid_Astar
     bool in_visit_queue;             //< flag for whether node is in the visit queue
     Grid_Astar* parent;                 //< Parent
     Grid_Astar(): cell_pos(0,0), distance(10000000.0), priority(5000000.0), visited(false), in_visit_queue(false), parent(nullptr){} //< initialization
+    Grid_Astar(Point<int> cell_pos): cell_pos(cell_pos), distance(10000000.0), priority(5000000.0), visited(false), in_visit_queue(false), parent(nullptr){} //< initialization
 };
 
 

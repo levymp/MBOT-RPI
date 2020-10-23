@@ -119,11 +119,9 @@ int main()
     //     std::cout << "NEIGHBOR " << i << " " << neighbors[i] -> cell_pos <<  std::endl;
         
     // }
-
-
-
-
-
+    Grid_Astar tst = Grid_Astar(Point<int>(1,2));
+    Grid_Astar tst1 = Grid_Astar();
+    std::cout << "\n\n\nTEST: " << tst.cell_pos <<  " OTHER "<< tst1.cell_pos << std::endl;
 
     return 0;
 }

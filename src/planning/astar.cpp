@@ -131,7 +131,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // assign grid position of neighbor
             // if iterator is not equal to end then just add pointer to current value
             if(it != stored_nodes.end()){
-                neighbors.push_back(&stored_nodes[k]);
+                neighbors.push_back(&(stored_nodes[k]));
             }
             // ensure that neighbor hasn't been visited before
             else if(k != -100){
@@ -140,7 +140,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
                 // write the position
                 stored_nodes[node_index].cell_pos = neighbor_position;
                 // add it to neighbors list
-                neighbors.push_back(&stored_nodes[node_index]);
+                neighbors.push_back(&(stored_nodes[node_index]));
             }
         }
     }
@@ -162,10 +162,31 @@ robot_path_t search_for_path(pose_xyt_t start,
 
     // setup stored_nodes
     std::vector<Grid_Astar> stored_nodes;
-    stored_nodes.reserve(distances.heightInCells()*distances.widthInCells());
+
+    // 
+    stored_nodes.reserve(distances.heightInCells() * distances.widthInCells());
+
+    // std::cout << "STORED NODES" << "BEFORE Loop ^" << "AFTER Loop..." << std::endl;
+    
+    // write all cell positions
+    int iind, jind;
+    for(iind= 0; iind < distances.widthInCells(); iind++ ){
+        for(jind= 0; jind < distances.heightInCells(); jind++){
+            stored_nodes.push_back(Grid_Astar(Point<int>(iind, jind)));
+        }
+    }
+    // std::cout << stored_nodes.size() << '\t' << stored_nodes.max_size() << '\t' << std::endl;
+
+
     // setup visit queue
     std::vector<Grid_Astar*> visit_q;
+    // std::cout << visit_q.size() << '\t' << visit_q.max_size() << '\t' << std::endl;
+
     visit_q.reserve(distances.heightInCells()*distances.widthInCells());
+
+    // std::cout << "VISIT QUEUE" <<"BEFORE RESERVE ^" << "AFTER RESERVE..." << std::endl;
+    // std::cout << visit_q.size() << '\t' << visit_q.max_size() << '\t' << std::endl;
+
     // add start/end to list of points
     int start_idx, goal_idx; 
     start_idx = append_node(stored_nodes);
@@ -238,8 +259,6 @@ robot_path_t search_for_path(pose_xyt_t start,
                         std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
                     }
                 }
-
-                
             }
 
             if(std::abs(distance_between_points(grid_position_to_global_position(Point<double>((*neighbor) -> cell_pos), distances), verification_point)) < 0.01){
@@ -263,10 +282,15 @@ robot_path_t search_for_path(pose_xyt_t start,
         neighbors.clear();
     }
 
+    std::cout << "VISIT QUEUE" <<"AFTER LOOP:\n";
+    std::cout << visit_q.size() << '\t' << visit_q.max_size() << '\t' << std::endl;
+    std::cout << "STORED NODES" <<"AFTER LOOP:\n";
+    std::cout << stored_nodes.size() << '\t' << stored_nodes.max_size() << '\t' << std::endl;
+
     // check if we're at the goal
     if(cur_node -> cell_pos == stored_nodes[goal_idx].cell_pos){
         std::cout << "*******---MAKING PATH!---*******" << std::endl;
-        return return_path = makepath(start, goal, cur_node, distances);
+        return makepath(start, goal, cur_node, distances);
     }else{
         // did not find a valid path!
         // returning same pose 
@@ -277,5 +301,4 @@ robot_path_t search_for_path(pose_xyt_t start,
         path.utime = start.utime;
         return path;
     }
-    
 }
