@@ -21,7 +21,7 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
 		float rayscore = .001;
         Point<float> rayE;
         rayE.x = ray.range * std::cos(ray.theta) + ray.origin.x;
-        rayE.y = ray.range * std::sin(ray.theta)+ ray.origin.y;
+        rayE.y = ray.range * std::sin(ray.theta) + ray.origin.y;
         Point<float> rayEnd = global_position_to_grid_position(rayE, map);
 		Point<int> rayEndCell = global_position_to_grid_position(rayE, map);
         Point<float> rayStart = global_position_to_grid_position(ray.origin, map);
@@ -66,5 +66,5 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
         }
 		score += rayscore;
 	}
-    return score*score/10000000;
+    return score*score*score/10000000;
 }
