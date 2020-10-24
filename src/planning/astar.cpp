@@ -77,7 +77,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
 }
 
 
-std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, std::vector<Grid_Astar*> &visit_q, const ObstacleDistanceGrid& distances)
+std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, std::vector<Grid_Astar*> &visit_q, const ObstacleDistanceGrid& distances, const SearchParams& params)
 {
     // get current x and y position
     int x = cur_node -> cell_pos.x;
@@ -102,7 +102,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // don't do anything if the cell is an obstacle
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
-            }else if(!distances(neighbor_position.x, neighbor_position.y)){
+            }else if(distances(neighbor_position.x, neighbor_position.y) < params.minDistanceToObstacle){
                 continue;
             }
 
@@ -199,6 +199,7 @@ robot_path_t search_for_path(pose_xyt_t start,
                 stored_nodes[node_idx].priority = euc_distance(start_pos, goal_pos);                
                 start_idx = node_idx;
             }else if(cur_pos == goal_pos){
+                // found goal, mark it's index
                 goal_flg = true;
                 goal_idx = node_idx;
             }
@@ -213,12 +214,12 @@ robot_path_t search_for_path(pose_xyt_t start,
     visit_q.reserve(10*distances.heightInCells()*distances.widthInCells());
 
     // check we found start and goal is in grid
-    // check that start/goal aren't in an obstacle
+    // check that start/goal aren't in an obstacle or within minimum distance to obstacle
     if(!start_flg || !goal_flg ||
     !distances.isCellInGrid(stored_nodes[start_idx].cell_pos.x, stored_nodes[start_idx].cell_pos.y) || 
     !distances.isCellInGrid(stored_nodes[goal_idx].cell_pos.x, stored_nodes[goal_idx].cell_pos.y) ||
-    !distances(start_pos.x, start_pos.y) ||
-    !distances(goal_pos.x, goal_pos.y)){
+    distances(start_pos.x, start_pos.y) < params.minDistanceToObstacle ||
+    distances(goal_pos.x, goal_pos.y) < params.minDistanceToObstacle){
         // return a path with just the start
         std::cout << "START/GOAL NOT IN GRID" << std::endl; 
         robot_path_t path;
@@ -245,7 +246,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     Grid_Astar* cur_node; 
 
     // distance float
-    float new_dist;
+    float new_dist, dist_obstacle;
 
     // set the current node to start node because we know it will be first value popped
     cur_node = &stored_nodes[start_idx];
@@ -270,7 +271,7 @@ robot_path_t search_for_path(pose_xyt_t start,
         // get neighbors to the current node (at most 8)
         // this will return less nodes if the neighbors are obstacles
         // will not return neighbors that have already been visited
-        neighbors = get_neighbors(cur_node, stored_nodes, visit_q, distances);
+        neighbors = get_neighbors(cur_node, stored_nodes, visit_q, distances, params);
 
         // loop through all neighbors
         for(neighbor = neighbors.begin(); neighbor != neighbors.end(); ++neighbor)
@@ -292,8 +293,14 @@ robot_path_t search_for_path(pose_xyt_t start,
                 (*neighbor)->priority = new_dist + euc_distance(stored_nodes[goal_idx].cell_pos, (*neighbor)-> cell_pos);
 
                 // add heuristic on distance to obstacle
-                (*neighbor)->priority += 1/(distances((*neighbor)->cell_pos.x, (*neighbor)->cell_pos.y));
+                dist_obstacle = distances((*neighbor)->cell_pos.x, (*neighbor)->cell_pos.y);
 
+                if(dist_obstacle <= 10*params.minDistanceToObstacle){
+                    (*neighbor)->priority += pow(1/dist_obstacle, params.distanceCostExponent);
+                }else{
+                    (*neighbor)->priority += params.maxDistanceWithCost;
+                }
+                
                 // check if neighbor is in the visit queue already
                 // if it is then reheap the visit queue (it had it's priority updated)
                 if((*neighbor)->in_visit_queue && !visit_q.empty()){

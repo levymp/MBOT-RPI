@@ -167,17 +167,17 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
     Target_pose.y = Target_point.y;
 
     if (map.isCellInGrid(Target_cell.x, Target_cell.y)) {
-        // robot_path_t path = planner.planPath(robotPose, Target_pose);
-        // return path;
-
-        robot_path_t path;
-        path.path.resize(2);
-        Target_pose.theta = robotPose.theta;
-        path.path[0] = robotPose;
-        path.path[1] = Target_pose;
-        std::cout << Target_pose.x << "   " << Target_pose.y  << std::endl;
-        path.path_length = 2;
+        robot_path_t path = planner.planPath(robotPose, Target_pose);
         return path;
+
+        // robot_path_t path;
+        // path.path.resize(2);
+        // Target_pose.theta = robotPose.theta;
+        // path.path[0] = robotPose;
+        // path.path[1] = Target_pose;
+        // std::cout << Target_pose.x << "   " << Target_pose.y  << std::endl;
+        // path.path_length = 2;
+        // return path;
          
     } else {
         // std::cout << "invalid goal: message from frontier.cpp" << std::endl;
