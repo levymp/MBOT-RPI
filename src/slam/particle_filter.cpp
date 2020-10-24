@@ -79,6 +79,7 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(0, emptyCells.size());
+    std::uniform_int_distribution<int> rot(-3.14, 3.14);
     int scatter = int((50000 - mapscore)/10000);
 
     for(int i = 0; i<posterior_.size(); i++){
@@ -86,6 +87,7 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
             Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
             posterior_[i].pose.x = empty.x;
             posterior_[i].pose.y = empty.y;
+            posterior_[i].pose.theta = rot(gen());
         }
     }
 }
