@@ -80,7 +80,6 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(0, emptyCells.size());
     int scatter = int((50000 - mapscore)/10000);
-    scatter = scatter
 
     for(int i = 0; i<posterior_.size(); i++){
         if(i%scatter == 0){
