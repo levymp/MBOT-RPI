@@ -88,7 +88,7 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
             Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
             posterior_[i].pose.x = empty.x;
             posterior_[i].pose.y = empty.y;
-            posterior_[i].pose.theta = rot(gen());
+            posterior_[i].pose.theta = rot(gen);
         }
     }
 }
