@@ -246,13 +246,14 @@ int8_t Exploration::executeExploringMap(bool initialize)
     
     /////////////////////////////// End student code ///////////////////////////////
 
+
     // std::cout << "For debugging: pathReceived_:" << pathReceived_ << std::endl;
     frontiers_ = find_map_frontiers(currentMap_, currentPose_, 1);
     if (!frontiers_.empty()) {
          currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
     }
     currentPath_.utime = utime_now();
-    
+
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
     status.utime = utime_now();
