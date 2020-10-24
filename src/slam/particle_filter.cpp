@@ -21,6 +21,7 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
     ///////////// TODO: Implement your method for initializing the particles in the particle filter ////////////////
     posteriorPose_ = pose;
     double sw = 1.0/kNumParticles_;
+    mapscore = 0;
 
     for(auto& p : posterior_){
         p.pose.x = pose.x;
@@ -36,6 +37,7 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
 {
     ///////////// TODO: Implement your method for initializing the particles in the particle filter ////////////////
     posteriorPose_ = pose;
+    mapscore = 0;
     double sw = 1.0/kNumParticles_;
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -218,6 +220,8 @@ std::vector<particle_t> ParticleFilter::computeNormalizedPosterior(const std::ve
         posterior[i].weight = posterior[i].weight/tot_w;
     }
 
+    mapscore = tot_w;
+
     return posterior;
 }
 
@@ -272,7 +276,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     pavgy = pavgy/n;
 
     stability = ((float) j)/kNumParticles_;
-    printf("st: %f %f\n", stability, avg_range);
+    printf("st: %f %f %f\n", stability, avg_range, mapscore);
 
     float avgt = atan2(avgvy,avgvx);
 

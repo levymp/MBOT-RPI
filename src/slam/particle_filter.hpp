@@ -93,6 +93,7 @@ private:
     SensorModel sensorModel_;   // Sensor model to compute particle weights
 
     float stability;
+    float mapscore;
     
     int kNumParticles_;         // Number of particles to use for estimating the pose
     
