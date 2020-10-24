@@ -146,14 +146,21 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
                 
                 float dist = 0.0f;
                 dist = sqrtf(powf(robotPose.x - new_point.x, 2) + powf(robotPose.y - new_point.y, 2));
+                
                 if (dist > 0.05f) {
                     Point<int> new_cell = global_position_to_grid_cell(new_point, map);
-                    if (map(new_cell.x, new_cell.y) < 0) {
+                    if (map(new_cell.x, new_cell.y) < -60) {
+                    // pose_xyt_t new_pose;
+                    // new_pose.x = new_point.x;
+                    // new_pose.y = new_point.y;
+                    // std::cout << "AM I HERE ? ? ? ? ?" << std::endl;
+                    // if (planner.isValidGoal(new_pose)) {
                         Target_point = new_point;
                         Target_cell = new_cell;
                         Target_found = true;
+                        std::cout << "THE RADIUS IS: " << radius << std::endl;
                         break;
-                    }
+                    } 
                 } 
             }
         }
@@ -175,7 +182,7 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
         Target_pose.theta = robotPose.theta;
         path.path[0] = robotPose;
         path.path[1] = Target_pose;
-        std::cout << Target_pose.x << "   " << Target_pose.y  << std::endl;
+        // std::cout << Target_pose.x << "   " << Target_pose.y  << std::endl;
         path.path_length = 2;
         return path;
          
