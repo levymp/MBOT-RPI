@@ -6,6 +6,7 @@
 #include <lcmtypes/particle_t.hpp>
 #include <lcmtypes/particles_t.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
+#include <common/grid_utils.hpp>
 #include <vector>
 
 class lidar_t;
@@ -44,7 +45,9 @@ public:
     * \param    pose            Initial pose of the robot
     */
     void initializeFilterAtPose(const pose_xyt_t& pose);
-    
+    void initializeFilterAtPoseMap(const pose_xyt_t& pose, const OccupancyGrid& map);
+    void addNoise(const OccupancyGrid& map);
+
     /**
     * updateFilter increments the state estimated by the particle filter. The filter update uses the most recent
     * odometry estimate and laser scan along with the occupancy grid map to estimate the new pose of the robot.
@@ -66,6 +69,10 @@ public:
     */
     pose_xyt_t updateFilterActionOnly(const pose_xyt_t&      odometry);
 
+    pose_xyt_t updateFilterGuess(const pose_xyt_t&      odometry,
+                                        const lidar_t& laser,
+                                        const OccupancyGrid&   map);
+
     /**
     * poseEstimate retrieves the current pose estimate computed by the filter.
     */
@@ -79,10 +86,14 @@ public:
 private:
     
     std::vector<particle_t> posterior_;     // The posterior distribution of particles at the end of the previous update
+    std::vector<Point<int>> emptyCells;
     pose_xyt_t posteriorPose_;              // Pose estimate associated with the posterior distribution
     
     ActionModel actionModel_;   // Action model to apply to particles on each update
     SensorModel sensorModel_;   // Sensor model to compute particle weights
+
+    float stability;
+    float mapscore;
     
     int kNumParticles_;         // Number of particles to use for estimating the pose
     

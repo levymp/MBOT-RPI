@@ -66,6 +66,5 @@ double SensorModel::likelihood(const particle_t& sample, const lidar_t& scan, co
         }
 		score += rayscore;
 	}
-    printf("score %f\n", score);
     return score;
 }

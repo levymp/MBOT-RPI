@@ -1,7 +1,9 @@
 #include <slam/slam.hpp>
 #include <slam/slam_channels.h>
 #include <mbot/mbot_channels.h>
+#include <lcmtypes/mbot_motor_command_t.hpp>
 #include <optitrack/optitrack_channels.h>
+#include <slam/moving_laser_scan.hpp>
 #include <unistd.h>
 #include <cassert>
 #include <chrono>
@@ -76,6 +78,7 @@ void OccupancyGridSLAM::runSLAM(void)
         {
             // Then run an iteration of our SLAM algorithm
             runSLAMIteration();
+            map_.saveToFile("prevrun.map");
         }
         // Otherwise, do a quick spin while waiting for data rather than using more complicated condition variable.
         else
@@ -242,8 +245,11 @@ void OccupancyGridSLAM::initializePosesIfNeeded(void)
         currentPose_ = previousPose_;
         currentPose_.utime  = currentScan_.times.back();
         haveInitializedPoses_ = true;
-        
-        filter_.initializeFilterAtPose(previousPose_);
+        if(mode_ != localization_only){
+            filter_.initializeFilterAtPose(previousPose_);
+        }else{
+            filter_.initializeFilterAtPoseMap(previousPose_, map_);
+        }
     }
     
     assert(haveInitializedPoses_);
@@ -260,6 +266,12 @@ void OccupancyGridSLAM::updateLocalization(void)
         }
         else{
             currentPose_  = filter_.updateFilter(currentOdometry_, currentScan_, map_);
+            if(mode_ == localization_only && currentPose_.x != previousPose_.x && currentPose_.y != previousPose_.y){
+                filter_.addNoise(map_);
+            }
+            if(mode_ == localization_only){
+                exploreRandom();
+            }
         }
         
         auto particles = filter_.particles();
@@ -273,7 +285,7 @@ void OccupancyGridSLAM::updateLocalization(void)
 
 void OccupancyGridSLAM::updateMap(void)
 {
-    if(mode_ != localization_only || mode_ != action_only)
+    if(mode_ != localization_only)
     {
         // Process the map
         mapper_.updateMap(currentScan_, currentPose_, map_);
@@ -292,3 +304,35 @@ void OccupancyGridSLAM::updateMap(void)
 
     ++mapUpdateCount_;
 }
+
+
+void OccupancyGridSLAM::exploreRandom(void)
+{
+    float score = 0;
+    MovingLaserScan mvscan(currentScan_, previousPose_, currentPose_);
+
+    bool fwdflg = false;
+    for(const auto& ray : mvscan){
+        if(ray.theta > -.03 || ray.theta < .03){
+            if(ray.range < .3f){
+                fwdflg = false;
+            }else{
+                fwdflg = true;
+            }
+        }
+    }
+
+    mbot_motor_command_t cmd;
+    lcm::LCM lcmInstance(MULTICAST_URL);
+
+    if(fwdflg){
+        cmd.trans_v = 0.1f;
+        cmd.angular_v = 0.0f;  
+    }else{
+        cmd.trans_v = 0.0f;
+        cmd.angular_v = .3f;
+    }
+    
+    lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
+}
+

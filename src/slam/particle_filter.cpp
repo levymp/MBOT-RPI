@@ -2,6 +2,7 @@
 #include <slam/occupancy_grid.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <common/angle_functions.hpp>
+#include <common/grid_utils.hpp>
 #include <unistd.h>
 #include <cassert>
 #include <random>
@@ -20,6 +21,7 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
     ///////////// TODO: Implement your method for initializing the particles in the particle filter ////////////////
     posteriorPose_ = pose;
     double sw = 1.0/kNumParticles_;
+    mapscore = 0;
 
     for(auto& p : posterior_){
         p.pose.x = pose.x;
@@ -30,6 +32,62 @@ void ParticleFilter::initializeFilterAtPose(const pose_xyt_t& pose)
         p.weight = sw;
     }
 }
+
+void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const OccupancyGrid& map)
+{
+    ///////////// TODO: Implement your method for initializing the particles in the particle filter ////////////////
+    posteriorPose_ = pose;
+    mapscore = 0;
+    double sw = 1.0/kNumParticles_;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    int w = map.widthInCells();
+    int h = map.heightInCells();
+
+    for(int i = 0; i<w; i++){
+        for(int j = 0; j<h; j++){
+            if(map.logOdds(i, j) < 0){
+                Point<int> a;
+                a.x = i;
+                a.y = j;
+                emptyCells.push_back(a);
+            }
+        }
+    }
+
+    std::uniform_int_distribution<int> dist(0, emptyCells.size());
+
+    for(auto& p : posterior_){
+        Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
+        p.pose.x = empty.x;
+        p.pose.y = empty.y;
+        p.pose.theta = pose.theta;
+        p.pose.utime = pose.utime;
+        p.parent_pose = p.pose;
+        p.weight = sw;
+    }
+
+    std::cout << "Inited particles\n";
+
+}
+
+void ParticleFilter::addNoise(const OccupancyGrid& map)
+{
+    std::vector<particle_t> noise;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(0, emptyCells.size());
+
+    for(int i = 0; i<posterior_.size(); i++){
+        if(i%5 == 0){
+            Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
+            posterior_[i].pose.x = empty.x;
+            posterior_[i].pose.y = empty.y;
+        }
+    }
+}
+
 
 
 pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
@@ -47,6 +105,21 @@ pose_xyt_t ParticleFilter::updateFilter(const pose_xyt_t&      odometry,
         posterior_ = computeNormalizedPosterior(proposal, laser, map);
         posteriorPose_ = estimatePosteriorPose(posterior_);
     }
+    
+    posteriorPose_.utime = odometry.utime;
+    
+    return posteriorPose_;
+}
+
+pose_xyt_t ParticleFilter::updateFilterGuess(const pose_xyt_t&      odometry,
+                                        const lidar_t& laser,
+                                        const OccupancyGrid&   map)
+{
+
+    auto prior = resamplePosteriorDistribution();
+    auto proposal = computeProposalDistribution(prior);
+    posterior_ = computeNormalizedPosterior(proposal, laser, map);
+    posteriorPose_ = estimatePosteriorPose(posterior_);
     
     posteriorPose_.utime = odometry.utime;
     
@@ -147,6 +220,8 @@ std::vector<particle_t> ParticleFilter::computeNormalizedPosterior(const std::ve
         posterior[i].weight = posterior[i].weight/tot_w;
     }
 
+    mapscore = tot_w;
+
     return posterior;
 }
 
@@ -182,6 +257,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     float pavgx = 0;
     float pavgy = 0;
     int n = 0;
+    int j = 0;
 
     for(unsigned int i = 0; i<posterior.size(); i++){
         float dx = posterior[i].pose.x-avgx;
@@ -191,10 +267,16 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
             pavgy += posterior[i].pose.y;
             n++;
         }
+        if(sqrt(dx*dx + dy*dy) <= .1){
+            j++;
+        }
     }
 
     pavgx = pavgx/n;
     pavgy = pavgy/n;
+
+    stability = ((float) j)/kNumParticles_;
+    printf("st: %f %f %f\n", stability, avg_range, mapscore);
 
     float avgt = atan2(avgvy,avgvx);
 

@@ -312,13 +312,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
     *       (1) dist(currentPose_, targetPose_) < kReachedPositionThreshold  :  reached the home pose
     *       (2) currentPath_.path_length > 1  :  currently following a path to the home pose
     */
-    robot_path_t path;
-    path.path.resize(2);
-    path.path[0] = currentPose_;
-    path.path[1] = homePose_;
-    path.path_length = 2;
-    currentPath_ = path;
-    currentPath_.utime = utime_now();
+    
 
     /////////////////////////////// End student code ///////////////////////////////
     
