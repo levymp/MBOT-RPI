@@ -78,7 +78,7 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
     std::uniform_int_distribution<int> dist(0, emptyCells.size());
 
     for(int i = 0; i<posterior_.size(); i++){
-        if(i%10 == 0){
+        if(i%8 == 0){
             Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
             posterior_[i].pose.x = empty.x;
             posterior_[i].pose.y = empty.y;
@@ -263,7 +263,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
             pavgy += posterior[i].pose.y;
             n++;
         }
-        if(sqrt(dx*dx + dy*dy) <= avg_range*2){
+        if(sqrt(dx*dx + dy*dy) <= .1){
             j++;
         }
     }
@@ -272,7 +272,7 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     pavgy = pavgy/n;
 
     stability = ((float) j)/kNumParticles_;
-    printf("st: %f\n", stability);
+    printf("st: %f %f\n", stability, avg_range);
 
     float avgt = atan2(avgvy,avgvx);
 
