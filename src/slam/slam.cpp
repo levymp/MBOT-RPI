@@ -313,8 +313,8 @@ void OccupancyGridSLAM::exploreRandom(void)
 
     bool fwdflg = false;
     for(const auto& ray : mvscan){
-        if(ray.theta > -.005 || ray.theta < .005){
-            if(ray.range < .75f){
+        if(ray.theta > -.02 || ray.theta < .02){
+            if(ray.range < .2f){
                 fwdflg = false;
             }else{
                 fwdflg = true;
