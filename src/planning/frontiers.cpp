@@ -99,9 +99,91 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
     *   - The cells along the frontier might not be in the configuration space of the robot, so you won't necessarily
     *       be able to drive straight to a frontier cell, but will need to drive somewhere close.
     */
-    robot_path_t emptyPath;
-    
-    return emptyPath;
+    unsigned int Target_frontier_id = 0;
+    unsigned int Target_frontier_point_id = 0;
+    float min_Dis = 1000000000000;
+    float Dis = 0;
+
+    for (size_t i = 0; i < frontiers.size(); i++) {
+        for (size_t j = 0; j < frontiers[i].cells.size(); j++) {
+            Point<float> temp_pt;
+            temp_pt.x = frontiers[i].cells[j].x;
+            temp_pt.y = frontiers[i].cells[j].y;
+
+            Dis = sqrtf(powf(robotPose.x - temp_pt.x, 2) + powf(robotPose.y - temp_pt.y, 2));
+
+            if (Dis < min_Dis) {
+                min_Dis = Dis;
+                Target_frontier_id = i;
+                Target_frontier_point_id = j;
+            }
+        }
+    }
+
+    Point<float> Target_frontier_point;
+    // Target_frontier_point.x = frontiers[Target_frontier_id].cells[Target_frontier_point_id].x;
+    // Target_frontier_point.y = frontiers[Target_frontier_id].cells[Target_frontier_point_id].y;
+    Target_frontier_point.x = frontiers[Target_frontier_id].cells[frontiers[Target_frontier_id].cells.size()/2].x;
+    Target_frontier_point.y = frontiers[Target_frontier_id].cells[frontiers[Target_frontier_id].cells.size()/2].y;
+
+    Point<float> Target_point;
+    Point<int> Target_cell;
+    bool Target_found = false;
+    int num_of_angles = 72;
+    float angle_increment = 2 * M_PI / num_of_angles;
+    float radius_init = 0.05f; // in meters
+
+    for (float radius = radius_init; ; radius += 0.05) {
+
+        for (int i = 0; i < num_of_angles; i++) {
+            float angle = i * angle_increment;
+            Point<float> new_point;
+            new_point.x = Target_frontier_point.x + radius * cosf(angle);
+            new_point.y = Target_frontier_point.y + radius * sinf(angle);
+
+            if (new_point.x >= 0 && new_point.x < map.widthInMeters()
+                && new_point.y >= 0 && new_point.y < map.heightInMeters()) {
+                
+                float dist = 0.0f;
+                dist = sqrtf(powf(robotPose.x - new_point.x, 2) + powf(robotPose.y - new_point.y, 2));
+                if (dist > 0.05f) {
+                    Point<int> new_cell = global_position_to_grid_cell(new_point, map);
+                    if (map(new_cell.x, new_cell.y) < 0) {
+                        Target_point = new_point;
+                        Target_cell = new_cell;
+                        Target_found = true;
+                        break;
+                    }
+                } 
+            }
+        }
+        if (Target_found) {
+            break;
+        }
+    }
+
+    pose_xyt_t Target_pose;
+    Target_pose.x = Target_point.x;
+    Target_pose.y = Target_point.y;
+
+    if (map.isCellInGrid(Target_cell.x, Target_cell.y)) {
+        // robot_path_t path = planner.planPath(robotPose, Target_pose);
+        // return path;
+
+        robot_path_t path;
+        path.path.resize(2);
+        Target_pose.theta = robotPose.theta;
+        path.path[0] = robotPose;
+        path.path[1] = Target_pose;
+        std::cout << Target_pose.x << "   " << Target_pose.y  << std::endl;
+        path.path_length = 2;
+        return path;
+         
+    } else {
+        // std::cout << "invalid goal: message from frontier.cpp" << std::endl;
+        exit(1);
+    }
+
 }
 
 
