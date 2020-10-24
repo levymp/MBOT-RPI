@@ -311,9 +311,9 @@ void OccupancyGridSLAM::exploreRandom(void)
     float score = 0;
     MovingLaserScan mvscan(currentScan_, currentPose_, currentPose_);
 
-    bool fwdfl.5 g = true;
+    bool fwdflg = true;
     for(const auto& ray : mvscan){
-        if(ray.theta > -1 && ray.theta < 1.5){
+        if(ray.theta > -1.5 && ray.theta < 1.5){
             if(ray.range < .2f){
                 fwdflg = false;
             }
