@@ -81,7 +81,7 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
     int scatter = int((14000000 - mapscore)/100000);
 
     for(int i = 0; i<posterior_.size(); i++){
-        if(i%scatter == 0){
+        if(i%5 == 0){
             Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
             posterior_[i].pose.x = empty.x;
             posterior_[i].pose.y = empty.y;
