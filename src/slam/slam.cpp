@@ -311,13 +311,11 @@ void OccupancyGridSLAM::exploreRandom(void)
     float score = 0;
     MovingLaserScan mvscan(currentScan_, previousPose_, currentPose_);
 
-    bool fwdflg = false;
+    bool fwdflg = true;
     for(const auto& ray : mvscan){
-        if(ray.theta > -.03 || ray.theta < .03){
-            if(ray.range < .3f){
+        if(ray.theta > -.025 || ray.theta < .025){
+            if(ray.range < .2f){
                 fwdflg = false;
-            }else{
-                fwdflg = true;
             }
         }
     }
@@ -330,7 +328,7 @@ void OccupancyGridSLAM::exploreRandom(void)
         cmd.angular_v = 0.0f;  
     }else{
         cmd.trans_v = 0.0f;
-        cmd.angular_v = .3f;
+        cmd.angular_v = -.3f;
     }
     
     lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
