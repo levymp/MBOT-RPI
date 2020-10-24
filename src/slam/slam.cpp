@@ -313,7 +313,7 @@ void OccupancyGridSLAM::exploreRandom(void)
 
     bool fwdflg = false;
     for(const auto& ray : mvscan){
-        if(ray.theta > -.03 || ray.theta < .03){
+        if(ray.theta > -.05 || ray.theta < .05){
             if(ray.range < .3f){
                 fwdflg = false;
             }else{
@@ -330,7 +330,7 @@ void OccupancyGridSLAM::exploreRandom(void)
         cmd.angular_v = 0.0f;  
     }else{
         cmd.trans_v = 0.0f;
-        cmd.angular_v = .3f;
+        cmd.angular_v = -.3f;
     }
     
     lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
