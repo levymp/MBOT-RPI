@@ -4,6 +4,7 @@
 #include <lcmtypes/mbot_motor_command_t.hpp>
 #include <optitrack/optitrack_channels.h>
 #include <slam/moving_laser_scan.hpp>
+#include <common/angle_functions.hpp>
 #include <unistd.h>
 #include <cassert>
 #include <chrono>
@@ -313,7 +314,7 @@ void OccupancyGridSLAM::exploreRandom(void)
 
     bool fwdflg = true;
     for(const auto& ray : mvscan){
-        if(ray.theta > -1.5 && ray.theta < 1.5){
+        if(angle_diff(ray.theta, currentPose_) < 1.5){
             if(ray.range < .2f){
                 fwdflg = false;
             }
