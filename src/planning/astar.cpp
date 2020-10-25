@@ -112,7 +112,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // don't do anything if the cell is an obstacle
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
-            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.2){
+            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.15){
                 continue;
             }
 
