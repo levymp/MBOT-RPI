@@ -70,6 +70,8 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
 
         // go to next node 
         node = node -> parent;
+        
+        // go to next node if the current node is not nullptr
         if(node){
             node = node -> parent;
         }
@@ -80,7 +82,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
     // append start to first position
     path.path.insert(path.path.begin(), start);
     path.path_length++;
-    std::cout << "FINISHED PATH! LENGTH: " << path.path_length;
+    std::cout << "FINISHED PATH! LENGTH: " << path.path_length << std::endl;
     return path;
 }
 
@@ -110,7 +112,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // don't do anything if the cell is an obstacle
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
-            }else if(!distances(neighbor_position.x, neighbor_position.y)){
+            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.1){
                 continue;
             }
 
@@ -225,8 +227,8 @@ robot_path_t search_for_path(pose_xyt_t start,
     if(!start_flg || !goal_flg ||
     !distances.isCellInGrid(stored_nodes[start_idx].cell_pos.x, stored_nodes[start_idx].cell_pos.y) || 
     !distances.isCellInGrid(stored_nodes[goal_idx].cell_pos.x, stored_nodes[goal_idx].cell_pos.y) ||
-    !distances(start_pos.x, start_pos.y) ||
-    !distances(goal_pos.x, goal_pos.y)){
+    distances(start_pos.x, start_pos.y) < 0.1||
+    distances(goal_pos.x, goal_pos.y) < 0.1){
         // return a path with just the start
         std::cout << "START/GOAL NOT IN GRID" << std::endl; 
         robot_path_t path;
@@ -253,7 +255,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     Grid_Astar* cur_node; 
 
     // distance float
-    float new_dist;
+    float new_dist, dist_to_obstacle;
 
     // set the current node to start node because we know it will be first value popped
     cur_node = &stored_nodes[start_idx];
@@ -300,21 +302,23 @@ robot_path_t search_for_path(pose_xyt_t start,
                 (*neighbor)->priority = new_dist + euc_distance(stored_nodes[goal_idx].cell_pos, (*neighbor)-> cell_pos);
 
                 // add heuristic on distance to obstacle
-                (*neighbor)->priority += 1/(distances((*neighbor)->cell_pos.x, (*neighbor)->cell_pos.y));
+                dist_to_obstacle = distances((*neighbor)->cell_pos.x, (*neighbor)->cell_pos.y);
 
-                // check if neighbor is in the visit queue already
-                // if it is then reheap the visit queue (it had it's priority updated)
-                if((*neighbor)->in_visit_queue && !visit_q.empty()){
-                    // reheap because priority for node has changed
-                    std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
-                }
-            }
+                // add distance to goal
+                (*neighbor)->priority += pow(1/(dist_to_obstacle), 4);
 
-            // put neighbor in visit queue if it hasn't already been put in
-            if(!(*neighbor)->in_visit_queue){
-                // put in visit queue
-                (*neighbor)->in_visit_queue = true;
-                enqueue(visit_q, (*neighbor));
+                // if not within a bad area append to visit queue
+                if(dist_to_obstacle >= 0.15){
+                    // either reheap or enqueue to visit queue
+                    if((*neighbor)->in_visit_queue && !visit_q.empty()){
+                        // reheap because priority for node has changed
+                        std::make_heap(visit_q.begin(), visit_q.end(), compare_priority());
+                    }else if(!(*neighbor)->in_visit_queue){
+                        // put in visit queue
+                        (*neighbor)->in_visit_queue = true;
+                        enqueue(visit_q, (*neighbor));
+                    }
+                }                
             }
         }
         // clear out neighbors vector
