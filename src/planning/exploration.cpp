@@ -327,7 +327,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
 
     // currentPath_ = planner_.planPath(currentPose_, homePose_); 
     // currentPath_.utime = utime_now();
-
+	/*if(currentPath_.path.size() < 1){
     Point<double> home_point;
     home_point.x = 0;
     home_point.y = 0;
@@ -369,10 +369,9 @@ int8_t Exploration::executeReturningHome(bool initialize)
                 }              
             }
         }
-    }
-    currentPath_ = planner_.planPath(currentPose_, Target_pose); 
+    }*/
+    currentPath_ = planner_.planPath(currentPose_, homePose_); 
     currentPath_.utime = utime_now();
-
     
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
