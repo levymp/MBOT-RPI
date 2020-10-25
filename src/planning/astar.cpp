@@ -102,9 +102,11 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // don't do anything if the cell is an obstacle
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
-            }else if(distances(neighbor_position.x, neighbor_position.y) < params.minDistanceToObstacle){
+            }else if(distances(neighbor_position.x, neighbor_position.y) <= params.minDistanceToObstacle){
+                std::cout << "SKIPPING POINT TOO CLOSE: " << neighbor_position << std::endl; 
                 continue;
             }
+            std::cout << distances(0,0) << std::endl;
 
             // go through all stored_nodes and get index of neighbor node
             // reset iterator count
@@ -296,9 +298,9 @@ robot_path_t search_for_path(pose_xyt_t start,
                 dist_obstacle = distances((*neighbor)->cell_pos.x, (*neighbor)->cell_pos.y);
 
                 if(dist_obstacle <= 10*params.minDistanceToObstacle){
-                    (*neighbor)->priority += pow(1/dist_obstacle, params.distanceCostExponent);
+                    (*neighbor)->priority += pow(1/dist_obstacle, 10);
                 }else{
-                    (*neighbor)->priority += params.maxDistanceWithCost;
+                    (*neighbor)->priority += 10;
                 }
                 
                 // check if neighbor is in the visit queue already
