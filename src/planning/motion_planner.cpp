@@ -65,7 +65,7 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
         // Add an extra cell to account for discretization error and make motion a little safer by not trying to
         // completely snuggle up against the walls in the motion plan
 
-        return distances_(goalCell.x, goalCell.y) > params_.robotRadius;
+        return distances_(goalCell.x, goalCell.y) > .15;
     }
     
     // A goal must be in the map for the robot to reach it
@@ -91,12 +91,12 @@ bool MotionPlanner::isPathSafe(const robot_path_t& path) const
         grid_pos = global_position_to_grid_cell(Point<double>(pose.x, pose.y), distances_);
         
         // check if within robot distance
-        if(distances_(grid_pos.x, grid_pos.y) <= searchParams_.minDistanceToObstacle){
+        if(distances_(grid_pos.x, grid_pos.y) <= .15){
             std::cout << "PATH IS NOT SAFE NOW!\n";
             return false;
         }
     }        
-    std::cout << "PATH IS SAFE!\n";
+    
     return true;
 }
 
