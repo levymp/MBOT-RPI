@@ -48,7 +48,7 @@ Exploration::Exploration(int32_t teamNumber,
     
     MotionPlannerParams params;
     // params.robotRadius = 0.2;
-    params.robotRadius = 0.1;
+    params.robotRadius = 0.15;
     planner_.setParams(params);
 }
 
@@ -252,8 +252,15 @@ int8_t Exploration::executeExploringMap(bool initialize)
     planner_.setMap(currentMap_);
     frontiers_ = find_map_frontiers(currentMap_, currentPose_, 0.2);
     if (!frontiers_.empty()) {
-        currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
-        currentPath_.utime = utime_now();
+	double eucl_dist = 0; 
+	if(!currentPath_.path.empty()){
+		eucl_dist = sqrtf(powf(currentPose_.x - currentPath_.path[0].x,2)+powf(currentPose_.y - currentPath_.path[0].y,2));
+	}	
+	std::cout << "dits: " << eucl_dist << "\n";
+	if(currentPath_.path.size() < 1 || eucl_dist > .2){
+        	currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
+        	currentPath_.utime = utime_now();
+	}
     }
 
     /////////////////////////   Create the status message    //////////////////////////
