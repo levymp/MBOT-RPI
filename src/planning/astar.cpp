@@ -82,7 +82,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
     // append start to first position
     path.path.insert(path.path.begin(), start);
     path.path_length++;
-    std::cout << "FINISHED PATH! LENGTH: " << path.path_length :: std::endl;
+    std::cout << "FINISHED PATH! LENGTH: " << path.path_length << std::endl;
     return path;
 }
 
@@ -112,7 +112,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // don't do anything if the cell is an obstacle
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
-            }else if(!distances(neighbor_position.x, neighbor_position.y)){
+            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.1){
                 continue;
             }
 
@@ -227,8 +227,8 @@ robot_path_t search_for_path(pose_xyt_t start,
     if(!start_flg || !goal_flg ||
     !distances.isCellInGrid(stored_nodes[start_idx].cell_pos.x, stored_nodes[start_idx].cell_pos.y) || 
     !distances.isCellInGrid(stored_nodes[goal_idx].cell_pos.x, stored_nodes[goal_idx].cell_pos.y) ||
-    !distances(start_pos.x, start_pos.y) ||
-    !distances(goal_pos.x, goal_pos.y)){
+    distances(start_pos.x, start_pos.y) < 0.1||
+    distances(goal_pos.x, goal_pos.y) < 0.1){
         // return a path with just the start
         std::cout << "START/GOAL NOT IN GRID" << std::endl; 
         robot_path_t path;
