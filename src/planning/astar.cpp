@@ -100,13 +100,16 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // check if at 0/0 (no assignment needed for this case)
             // don't do anything if cell isn't in grid
             // don't do anything if the cell is an obstacle
-            if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
+            if((!i && !j) ){
                 continue;
-            }else if(distances(neighbor_position.x, neighbor_position.y) <= params.minDistanceToObstacle){
-                std::cout << "SKIPPING POINT TOO CLOSE: " << neighbor_position << std::endl; 
+            }else if(distances(neighbor_position.x, neighbor_position.y) <= 0.15){
+                std::cout << "TOO CLOSE: " << neighbor_position << '\t' << distances(neighbor_position.x, neighbor_position.y) << std::endl; 
+                continue;
+            }else if(!distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
+                std::cout << "NOT IN GRID: " << neighbor_position << std::endl;
                 continue;
             }
-            std::cout << distances(0,0) << std::endl;
+            // std::cout << distances(150,150) << std::endl;
 
             // go through all stored_nodes and get index of neighbor node
             // reset iterator count
@@ -212,6 +215,7 @@ robot_path_t search_for_path(pose_xyt_t start,
 
     // setup visit queue
     std::vector<Grid_Astar*> visit_q;
+
     // reserve 10x memory
     visit_q.reserve(10*distances.heightInCells()*distances.widthInCells());
 
@@ -252,9 +256,10 @@ robot_path_t search_for_path(pose_xyt_t start,
 
     // set the current node to start node because we know it will be first value popped
     cur_node = &stored_nodes[start_idx];
+
     
     // while visit queue not empty and current node not goal continue going through all nodes
-    while(!visit_q.empty() && cur_node -> cell_pos != stored_nodes[goal_idx].cell_pos)
+    while(!visit_q.empty() && (euc_distance(cur_node -> cell_pos, stored_nodes[goal_idx].cell_pos) <= .15))
     {
         // dequeue min heap
         cur_node = dequeue(visit_q);
@@ -274,6 +279,11 @@ robot_path_t search_for_path(pose_xyt_t start,
         // this will return less nodes if the neighbors are obstacles
         // will not return neighbors that have already been visited
         neighbors = get_neighbors(cur_node, stored_nodes, visit_q, distances, params);
+        // check if neighbors is empty
+        if(neighbors.empty()){
+            continue;
+        }
+        std::cout << visit_q.size() << '\t' << stored_nodes.size() << "\t" << cur_node -> cell_pos << '\t' << euc_distance(stored_nodes[goal_idx].cell_pos, cur_node -> cell_pos) << std::endl;
 
         // loop through all neighbors
         for(neighbor = neighbors.begin(); neighbor != neighbors.end(); ++neighbor)
@@ -312,7 +322,7 @@ robot_path_t search_for_path(pose_xyt_t start,
             }
 
             // put neighbor in visit queue if it hasn't already been put in
-            if(!(*neighbor)->in_visit_queue){
+            if(!(*neighbor)->in_visit_queue && !(*neighbor) -> visited){
                 // put in visit queue
                 (*neighbor)->in_visit_queue = true;
                 enqueue(visit_q, (*neighbor));
