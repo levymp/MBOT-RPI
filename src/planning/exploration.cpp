@@ -45,10 +45,10 @@ Exploration::Exploration(int32_t teamNumber,
     status.status = exploration_status_t::STATUS_IN_PROGRESS;
     
     lcmInstance_->publish(EXPLORATION_STATUS_CHANNEL, &status);
-    
+	goingHome = false;    
     MotionPlannerParams params;
     // params.robotRadius = 0.2;
-    params.robotRadius = 0.15;
+    params.robotRadius = 0.3;
     planner_.setParams(params);
 }
 
@@ -252,12 +252,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
     planner_.setMap(currentMap_);
     frontiers_ = find_map_frontiers(currentMap_, currentPose_, 0.2);
     if (!frontiers_.empty()) {
-	double eucl_dist = 0; 
-	if(!currentPath_.path.empty()){
-		eucl_dist = sqrtf(powf(currentPose_.x - currentPath_.path[0].x,2)+powf(currentPose_.y - currentPath_.path[0].y,2));
-	}	
-	std::cout << "dits: " << eucl_dist << "\n";
-	if(currentPath_.path.size() < 1 || eucl_dist > .2){
+	if(currentPath_.path.size() < 1 || !planner_.isPathSafe(&currentPath_.path)){
         	currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
         	currentPath_.utime = utime_now();
 	}
@@ -326,8 +321,9 @@ int8_t Exploration::executeReturningHome(bool initialize)
     planner_.setMap(currentMap_);
 
     // currentPath_ = planner_.planPath(currentPose_, homePose_); 
-    // currentPath_.utime = utime_now();
-	/*if(currentPath_.path.size() < 1){
+    // currentPath_.utime = utime_now()
+	if(!planner_.isValidGoal(homePose_) && !goingHome){
+	goingHome = true;
     Point<double> home_point;
     home_point.x = 0;
     home_point.y = 0;
@@ -369,10 +365,15 @@ int8_t Exploration::executeReturningHome(bool initialize)
                 }              
             }
         }
-    }*/
+    }
+	currentPath_=planner_.planPath(currentPose_,Target_pose);
+	currentPath_.utime = utime_now();
+}else if(!goingHome){
+	goingHome = true;
+	std::cout << "home is valid\n";
     currentPath_ = planner_.planPath(currentPose_, homePose_); 
     currentPath_.utime = utime_now();
-    
+    }
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
     status.utime = utime_now();
