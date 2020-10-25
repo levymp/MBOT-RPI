@@ -38,7 +38,11 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
     Point<double> global_position;
     
     // initialize path length
-    path.path_length = 0;
+    path.path_length = 1;
+    
+    // go to next node as node is the parent;
+    node = node -> parent;
+    std::cout << "MAKING PATH:\n";
     
     // go through all nodes
     while(node != nullptr)
@@ -56,23 +60,27 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
         current_pose.theta = atan2(dy, dx);
         
         // append pose to current_pose path (put it at the beginning)
-        if((node -> parent)){
-            // std::cout << current_pose.x << '\t' << current_pose.y << '\t' << current_pose.theta << '\t' << node -> priority << '\t' << node -> visited << '\t'<< node -> distance <<std::endl;
-            path.path.insert(path.path.begin(), current_pose);
-            path.path_length++;  
-        }
-
+        std::cout << current_pose.x << '\t' << current_pose.y << '\t' << current_pose.theta << '\t' << node -> priority << '\t' << node -> visited << '\t'<< node -> distance <<std::endl;
+        path.path.insert(path.path.begin(), current_pose);
+        // append path length
+        path.path_length++;
+        
         // set future pose to current pose
         future_pose = current_pose;
 
         // go to next node 
         node = node -> parent;
-        // increase path vector length
-        path.path_length++;
+        if(node){
+            node = node -> parent;
+        }
     }
+    
+    
+
     // append start to first position
     path.path.insert(path.path.begin(), start);
     path.path_length++;
+    std::cout << "FINISHED PATH! LENGTH: " << path.path_length;
     return path;
 }
 
@@ -162,7 +170,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     // setup stored_nodes
     std::vector<Grid_Astar> stored_nodes;
     // reserve 10x the memory needed
-    stored_nodes.reserve(10*distances.heightInCells() * distances.widthInCells());
+    stored_nodes.reserve(100*distances.heightInCells() * distances.widthInCells());
 
     // init start/goal/loop position
     Point<int> start_pos, goal_pos, cur_pos;
@@ -210,7 +218,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     // setup visit queue
     std::vector<Grid_Astar*> visit_q;
     // reserve 10x memory
-    visit_q.reserve(10*distances.heightInCells()*distances.widthInCells());
+    visit_q.reserve(100*distances.heightInCells()*distances.widthInCells());
 
     // check we found start and goal is in grid
     // check that start/goal aren't in an obstacle
