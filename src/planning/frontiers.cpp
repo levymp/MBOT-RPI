@@ -148,8 +148,11 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
             temp_cell.x = i;
             temp_cell.y = j;
 
+            // std::cout << "temp_cell.x = " << temp_cell.x << "temp_cell.y = " << temp_cell.y << std::endl;
+
             Point<double> temp_point = grid_position_to_global_position(temp_cell, map);
-            
+            // std::cout << "temp_point.x = " << temp_point.x << "temp_point.y = " << temp_point.y << std::endl;
+
             pose_xyt_t temp_pose;
             temp_pose.x = temp_point.x;
             temp_pose.y = temp_point.y;
@@ -169,13 +172,13 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
     }
     
 
-    if (!ValidGoal_num) {
+    if (ValidGoal_num != 0) {
         robot_path_t path = planner.planPath(robotPose, Target_pose);
         return path;
 
     } 
     
-    if (ValidGoal_num) {
+    if (ValidGoal_num == 0) {
         std::cout << "THERE IS NO VALID GOAL ON THE MAP" << std::endl;
     }
 
