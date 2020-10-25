@@ -47,7 +47,8 @@ Exploration::Exploration(int32_t teamNumber,
     lcmInstance_->publish(EXPLORATION_STATUS_CHANNEL, &status);
     
     MotionPlannerParams params;
-    params.robotRadius = 0.2;
+    // params.robotRadius = 0.2;
+    params.robotRadius = 0.1;
     planner_.setParams(params);
 }
 
@@ -248,6 +249,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
 
 
     // std::cout << "For debugging: pathReceived_:" << pathReceived_ << std::endl;
+    planner_.setMap(currentMap_);
     frontiers_ = find_map_frontiers(currentMap_, currentPose_, 1);
     if (!frontiers_.empty()) {
          currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
@@ -275,7 +277,6 @@ int8_t Exploration::executeExploringMap(bool initialize)
     else
     {   
         std::cout << "For debugging: there are frontiers, but no valid path exists" << std::endl;
-        std::cout << "For debugging: currentPath_.path.size() = " << currentPath_.path.size() << std::endl;
         status.status = exploration_status_t::STATUS_FAILED;
     }
     
@@ -315,6 +316,8 @@ int8_t Exploration::executeReturningHome(bool initialize)
     
 
     /////////////////////////////// End student code ///////////////////////////////
+    currentPath_ = planner_.planPath(currentPose_, homePose_); 
+    currentPath_.utime = utime_now();
     
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;

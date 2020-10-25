@@ -54,7 +54,10 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
     float distanceFromPrev = std::sqrt(dx * dx + dy * dy);
 
     //if there's more than 1 frontier, don't go to a target that is within a robot diameter of the current pose
-    if(num_frontiers != 1 && distanceFromPrev < 2 * searchParams_.minDistanceToObstacle) return false;
+    if(num_frontiers != 1 && distanceFromPrev < 2 * searchParams_.minDistanceToObstacle) {
+        std::cout << "TARGET IS WITHIN ROBOT DIAMTER" << std::endl;
+        return false;
+    } 
 
     auto goalCell = global_position_to_grid_cell(Point<double>(goal.x, goal.y), distances_);
 
@@ -64,11 +67,18 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
         // And is far enough from obstacles that the robot can physically occupy the space
         // Add an extra cell to account for discretization error and make motion a little safer by not trying to
         // completely snuggle up against the walls in the motion plan
+        std::cout << "THE GOAL IS IN THE MAP" << std::endl;
+        std::cout << "DISTANCES_ = " << distances_(goalCell.x, goalCell.y) << std::endl;
+        std::cout << "params_.robotRadius = " << params_.robotRadius << std::endl;
+        if (distances_(goalCell.x, goalCell.y) > params_.robotRadius == false) {
+            std::cout << "distances_(goalCell.x, goalCell.y) > params_.robotRadius is FALSE" << std::endl;
+        }
 
         return distances_(goalCell.x, goalCell.y) > params_.robotRadius;
     }
     
     // A goal must be in the map for the robot to reach it
+    std::cout << "THE GOAL IS NOT IN THE MAP" << std::endl;
     return false;
 }
 
