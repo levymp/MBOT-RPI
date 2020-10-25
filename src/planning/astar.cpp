@@ -70,6 +70,8 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
 
         // go to next node 
         node = node -> parent;
+        
+        // go to next node if the current node is not nullptr
         if(node){
             node = node -> parent;
         }
@@ -80,7 +82,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
     // append start to first position
     path.path.insert(path.path.begin(), start);
     path.path_length++;
-    std::cout << "FINISHED PATH! LENGTH: " << path.path_length;
+    std::cout << "FINISHED PATH! LENGTH: " << path.path_length :: std::endl;
     return path;
 }
 
