@@ -77,7 +77,26 @@ bool MotionPlanner::isPathSafe(const robot_path_t& path) const
 {
 
     ///////////// TODO: Implement your test for a safe path here //////////////////
+    // assume before this is called the obstacle distance grid is updated
 
+    // get all of the targes
+    
+    
+    // target grid position
+    Point<int> grid_pos;
+
+    // iterate through all poses
+    for(auto pose : path.path){
+        // get grid position of cell
+        grid_pos = global_position_to_grid_cell(Point<double>(pose.x, pose.y), distances_);
+        
+        // check if within robot distance
+        if(distances_(grid_pos.x, grid_pos.y) <= searchParams_.minDistanceToObstacle){
+            std::cout << "PATH IS NOT SAFE NOW!\n";
+            return false;
+        }
+    }        
+    std::cout << "PATH IS SAFE!\n";
     return true;
 }
 
