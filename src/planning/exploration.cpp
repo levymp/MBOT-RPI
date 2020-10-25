@@ -47,7 +47,8 @@ Exploration::Exploration(int32_t teamNumber,
     lcmInstance_->publish(EXPLORATION_STATUS_CHANNEL, &status);
     
     MotionPlannerParams params;
-    params.robotRadius = 0.2;
+    // params.robotRadius = 0.2;
+    params.robotRadius = 0.1;
     planner_.setParams(params);
 }
 
@@ -248,11 +249,12 @@ int8_t Exploration::executeExploringMap(bool initialize)
 
 
     // std::cout << "For debugging: pathReceived_:" << pathReceived_ << std::endl;
-    frontiers_ = find_map_frontiers(currentMap_, currentPose_, 1);
+    planner_.setMap(currentMap_);
+    frontiers_ = find_map_frontiers(currentMap_, currentPose_, 0.2);
     if (!frontiers_.empty()) {
-         currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
+        currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
+        currentPath_.utime = utime_now();
     }
-    currentPath_.utime = utime_now();
 
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
@@ -275,7 +277,6 @@ int8_t Exploration::executeExploringMap(bool initialize)
     else
     {   
         std::cout << "For debugging: there are frontiers, but no valid path exists" << std::endl;
-        std::cout << "For debugging: currentPath_.path.size() = " << currentPath_.path.size() << std::endl;
         status.status = exploration_status_t::STATUS_FAILED;
     }
     
@@ -315,6 +316,56 @@ int8_t Exploration::executeReturningHome(bool initialize)
     
 
     /////////////////////////////// End student code ///////////////////////////////
+    planner_.setMap(currentMap_);
+
+    // currentPath_ = planner_.planPath(currentPose_, homePose_); 
+    // currentPath_.utime = utime_now();
+
+    Point<double> home_point;
+    home_point.x = 0;
+    home_point.y = 0;
+
+    Point<int> home_cell;
+    home_cell = global_position_to_grid_cell(home_point, currentMap_);
+
+    Point<double> Target_point;
+    Point<int> Target_cell;
+    pose_xyt_t Target_pose;
+    int ValidGoal_num = 0;
+    double min_Dis_to_homecell = 100000000000;
+    double Dis_to_homecell = 0;
+    
+    for (int i = 0; i < currentMap_.widthInCells(); i++) {
+        for (int j = 0; j < currentMap_.heightInCells(); j++) {
+            Point<int> temp_cell;
+            temp_cell.x = i;
+            temp_cell.y = j;
+
+            // std::cout << "temp_cell.x = " << temp_cell.x << "temp_cell.y = " << temp_cell.y << std::endl;
+
+            Point<double> temp_point = grid_position_to_global_position(temp_cell, currentMap_);
+            // std::cout << "temp_point.x = " << temp_point.x << "temp_point.y = " << temp_point.y << std::endl;
+
+            pose_xyt_t temp_pose;
+            temp_pose.x = temp_point.x;
+            temp_pose.y = temp_point.y;
+
+            if (planner_.isValidGoal(temp_pose)) {
+                ValidGoal_num++;
+                Dis_to_homecell = sqrtf((powf(home_cell.x - temp_cell.x, 2) + powf(home_cell.y - temp_cell.y, 2)));
+                
+                if (Dis_to_homecell < min_Dis_to_homecell) {
+                    min_Dis_to_homecell = Dis_to_homecell;
+                    Target_cell = temp_cell;
+                    Target_point = temp_point;
+                    Target_pose = temp_pose;
+                }              
+            }
+        }
+    }
+    currentPath_ = planner_.planPath(currentPose_, Target_pose); 
+    currentPath_.utime = utime_now();
+
     
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
