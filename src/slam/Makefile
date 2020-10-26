@@ -22,7 +22,11 @@ LDFLAGS = $(LDFLAGS_STD) \
 LIBDEPS = $(call libdeps, $(LDFLAGS))
 
 LIB_MAPPING = $(LIB_PATH)/libmapping.a
-LIBMAPPING_OBJS = occupancy_grid.o
+LIBMAPPING_OBJS = \ occupancy_grid.o \
+    motion_planner.o \
+    obstacle_distance_grid.o \
+    astar.o \
+    priority.o
 
 BIN_SLAM = $(BIN_PATH)/slam
 
@@ -30,7 +34,7 @@ ALL = $(LIB_MAPPING) $(BIN_SLAM)
 
 all: $(ALL)
 
-$(BIN_SLAM): slam_main.o moving_laser_scan.o mapping.o slam.o action_model.o motion_planner.o particle_filter.o sensor_model.o $(LIBDEPS)
+$(BIN_SLAM): slam_main.o moving_laser_scan.o mapping.o slam.o action_model.o particle_filter.o sensor_model.o $(LIBDEPS)
 	@echo "    $@"
 	@$(CXX) -o $@ $^ $(LDFLAGS) $(CXXFLAGS)
 
