@@ -67,7 +67,12 @@ OccupancyGridSLAM::OccupancyGridSLAM(int         numParticles,
     initialPose_.x = initialPose_.y = initialPose_.theta = 0.0f;
     previousPose_.x = previousPose_.y = previousPose_.theta = 0.0f;
     currentPose_.x  = currentPose_.y  = currentPose_.theta  = 0.0f;
+
     scatter = 0;
+    goHome = 0;
+    MotionPlannerParams params;
+    params.robotRadius = 0.3;
+    planner_.setParams(params);
 }
 
 
@@ -271,8 +276,24 @@ void OccupancyGridSLAM::updateLocalization(void)
             if(mode_ == localization_only && currentPose_.x != previousPose_.x && currentPose_.y != previousPose_.y){
                 scatter = filter_.addNoise(map_);
             }
-            if(mode_ == localization_only){
+
+            if(mode_ == localization_only && goHome < 10){
                 exploreRandom();
+                if(scatter < 400){
+                    goHome++;
+                }
+            }
+            if(goHome == 10){
+                planner_.setMap(currentMap_);
+                pose_xyt_t gPose;
+    
+                gPose.x = 0.0f;
+                gPose.y = 0.0f;
+                gPose.theta = 0.0f;
+
+                robot_path_t path = planner.planPath(currentPose_, gPose);
+                lcm_.publish(CONTROLLER_PATH_CHANNEL, &path);
+                goHome++;
             }
         }
         
