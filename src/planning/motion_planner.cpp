@@ -9,6 +9,7 @@
 MotionPlanner::MotionPlanner(const MotionPlannerParams& params)
 : params_(params)
 {
+    std::cout << "ROBOT RADIUS SET TO: " << params_.robotRadius << std::endl;
     setParams(params);
 }
 

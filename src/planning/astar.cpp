@@ -93,7 +93,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
 }
 
 
-std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, std::vector<Grid_Astar*> &visit_q, const ObstacleDistanceGrid& distances)
+std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, std::vector<Grid_Astar*> &visit_q, const ObstacleDistanceGrid& distances, const SearchParams& params)
 {
     // get current x and y position
     int x = cur_node -> cell_pos.x;
@@ -116,9 +116,10 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // check if at 0/0 (no assignment needed for this case)
             // don't do anything if cell isn't in grid
             // don't do anything if the cell is an obstacle
+            // dont do anything if the robot is too close to 
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
-            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.13){
+            }else if(distances(neighbor_position.x, neighbor_position.y) < params.minDistanceToObstacle){
                 continue;
             }
 
@@ -136,7 +137,6 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
                         break;
                     }else{
                         // don't append to neighbors (already been visited)
-                        // std::cout << "FOUND SOMETHING THAT HAS ALREADY BEEN VISITED\n";
                         k = -100;
                         break;
                     }   
@@ -173,7 +173,7 @@ robot_path_t search_for_path(pose_xyt_t start,
 {
     std::cout << "START POSITION: " << "(" << start.x << ", " << start.y << ", " << start.theta << ")" << std::endl; 
     std::cout << "GOAL POSITION: " << "(" << goal.x << ", " << goal.y << ", " << goal.theta << ")" << std::endl; 
-   
+    std::cout << "MIN DISTANCE: " << params.minDistanceToObstacle << "\t" << std::endl;
 
     // setup stored_nodes
     std::vector<Grid_Astar> stored_nodes;
@@ -231,7 +231,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     // check we found start and goal is in grid
     // check that start/goal aren't in an obstacle
     if(!goal_flg ||
-        distances(goal_pos.x, goal_pos.y) < 0.13){
+        distances(goal_pos.x, goal_pos.y) <= params.minDistanceToObstacle){
         // return a path with just the start
         std::cout << "GOAL NOT IN GRID" << std::endl; 
         std::cout << "START " <<  stored_nodes[start_idx].cell_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
@@ -286,7 +286,7 @@ robot_path_t search_for_path(pose_xyt_t start,
         // get neighbors to the current node (at most 8)
         // this will return less nodes if the neighbors are obstacles
         // will not return neighbors that have already been visited
-        neighbors = get_neighbors(cur_node, stored_nodes, visit_q, distances);
+        neighbors = get_neighbors(cur_node, stored_nodes, visit_q, distances, params);
 
         // loop through all neighbors
         for(neighbor = neighbors.begin(); neighbor != neighbors.end(); ++neighbor)
@@ -311,10 +311,10 @@ robot_path_t search_for_path(pose_xyt_t start,
                 dist_to_obstacle = distances((*neighbor)->cell_pos.x, (*neighbor)->cell_pos.y);
 
                 // add distance to goal
-                (*neighbor)->priority += pow(1/(dist_to_obstacle), 4);
+                (*neighbor)->priority += 10*pow(1/(dist_to_obstacle), 4);
 
                 // if not within a bad area append to visit queue
-                if(dist_to_obstacle >= 0.13){
+                if(dist_to_obstacle >= params.minDistanceToObstacle){
                     // either reheap or enqueue to visit queue
                     if((*neighbor)->in_visit_queue && !visit_q.empty()){
                         // reheap because priority for node has changed

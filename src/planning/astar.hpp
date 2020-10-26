@@ -60,7 +60,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
  * \param   distances   Distances to the nearest obstacle for each cell in the grid (also grid test)
  * \return  Vector <Grid_Astar*> of all neighbors to cur_node in Stored_nodes (appends them if they exist in grid and aren't already in stored_nodes)
  */
-std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, std::vector<Grid_Astar*> &visit_q, const ObstacleDistanceGrid& distances);
+std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_Astar> &stored_nodes, std::vector<Grid_Astar*> &visit_q, const ObstacleDistanceGrid& distances, const SearchParams& params);
 
 /**
 * search_for_path uses an A* search to find a path from the start to goal poses. The search assumes a circular robot
