@@ -57,12 +57,13 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
     }
 
     std::uniform_int_distribution<int> dist(0, emptyCells.size());
+    std::uniform_int_distribution<int> rot(-3.14, 3.14);
 
     for(auto& p : posterior_){
         Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
         p.pose.x = empty.x;
         p.pose.y = empty.y;
-        p.pose.theta = pose.theta;
+        p.pose.theta = rot(gen);
         p.pose.utime = pose.utime;
         p.parent_pose = p.pose;
         p.weight = sw;
@@ -78,13 +79,17 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(0, emptyCells.size());
-    int scatter = int((70000 - mapscore)/10000);
+    std::uniform_int_distribution<int> rot(-3.14, 3.14);
+    int scatter = std::ceil((mapscore+1)*10/25000);
+    scatter = scatter*scatter+1;
+    printf("scatter: %d\n", scatter);
 
     for(int i = 0; i<posterior_.size(); i++){
         if(i%scatter == 0){
             Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
             posterior_[i].pose.x = empty.x;
             posterior_[i].pose.y = empty.y;
+            posterior_[i].pose.theta = rot(gen);
         }
     }
 }
