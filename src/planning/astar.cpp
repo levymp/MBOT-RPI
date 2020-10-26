@@ -63,7 +63,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
         current_pose.theta = atan2(dy, dx);
         
         // append pose to current_pose path (put it at the beginning)
-        std::cout << current_pose << '\t' << node -> priority << '\t' << '\t'<< distances((node -> cell_pos).x, (node -> cell_pos).y) << std::endl;
+        std::cout << "(" << current_pose.x << ", " << current_pose.y << ", " << current_pose.theta << ")" << '\t' << node -> priority << '\t' << '\t'<< distances((node -> cell_pos).x, (node -> cell_pos).y) << std::endl;
         path.path.insert(path.path.begin(), current_pose);
         // append path length
         path.path_length++;
@@ -171,8 +171,8 @@ robot_path_t search_for_path(pose_xyt_t start,
                              const ObstacleDistanceGrid& distances,
                              const SearchParams& params)
 {
-    std::cout << "START POSITION: " << start << std::endl; 
-    std::cout << "END POSITION: " << end << std::endl;
+    std::cout << "START POSITION: " << "(" << start.x << ", " << start.y << ", " << start.theta << ")" << std::endl; 
+    std::cout << "GOAL POSITION: " << "(" << goal.x << ", " << goal.y << ", " << goal.theta << ")" << std::endl; 
    
 
     // setup stored_nodes
