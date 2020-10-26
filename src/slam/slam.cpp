@@ -285,7 +285,7 @@ void OccupancyGridSLAM::updateLocalization(void)
             if(goHome == 10){
                 MotionPlanner planner_;
                 MotionPlannerParams params;
-                params.robotRadius = 0.3;
+                params.robotRadius = 0.15;
                 planner_.setParams(params);
                 planner_.setMap(map_);
                 pose_xyt_t gPose;
