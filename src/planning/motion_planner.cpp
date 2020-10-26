@@ -57,7 +57,7 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
     //if there's more than 1 frontier, don't go to a target that is within a robot diameter of the current pose
     if (goal.x != 0.0f && goal.y !=  0.0f) {
         if(num_frontiers != 1 && distanceFromPrev < 2 * searchParams_.minDistanceToObstacle) {
-            // std::cout << "TARGET IS WITHIN ROBOT DIAMTER" << std::endl;
+            std::cout << "TARGET IS WITHIN ROBOT DIAMTER" << std::endl;
             return false;
         } 
     }
