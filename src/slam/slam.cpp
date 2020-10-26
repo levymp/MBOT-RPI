@@ -285,7 +285,7 @@ void OccupancyGridSLAM::updateLocalization(void)
             }
             std::cout << "gohome: " << goHome << "\n";
             if(goHome == 10){
-                planner_.setMap(currentMap_);
+                planner_.setMap(map_);
                 pose_xyt_t gPose;
     
                 gPose.x = 0.0f;
