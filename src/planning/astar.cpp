@@ -115,7 +115,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // don't do anything if the cell is an obstacle
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
-            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.15){
+            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.175){
                 continue;
             }
 
@@ -231,7 +231,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     !distances.isCellInGrid(stored_nodes[start_idx].cell_pos.x, stored_nodes[start_idx].cell_pos.y) || 
     !distances.isCellInGrid(stored_nodes[goal_idx].cell_pos.x, stored_nodes[goal_idx].cell_pos.y) ||
     distances(start_pos.x, start_pos.y) < 0.1||
-    distances(goal_pos.x, goal_pos.y) < 0.15){
+    distances(goal_pos.x, goal_pos.y) < 0.175){
         // return a path with just the start
         std::cout << "START/GOAL NOT IN GRID" << std::endl; 
         robot_path_t path;
@@ -311,7 +311,7 @@ robot_path_t search_for_path(pose_xyt_t start,
                 (*neighbor)->priority += pow(1/(dist_to_obstacle), 4);
 
                 // if not within a bad area append to visit queue
-                if(dist_to_obstacle >= 0.15){
+                if(dist_to_obstacle >= 0.175){
                     // either reheap or enqueue to visit queue
                     if((*neighbor)->in_visit_queue && !visit_q.empty()){
                         // reheap because priority for node has changed
