@@ -74,7 +74,7 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
     }
     
     // A goal must be in the map for the robot to reach it
-    // std::cout << "THE GOALs IS NOT IN THE MAP" << std::endl;
+    // std::cout << "THE GOAL IS NOT IN THE MAP" << std::endl;
     return false;
 }
 
