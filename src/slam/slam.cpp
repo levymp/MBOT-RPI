@@ -292,7 +292,7 @@ void OccupancyGridSLAM::updateLocalization(void)
                 gPose.y = 0.0f;
                 gPose.theta = 0.0f;
 
-                robot_path_t path = planner.planPath(currentPose_, gPose);
+                robot_path_t path = planner_.planPath(currentPose_, gPose);
                 lcm_.publish(CONTROLLER_PATH_CHANNEL, &path);
                 goHome++;
             }
