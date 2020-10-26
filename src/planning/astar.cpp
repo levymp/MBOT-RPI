@@ -79,9 +79,9 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
     
     
 
-    // append start to first position
-    path.path.insert(path.path.begin(), start);
-    path.path_length++;
+    // append start to first position (no longer necessary because it messes up robot path)
+    // path.path.insert(path.path.begin(), start);
+    // path.path_length++;
     std::cout << "FINISHED PATH! LENGTH: " << path.path_length << std::endl;
     return path;
 }
