@@ -48,7 +48,7 @@ Exploration::Exploration(int32_t teamNumber,
 	goingHome = false;    
     MotionPlannerParams params;
     // params.robotRadius = 0.2;
-    params.robotRadius = 0.3;
+    params.robotRadius = 0.1;
     planner_.setParams(params);
 }
 
