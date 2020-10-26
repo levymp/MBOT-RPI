@@ -74,6 +74,9 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
         // go to next node if the current node is not nullptr
         if(node){
             node = node -> parent;
+            if(node){
+                node = node -> parent;
+            }
         }
     }
     
