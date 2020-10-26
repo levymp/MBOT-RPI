@@ -30,7 +30,7 @@ ALL = $(LIB_MAPPING) $(BIN_SLAM)
 
 all: $(ALL)
 
-$(BIN_SLAM): slam_main.o moving_laser_scan.o mapping.o slam.o action_model.o particle_filter.o sensor_model.o $(LIBDEPS)
+$(BIN_SLAM): slam_main.o moving_laser_scan.o mapping.o slam.o action_model.o ../planning/motion_planner.o particle_filter.o sensor_model.o $(LIBDEPS)
 	@echo "    $@"
 	@$(CXX) -o $@ $^ $(LDFLAGS) $(CXXFLAGS)
 

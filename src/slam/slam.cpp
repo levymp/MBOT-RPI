@@ -1,7 +1,7 @@
 #include <slam/slam.hpp>
+#include <planning/motion_planner.hpp>
 #include <slam/slam_channels.h>
 #include <mbot/mbot_channels.h>
-#include <planning/motion_planner.cpp>
 #include <lcmtypes/mbot_motor_command_t.hpp>
 #include <optitrack/optitrack_channels.h>
 #include <slam/moving_laser_scan.hpp>
