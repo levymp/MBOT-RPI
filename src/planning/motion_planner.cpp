@@ -80,8 +80,10 @@ bool MotionPlanner::isPathSafe(const robot_path_t& path) const
     // assume before this is called the obstacle distance grid is updated
 
     // get all of the targes
-    
-    
+    if(path.path_length <= 1){
+        return true;
+    }
+
     // target grid position
     Point<int> grid_pos;
 
