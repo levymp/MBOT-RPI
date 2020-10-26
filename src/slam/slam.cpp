@@ -70,9 +70,6 @@ OccupancyGridSLAM::OccupancyGridSLAM(int         numParticles,
 
     scatter = 0;
     goHome = 0;
-    MotionPlannerParams params;
-    params.robotRadius = 0.3;
-    planner_.setParams(params);
 }
 
 
@@ -285,8 +282,11 @@ void OccupancyGridSLAM::updateLocalization(void)
             }
             std::cout << "gohome: " << goHome << "\n";
             if(goHome == 10){
-                const OccupancyGrid nmap_ = map_;
-                planner_.setMap(nmap_);
+                MotionPlanner planner_;
+                MotionPlannerParams params;
+                params.robotRadius = 0.3;
+                planner_.setParams(params);
+                planner_.setMap(map_);
                 pose_xyt_t gPose;
     
                 gPose.x = 0.0f;
