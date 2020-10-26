@@ -336,6 +336,8 @@ robot_path_t search_for_path(pose_xyt_t start,
         // did not find a valid path!
         // returning start pose 
         std::cout << "COULD NOT FIND CORRECT PATH" << std::endl;
+        std::cout << "START " <<  stored_nodes[start_idx].cell_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
+        std::cout << "GOAL " << goal_pos  << '\t' << "DISTANCE: " << distances(goal_pos.x, goal_pos.y) << std::endl;
         robot_path_t path;
         // append start to first element of path
         path.path.push_back(start);
