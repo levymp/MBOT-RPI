@@ -354,7 +354,7 @@ void OccupancyGridSLAM::exploreRandom(void)
         cmd.angular_v = 0.0f;  
     }else{
         cmd.trans_v = 0.0f;
-        cmd.angular_v = -.3f;
+        cmd.angular_v = .3f;
     }
     
     lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
