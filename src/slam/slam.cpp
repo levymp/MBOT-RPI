@@ -339,7 +339,7 @@ void OccupancyGridSLAM::exploreRandom(void)
 
     bool fwdflg = true;
     for(int i = 0; i<currentScan_.thetas.size(); i++){
-        if(fabs(currentScan_.thetas[i]) < 1.25){
+        if(fabs(currentScan_.thetas[i]) < .75 && fabs(currentScan_.thetas[i]) > 5.5){
             if(currentScan_.ranges[i] < .25f){
                 fwdflg = false;
             }
