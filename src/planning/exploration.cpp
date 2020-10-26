@@ -252,7 +252,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
     planner_.setMap(currentMap_);
     frontiers_ = find_map_frontiers(currentMap_, currentPose_, 0.2);
     if (!frontiers_.empty()) {
-	if(currentPath_.path.size() < 1 || !planner_.isPathSafe(&currentPath_.path)){
+	if(currentPath_.path.size() < 1 || !planner_.isPathSafe(currentPath_)){
         	currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
         	currentPath_.utime = utime_now();
 	}
