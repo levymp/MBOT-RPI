@@ -161,6 +161,11 @@ void Exploration::executeStateMachine(void)
                 
             case exploration_status_t::STATE_RETURNING_HOME:
                 nextState = executeReturningHome(stateChanged);
+                // while(!goingHome){
+                //     // sleep
+                //     usleep(10e7);
+                //     nextState = executeReturningHome(stateChanged);
+                // }
                 break;
 
             case exploration_status_t::STATE_COMPLETED_EXPLORATION:
@@ -249,10 +254,13 @@ int8_t Exploration::executeExploringMap(bool initialize)
 
 
     // std::cout << "For debugging: pathReceived_:" << pathReceived_ << std::endl;
+
+
     planner_.setMap(currentMap_);
     frontiers_ = find_map_frontiers(currentMap_, currentPose_, 0.2);
+    
     if (!frontiers_.empty()) {
-        if(currentPath_.path.size() < 1 || !planner_.isPathSafe(currentPath_)){
+        if(currentPath_.path.size() < 1 || !planner_.isPathSafe(currentPath_) || distance_between_points(Point<double>(currentPose_.x, currentPose_.y), Point<double>(currentPath_.path.back().x, currentPath_.path.back().y)) < 2*kReachedPositionThreshold){
             currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
             currentPath_.utime = utime_now();
         }
@@ -322,58 +330,68 @@ int8_t Exploration::executeReturningHome(bool initialize)
 
     // currentPath_ = planner_.planPath(currentPose_, homePose_); 
     // currentPath_.utime = utime_now()
-	if(!planner_.isValidGoal(homePose_) && !goingHome){
-	goingHome = true;
-    Point<double> home_point;
-    home_point.x = 0;
-    home_point.y = 0;
+	// if(!planner_.isValidGoal(homePose_) && !goingHome){
+    //     std::cout << "home is invalid";
+    //     goingHome = false;
+    //     Point<double> home_point;
+    //     home_point.x = 0;
+    //     home_point.y = 0;
 
-    Point<int> home_cell;
-    home_cell = global_position_to_grid_cell(home_point, currentMap_);
+    //     Point<int> home_cell;
+    //     home_cell = global_position_to_grid_cell(home_point, currentMap_);
 
-    Point<double> Target_point;
-    Point<int> Target_cell;
-    pose_xyt_t Target_pose;
-    int ValidGoal_num = 0;
-    double min_Dis_to_homecell = 100000000000;
-    double Dis_to_homecell = 0;
-    
-    for (int i = 0; i < currentMap_.widthInCells(); i++) {
-        for (int j = 0; j < currentMap_.heightInCells(); j++) {
-            Point<int> temp_cell;
-            temp_cell.x = i;
-            temp_cell.y = j;
+    //     Point<double> Target_point;
+    //     Point<int> Target_cell;
+    //     pose_xyt_t Target_pose;
+    //     int ValidGoal_num = 0;
+    //     double min_Dis_to_homecell = 100000000000;
+    //     double Dis_to_homecell = 0;
+        
+    //     for (int i = 0; i < currentMap_.widthInCells(); i++) {
+    //         for (int j = 0; j < currentMap_.heightInCells(); j++) {
+    //             Point<int> temp_cell;
+    //             temp_cell.x = i;
+    //             temp_cell.y = j;
 
-            // std::cout << "temp_cell.x = " << temp_cell.x << "temp_cell.y = " << temp_cell.y << std::endl;
+    //             // std::cout << "temp_cell.x = " << temp_cell.x << "temp_cell.y = " << temp_cell.y << std::endl;
 
-            Point<double> temp_point = grid_position_to_global_position(temp_cell, currentMap_);
-            // std::cout << "temp_point.x = " << temp_point.x << "temp_point.y = " << temp_point.y << std::endl;
+    //             Point<double> temp_point = grid_position_to_global_position(temp_cell, currentMap_);
+    //             // std::cout << "temp_point.x = " << temp_point.x << "temp_point.y = " << temp_point.y << std::endl;
 
-            pose_xyt_t temp_pose;
-            temp_pose.x = temp_point.x;
-            temp_pose.y = temp_point.y;
+    //             pose_xyt_t temp_pose;
+    //             temp_pose.x = temp_point.x;
+    //             temp_pose.y = temp_point.y;
 
-            if (planner_.isValidGoal(temp_pose)) {
-                ValidGoal_num++;
-                Dis_to_homecell = sqrtf((powf(home_cell.x - temp_cell.x, 2) + powf(home_cell.y - temp_cell.y, 2)));
-                
-                if (Dis_to_homecell < min_Dis_to_homecell) {
-                    min_Dis_to_homecell = Dis_to_homecell;
-                    Target_cell = temp_cell;
-                    Target_point = temp_point;
-                    Target_pose = temp_pose;
-                }              
-            }
-        }
-    }
-	currentPath_=planner_.planPath(currentPose_,Target_pose);
-	currentPath_.utime = utime_now();
-}else if(!goingHome){
-	goingHome = true;
-	std::cout << "home is valid\n";
-    currentPath_ = planner_.planPath(currentPose_, homePose_); 
-    currentPath_.utime = utime_now();
-    }
+    //             if (planner_.isValidGoal(temp_pose)) {
+    //                 ValidGoal_num++;
+    //                 Dis_to_homecell = sqrtf((powf(home_cell.x - temp_cell.x, 2) + powf(home_cell.y - temp_cell.y, 2)));
+                    
+    //                 if (Dis_to_homecell < min_Dis_to_homecell) {
+    //                     min_Dis_to_homecell = Dis_to_homecell;
+    //                     Target_cell = temp_cell;
+    //                     Target_point = temp_point;
+    //                     Target_pose = temp_pose;
+    //                 }              
+    //             }
+    //         }
+    //     }
+    //     // write path
+    //     currentPath_= planner_.planPath(currentPose_,Target_pose);
+    //     currentPath_.utime = utime_now();
+    // }else if(!goingHome){
+        // goingHome = true;
+        // std::cout << "home is valid\n";
+        
+        // pose_xyt_t gPose;
+        // gPose.x = 0.0f;
+        // gPose.y = 0.0f;
+        // gPose.theta = 0.0f;
+        // currentPath_ = planner_.planPath(currentPose_, gPose); 
+        
+        currentPath_ = planner_.planPath(currentPose_, homePose_); 
+        currentPath_.utime = utime_now();
+    // }
+
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
     status.utime = utime_now();
@@ -382,6 +400,8 @@ int8_t Exploration::executeReturningHome(bool initialize)
     
     double distToHome = distance_between_points(Point<float>(homePose_.x, homePose_.y), 
                                                 Point<float>(currentPose_.x, currentPose_.y));
+    // double distToHome = distance_between_points(Point<float>(gPose.x, gPose.y), 
+    //                                             Point<float>(currentPose_.x, currentPose_.y));
     // If we're within the threshold of home, then we're done.
     if(distToHome <= kReachedPositionThreshold)
     {
@@ -407,7 +427,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
     {
         return exploration_status_t::STATE_RETURNING_HOME;
     }
-    else if(status.status = exploration_status_t::STATUS_COMPLETE)
+    else if(status.status == exploration_status_t::STATUS_COMPLETE)
     {
         return exploration_status_t::STATE_COMPLETED_EXPLORATION;
     }
