@@ -44,6 +44,9 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
     node = node -> parent;
     std::cout << "MAKING PATH:\n";
     
+    // VALUE COLUMNS
+    std::cout << "POSE" << '\t' << "PRIORITY" << "\t" << "DISTANCE TO OBSTACLE" << std::endl;
+
     // go through all nodes
     while(node != nullptr)
     {
@@ -60,7 +63,7 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
         current_pose.theta = atan2(dy, dx);
         
         // append pose to current_pose path (put it at the beginning)
-        std::cout << current_pose.x << '\t' << current_pose.y << '\t' << current_pose.theta << '\t' << node -> priority << '\t' << node -> visited << '\t'<< node -> distance <<std::endl;
+        std::cout << current_pose << '\t' << node -> priority << '\t' << '\t'<< distances((node -> cell_pos).x, (node -> cell_pos).y) << std::endl;
         path.path.insert(path.path.begin(), current_pose);
         // append path length
         path.path_length++;
@@ -73,9 +76,9 @@ robot_path_t makepath(pose_xyt_t start, pose_xyt_t goal, Grid_Astar* node, const
         
         // go to next node if the current node is not nullptr
         if(node){
-            node = node -> parent;
-            if(node){
-                node = node -> parent;
+            // node = node -> parent;
+            if(!(node->parent)){
+                break;
             }
         }
     }
@@ -115,7 +118,7 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // don't do anything if the cell is an obstacle
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
-            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.175){
+            }else if(distances(neighbor_position.x, neighbor_position.y) < 0.13){
                 continue;
             }
 
@@ -168,8 +171,8 @@ robot_path_t search_for_path(pose_xyt_t start,
                              const ObstacleDistanceGrid& distances,
                              const SearchParams& params)
 {
-    // std::cout << "START POSITION: " << start << std::endl; 
-    // std::cout << "END POSITION: " << end << std::endl;
+    std::cout << "START POSITION: " << start << std::endl; 
+    std::cout << "END POSITION: " << end << std::endl;
    
 
     // setup stored_nodes
@@ -228,7 +231,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     // check we found start and goal is in grid
     // check that start/goal aren't in an obstacle
     if(!goal_flg ||
-        distances(goal_pos.x, goal_pos.y) < 0.175){
+        distances(goal_pos.x, goal_pos.y) < 0.13){
         // return a path with just the start
         std::cout << "GOAL NOT IN GRID" << std::endl; 
         std::cout << "START " <<  stored_nodes[start_idx].cell_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
@@ -311,7 +314,7 @@ robot_path_t search_for_path(pose_xyt_t start,
                 (*neighbor)->priority += pow(1/(dist_to_obstacle), 4);
 
                 // if not within a bad area append to visit queue
-                if(dist_to_obstacle >= 0.175){
+                if(dist_to_obstacle >= 0.13){
                     // either reheap or enqueue to visit queue
                     if((*neighbor)->in_visit_queue && !visit_q.empty()){
                         // reheap because priority for node has changed
