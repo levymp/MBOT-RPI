@@ -279,10 +279,11 @@ void OccupancyGridSLAM::updateLocalization(void)
 
             if(mode_ == localization_only && goHome < 10){
                 exploreRandom();
-                if(scatter < 300){
+                if(scatter < 200){
                     goHome++;
                 }
             }
+            std::cout << "gohome: " << goHome << "\n";
             if(goHome == 10){
                 planner_.setMap(currentMap_);
                 pose_xyt_t gPose;
