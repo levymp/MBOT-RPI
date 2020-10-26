@@ -326,6 +326,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
     // currentPath_ = planner_.planPath(currentPose_, homePose_); 
     // currentPath_.utime = utime_now()
 	if(!planner_.isValidGoal(homePose_) && !goingHome){
+        std::cout << "home is invalid";
         goingHome = true;
         Point<double> home_point;
         home_point.x = 0;
@@ -369,14 +370,16 @@ int8_t Exploration::executeReturningHome(bool initialize)
                 }
             }
         }
+        // write path
         currentPath_=planner_.planPath(currentPose_,Target_pose);
         currentPath_.utime = utime_now();
-}else if(!goingHome){
-	goingHome = true;
-	std::cout << "home is valid\n";
-    currentPath_ = planner_.planPath(currentPose_, homePose_); 
-    currentPath_.utime = utime_now();
+    }else if(!goingHome){
+        goingHome = true;
+        std::cout << "home is valid\n";
+        currentPath_ = planner_.planPath(currentPose_, homePose_); 
+        currentPath_.utime = utime_now();
     }
+
     /////////////////////////   Create the status message    //////////////////////////
     exploration_status_t status;
     status.utime = utime_now();
