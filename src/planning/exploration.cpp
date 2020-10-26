@@ -161,8 +161,10 @@ void Exploration::executeStateMachine(void)
                 
             case exploration_status_t::STATE_RETURNING_HOME:
                 nextState = executeReturningHome(stateChanged);
-                if(!goingHome){
-
+                while(!goingHome){
+                    // sleep
+                    usleep(10e7);
+                    nextState = executeReturningHome(stateChanged);
                 }
                 break;
 
@@ -374,7 +376,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
             }
         }
         // write path
-        currentPath_=planner_.planPath(currentPose_,Target_pose);
+        currentPath_= planner_.planPath(currentPose_,Target_pose);
         currentPath_.utime = utime_now();
     }else if(!goingHome){
         goingHome = true;
