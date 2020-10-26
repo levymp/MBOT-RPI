@@ -249,10 +249,13 @@ int8_t Exploration::executeExploringMap(bool initialize)
 
 
     // std::cout << "For debugging: pathReceived_:" << pathReceived_ << std::endl;
+
+
     planner_.setMap(currentMap_);
     frontiers_ = find_map_frontiers(currentMap_, currentPose_, 0.2);
+    
     if (!frontiers_.empty()) {
-        if(currentPath_.path.size() < 1 || !planner_.isPathSafe(currentPath_)){
+        if(currentPath_.path.size() < 1 || !planner_.isPathSafe(currentPath_) || distance_between_points(Point<double>(currentPose_.x, currentPose_.y), Point<double>(currentPath_.path.back().x, currentPath_.path.back().y)) < 2*kReachedPositionThreshold){
             currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
             currentPath_.utime = utime_now();
         }
