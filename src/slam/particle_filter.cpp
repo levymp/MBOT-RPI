@@ -73,7 +73,7 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
 
 }
 
-void ParticleFilter::addNoise(const OccupancyGrid& map)
+int ParticleFilter::addNoise(const OccupancyGrid& map)
 {
     std::vector<particle_t> noise;
     std::random_device rd;
@@ -92,6 +92,7 @@ void ParticleFilter::addNoise(const OccupancyGrid& map)
             posterior_[i].pose.theta = rot(gen);
         }
     }
+    return scatter;
 }
 
 

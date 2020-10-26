@@ -67,6 +67,7 @@ OccupancyGridSLAM::OccupancyGridSLAM(int         numParticles,
     initialPose_.x = initialPose_.y = initialPose_.theta = 0.0f;
     previousPose_.x = previousPose_.y = previousPose_.theta = 0.0f;
     currentPose_.x  = currentPose_.y  = currentPose_.theta  = 0.0f;
+    scatter = 0;
 }
 
 
@@ -268,7 +269,7 @@ void OccupancyGridSLAM::updateLocalization(void)
         else{
             currentPose_  = filter_.updateFilter(currentOdometry_, currentScan_, map_);
             if(mode_ == localization_only && currentPose_.x != previousPose_.x && currentPose_.y != previousPose_.y){
-                filter_.addNoise(map_);
+                scatter = filter_.addNoise(map_);
             }
             if(mode_ == localization_only){
                 exploreRandom();

@@ -98,6 +98,7 @@ private:
     
     lcm::LCM& lcm_;
     int mapUpdateCount_;  // count so we only send the map occasionally, as it takes lots of bandwidth
+    int scatter;
     
     std::mutex dataMutex_;
 
