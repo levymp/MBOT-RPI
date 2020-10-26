@@ -82,7 +82,7 @@ private:
     pose_xyt_t currentPose_;            // Robot pose to use for computing new paths
     OccupancyGrid currentMap_;          // Map to use for finding frontiers and planning paths to them
     MotionPlanner planner_;             // Planner to use for finding collision-free paths to select frontiers
-    
+    MotionPlannerParams params_;
     pose_xyt_t homePose_;               // Pose of the robot when it is home, i.e. the initial pose before exploration begins
 
     robot_path_t currentPath_;          // Current path being followed to a frontier or other target, like the home or key poses

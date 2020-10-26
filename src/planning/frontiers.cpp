@@ -89,7 +89,9 @@ std::vector<frontier_t> find_map_frontiers(const OccupancyGrid& map,
 robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers, 
                                    const pose_xyt_t& robotPose,
                                    const OccupancyGrid& map,
-                                   const MotionPlanner& planner)
+                                   const MotionPlanner& planner,
+                                   const MotionPlannerParams& params)
+
 {
     ///////////// TODO: Implement your strategy to select the next frontier to explore here //////////////////
     /*
@@ -164,7 +166,7 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
 
                 Dis_to_frontierpoint = sqrtf((powf(Target_frontier_point.x - temp_point.x, 2) + powf(Target_frontier_point.y - temp_point.y, 2)));
                 
-                if (Dis_to_frontierpoint > 0.2) { //robotradius 
+                if (Dis_to_frontierpoint > params.robotRadius) { //robotradius 
                     ValidGoal_num++;
                 
                     if (Dis_to_frontierpoint < min_Dis_to_frontierpoint) {
