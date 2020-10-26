@@ -228,7 +228,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     // check we found start and goal is in grid
     // check that start/goal aren't in an obstacle
     if(!goal_flg ||
-        distances(goal_pos.x, goal_pos.y) < 0.125){
+        distances(goal_pos.x, goal_pos.y) < 0.025){
         // return a path with just the start
         std::cout << "GOAL NOT IN GRID" << std::endl; 
         std::cout << "START " <<  stored_nodes[start_idx].cell_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
