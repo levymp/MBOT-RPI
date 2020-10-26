@@ -230,7 +230,7 @@ robot_path_t search_for_path(pose_xyt_t start,
     if(!start_flg || !goal_flg ||
     !distances.isCellInGrid(stored_nodes[start_idx].cell_pos.x, stored_nodes[start_idx].cell_pos.y) || 
     !distances.isCellInGrid(stored_nodes[goal_idx].cell_pos.x, stored_nodes[goal_idx].cell_pos.y) ||
-    distances(start_pos.x, start_pos.y) < 0.1||
+    distances(start_pos.x, start_pos.y) < 0.15||
     distances(goal_pos.x, goal_pos.y) < 0.175){
         // return a path with just the start
         std::cout << "START/GOAL NOT IN GRID" << std::endl; 

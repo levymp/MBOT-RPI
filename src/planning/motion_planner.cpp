@@ -99,7 +99,7 @@ bool MotionPlanner::isPathSafe(const robot_path_t& path) const
         grid_pos = global_position_to_grid_cell(Point<double>(pose.x, pose.y), distances_);
         
         // check if within robot distance
-        if(distances_(grid_pos.x, grid_pos.y) <= .15){
+        if(distances_(grid_pos.x, grid_pos.y) <= .175){
             std::cout << "PATH IS NOT SAFE NOW!\n";
             return false;
         }
