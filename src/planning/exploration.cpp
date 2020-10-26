@@ -161,6 +161,9 @@ void Exploration::executeStateMachine(void)
                 
             case exploration_status_t::STATE_RETURNING_HOME:
                 nextState = executeReturningHome(stateChanged);
+                if(!goingHome){
+
+                }
                 break;
 
             case exploration_status_t::STATE_COMPLETED_EXPLORATION:
@@ -327,7 +330,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
     // currentPath_.utime = utime_now()
 	if(!planner_.isValidGoal(homePose_) && !goingHome){
         std::cout << "home is invalid";
-        goingHome = true;
+        goingHome = false;
         Point<double> home_point;
         home_point.x = 0;
         home_point.y = 0;
