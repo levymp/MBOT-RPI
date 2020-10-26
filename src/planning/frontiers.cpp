@@ -141,6 +141,9 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
     int ValidGoal_num = 0;
     double min_Dis_to_frontiercell = 100000000000;
     double Dis_to_frontiercell = 0;
+
+    double min_Dis_to_frontierpoint = 100000000000;
+    double Dis_to_frontierpoint = 0;
     
     for (int i = 0; i < map.widthInCells(); i++) {
         for (int j = 0; j < map.heightInCells(); j++) {
@@ -158,19 +161,34 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
             temp_pose.y = temp_point.y;
 
             if (planner.isValidGoal(temp_pose)) {
-                ValidGoal_num++;
-                Dis_to_frontiercell = sqrtf((powf(Target_frontier_cell.x - temp_cell.x, 2) + powf(Target_frontier_cell.y - temp_cell.y, 2)));
+
+                Dis_to_frontierpoint = sqrtf((powf(Target_frontier_point.x - temp_point.x, 2) + powf(Target_frontier_point.y - temp_point.y, 2)));
                 
-                if (Dis_to_frontiercell < min_Dis_to_frontiercell) {
-                    min_Dis_to_frontiercell = Dis_to_frontiercell;
-                    Target_cell = temp_cell;
-                    Target_point = temp_point;
-                    Target_pose = temp_pose;
-                }              
+                if (Dis_to_frontierpoint > 0.2) { //robotradius 
+                    ValidGoal_num++;
+                
+                    if (Dis_to_frontierpoint < min_Dis_to_frontierpoint) {
+                        min_Dis_to_frontierpoint = Dis_to_frontierpoint;
+                        Target_cell = temp_cell;
+                        Target_point = temp_point;
+                        Target_pose = temp_pose;
+                    }
+                }
+
+                /* Commented on 6:50pm 10/26/2020 -- Xun
+                // ValidGoal_num++;
+                // Dis_to_frontiercell = sqrtf((powf(Target_frontier_cell.x - temp_cell.x, 2) + powf(Target_frontier_cell.y - temp_cell.y, 2)));
+                
+                // if (Dis_to_frontiercell < min_Dis_to_frontiercell) {
+                //     min_Dis_to_frontiercell = Dis_to_frontiercell;
+                //     Target_cell = temp_cell;
+                //     Target_point = temp_point;
+                //     Target_pose = temp_pose;
+                // } 
+                */             
             }
         }
     }
-    
 
     if (ValidGoal_num != 0) {
         robot_path_t path = planner.planPath(robotPose, Target_pose);
