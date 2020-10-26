@@ -23,10 +23,10 @@ LIBDEPS = $(call libdeps, $(LDFLAGS))
 
 LIB_MAPPING = $(LIB_PATH)/libmapping.a
 LIBMAPPING_OBJS = \ occupancy_grid.o \
-    motion_planner.o \
-    obstacle_distance_grid.o \
-    astar.o \
-    priority.o
+    ../planning/motion_planner.o \
+    ../planning/obstacle_distance_grid.o \
+    ../planning/astar.o \
+    ../planning/priority.o
 
 BIN_SLAM = $(BIN_PATH)/slam
 
