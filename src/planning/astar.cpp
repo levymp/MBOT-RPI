@@ -237,13 +237,27 @@ robot_path_t search_for_path(pose_xyt_t start,
         std::cout << "START " <<  stored_nodes[start_idx].cell_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
         std::cout << "GOAL " << goal_pos  << '\t' << "DISTANCE: " << distances(goal_pos.x, goal_pos.y) << std::endl;
 
+        // return one pose
         robot_path_t path;
         // append start to first element of path
         path.path.push_back(start);
         path.utime = start.utime;
         path.path_length = 1;
         return path;
-    }else{
+    }else if(!start_flg || distances(start_pos.x, start_pos.y) <= params.minDistanceToObstacle){
+        std::cout << "START NOT IN GRID" << std::endl; 
+        std::cout << "START " <<  stored_nodes[start_idx].cell_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
+        std::cout << "START " << start_pos  << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
+        
+        // return one pose
+        robot_path_t path;
+        // append start to first element of path
+        path.path.push_back(start);
+        path.utime = start.utime;
+        path.path_length = 1;
+    }
+    
+    else{
         // add start position to the empty priority queue
         visit_q.push_back(&stored_nodes[start_idx]);    
         stored_nodes[start_idx].in_visit_queue = true;  
