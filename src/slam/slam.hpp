@@ -3,6 +3,8 @@
 
 #include <lcmtypes/lidar_t.hpp>
 #include <lcmtypes/odometry_t.hpp>
+#include <planning/motion_planner.hpp>
+#include <lcmtypes/robot_path_t.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <slam/particle_filter.hpp>
 #include <slam/mapping.hpp>
@@ -98,6 +100,8 @@ private:
     
     lcm::LCM& lcm_;
     int mapUpdateCount_;  // count so we only send the map occasionally, as it takes lots of bandwidth
+    int scatter;
+    int goHome;
     
     std::mutex dataMutex_;
 

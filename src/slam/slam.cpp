@@ -1,9 +1,11 @@
 #include <slam/slam.hpp>
+#include <planning/motion_planner.hpp>
 #include <slam/slam_channels.h>
 #include <mbot/mbot_channels.h>
 #include <lcmtypes/mbot_motor_command_t.hpp>
 #include <optitrack/optitrack_channels.h>
 #include <slam/moving_laser_scan.hpp>
+#include <common/angle_functions.hpp>
 #include <unistd.h>
 #include <cassert>
 #include <chrono>
@@ -66,6 +68,9 @@ OccupancyGridSLAM::OccupancyGridSLAM(int         numParticles,
     initialPose_.x = initialPose_.y = initialPose_.theta = 0.0f;
     previousPose_.x = previousPose_.y = previousPose_.theta = 0.0f;
     currentPose_.x  = currentPose_.y  = currentPose_.theta  = 0.0f;
+
+    scatter = 0;
+    goHome = 0;
 }
 
 
@@ -267,10 +272,31 @@ void OccupancyGridSLAM::updateLocalization(void)
         else{
             currentPose_  = filter_.updateFilter(currentOdometry_, currentScan_, map_);
             if(mode_ == localization_only && currentPose_.x != previousPose_.x && currentPose_.y != previousPose_.y){
-                filter_.addNoise(map_);
+                scatter = filter_.addNoise(map_);
             }
-            if(mode_ == localization_only){
+
+            if(mode_ == localization_only && goHome < 10){
                 exploreRandom();
+                if(scatter > 700){
+                    goHome++;
+                }
+            }
+            std::cout << "gohome: " << goHome << "\n";
+            if(goHome == 10){
+                MotionPlanner planner_;
+                MotionPlannerParams params;
+                params.robotRadius = 0.15;
+                planner_.setParams(params);
+                planner_.setMap(map_);
+                pose_xyt_t gPose;
+    
+                gPose.x = 0.0f;
+                gPose.y = 0.0f;
+                gPose.theta = 0.0f;
+
+                robot_path_t path = planner_.planPath(currentPose_, gPose);
+                lcm_.publish(CONTROLLER_PATH_CHANNEL, &path);
+                goHome++;
             }
         }
         
@@ -309,12 +335,12 @@ void OccupancyGridSLAM::updateMap(void)
 void OccupancyGridSLAM::exploreRandom(void)
 {
     float score = 0;
-    MovingLaserScan mvscan(currentScan_, previousPose_, currentPose_);
+    MovingLaserScan mvscan(currentScan_, currentPose_, currentPose_);
 
     bool fwdflg = true;
-    for(const auto& ray : mvscan){
-        if(ray.theta > -.025 || ray.theta < .025){
-            if(ray.range < .2f){
+    for(int i = 0; i<currentScan_.thetas.size(); i++){
+        if(fabs(currentScan_.thetas[i]) < .5 || fabs(currentScan_.thetas[i]) > 5.75){
+            if(currentScan_.ranges[i] < .25f){
                 fwdflg = false;
             }
         }
@@ -328,7 +354,7 @@ void OccupancyGridSLAM::exploreRandom(void)
         cmd.angular_v = 0.0f;  
     }else{
         cmd.trans_v = 0.0f;
-        cmd.angular_v = -.3f;
+        cmd.angular_v = .3f;
     }
     
     lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);

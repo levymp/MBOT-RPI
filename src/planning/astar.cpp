@@ -119,7 +119,9 @@ std::vector<Grid_Astar*> get_neighbors(Grid_Astar* cur_node, std::vector<Grid_As
             // dont do anything if the robot is too close to 
             if((!i && !j) || !distances.isCellInGrid(neighbor_position.x, neighbor_position.y)){
                 continue;
+
             }else if(distances(neighbor_position.x, neighbor_position.y) < params.minDistanceToObstacle){
+
                 continue;
             }
 
@@ -234,7 +236,9 @@ robot_path_t search_for_path(pose_xyt_t start,
 
 
     if(!goal_flg ||
+
         distances(goal_pos.x, goal_pos.y) <= params.minDistanceToObstacle){
+
         // return a path with just the start
         std::cout << "GOAL NOT IN GRID" << std::endl; 
         std::cout << "START " <<  start_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
@@ -332,7 +336,9 @@ robot_path_t search_for_path(pose_xyt_t start,
                 (*neighbor)->priority += 10*pow(1/(dist_to_obstacle), 4);
 
                 // if not within a bad area append to visit queue
+
                 if(dist_to_obstacle >= params.minDistanceToObstacle){
+
                     // either reheap or enqueue to visit queue
                     if((*neighbor)->in_visit_queue && !visit_q.empty()){
                         // reheap because priority for node has changed
@@ -357,6 +363,8 @@ robot_path_t search_for_path(pose_xyt_t start,
         // did not find a valid path!
         // returning start pose 
         std::cout << "COULD NOT FIND CORRECT PATH" << std::endl;
+        std::cout << "START " <<  stored_nodes[start_idx].cell_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
+        std::cout << "GOAL " << goal_pos  << '\t' << "DISTANCE: " << distances(goal_pos.x, goal_pos.y) << std::endl;
         robot_path_t path;
         // append start to first element of path
         path.path.push_back(start);
