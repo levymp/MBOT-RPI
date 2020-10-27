@@ -387,9 +387,16 @@ int8_t Exploration::executeReturningHome(bool initialize)
         // gPose.y = 0.0f;
         // gPose.theta = 0.0f;
         // currentPath_ = planner_.planPath(currentPose_, gPose); 
+        if(initialize){
+            // if just starting plan a path to home
+            currentPath_ = planner_.planPath(currentPose_, homePose_); 
+            currentPath_.utime = utime_now();
+        }else if(!initalize && !isPathSafe(currentPath_)){
+            // if the path becomes unsafe create a new one
+            currentPath_ = planner_.planPath(currentPose_, homePose_); 
+            currentPath_.utime = utime_now();
+        }
         
-        currentPath_ = planner_.planPath(currentPose_, homePose_); 
-        currentPath_.utime = utime_now();
     // }
 
     /////////////////////////   Create the status message    //////////////////////////
