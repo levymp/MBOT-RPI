@@ -62,6 +62,8 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
             std::cout << "TARGET IS WITHIN ROBOT DIAMTER" << std::endl;
             return false;
         } 
+    }else{
+        return true;
     }
     auto goalCell = global_position_to_grid_cell(Point<double>(goal.x, goal.y), distances_);
 
@@ -74,8 +76,8 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
 
         // std::cout << "distances_(" << goalCell.x << " , " << goalCell.y << ") = " << distances_(goalCell.x, goalCell.y) << std::endl;
         return distances_(goalCell.x, goalCell.y) > params_.robotRadius + .07;
-
     }
+    std::cout << "GOAL IS NOT IN THE GRID\n";
     
     // A goal must be in the map for the robot to reach it
     // std::cout << "THE GOAL IS NOT IN THE MAP" << std::endl;
