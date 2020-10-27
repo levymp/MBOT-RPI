@@ -391,7 +391,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
             // if just starting plan a path to home
             currentPath_ = planner_.planPath(currentPose_, homePose_); 
             currentPath_.utime = utime_now();
-        }else if(!initalize && !isPathSafe(currentPath_)){
+        }else if(!initialize && !planner_.isPathSafe(currentPath_)){
             // if the path becomes unsafe create a new one
             currentPath_ = planner_.planPath(currentPose_, homePose_); 
             currentPath_.utime = utime_now();
@@ -435,7 +435,9 @@ int8_t Exploration::executeReturningHome(bool initialize)
         return exploration_status_t::STATE_RETURNING_HOME;
     }
     else if(status.status == exploration_status_t::STATUS_COMPLETE)
-    {
+    {   
+        std::cout << "currentPose: " << currentPose_.x << currentPose_.y << currentPose_.theta << std::endl;
+        std::cout << "homePose: " << homePose_.x << homePose_.y << homePose_.theta << std::endl;
         return exploration_status_t::STATE_COMPLETED_EXPLORATION;
     }
     else //if(status.status == exploration_status_t::STATUS_FAILED)
