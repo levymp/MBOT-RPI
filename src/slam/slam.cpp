@@ -339,7 +339,7 @@ void OccupancyGridSLAM::exploreRandom(void)
 
     bool fwdflg = true;
     for(int i = 0; i<currentScan_.thetas.size(); i++){
-        if(fabs(currentScan_.thetas[i]) < .5 || fabs(currentScan_.thetas[i]) > 5.75){
+        if(fabs(currentScan_.thetas[i]) < .3 || fabs(currentScan_.thetas[i]) > 5.9){
             if(currentScan_.ranges[i] < .25f){
                 fwdflg = false;
             }
@@ -354,7 +354,7 @@ void OccupancyGridSLAM::exploreRandom(void)
         cmd.angular_v = 0.0f;  
     }else{
         cmd.trans_v = 0.0f;
-        cmd.angular_v = .3f;
+        cmd.angular_v = -.3f;
     }
     
     lcmInstance.publish(MBOT_MOTOR_COMMAND_CHANNEL, &cmd);
