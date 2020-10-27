@@ -82,9 +82,9 @@ public:
         //////////// TODO: Implement your feedback controller here. //////////////////////
         
         
-        const float kd = 0.75f; // distance coefficients
-        const float kb = -.005f; // goal pose coefficient
-        const float ka = 3; // heading coefficient
+        const float kd = 0.5f; // distance coefficients
+        const float kb = -0.0f; // goal pose coefficient
+        const float ka = 1.75*(2.0/3.14*kd - 1.66*kb); // heading coefficient
         
         mbot_motor_command_t cmd;
 
@@ -113,29 +113,24 @@ public:
             
             double targetHeading = std::atan2(target.y - pose.y, target.x - pose.x);
             double alpha = angle_diff(targetHeading, pose.theta);
-            double beta = -1.0*targetHeading;
+            double beta = angle_diff(target.theta,pose.theta);
             std::cout << "targetHeading: " << targetHeading << ", pose Theta: " << pose.theta << std::endl;
             std::cout << "Alpha:" << alpha << '\n';
             
             float distToGoal = std::sqrt(std::pow(target.x - pose.x, 2.0f) + std::pow(target.y - pose.y, 2.0f));
             std::cout << "distToGoal: " << distToGoal << '\n';
 
-            // Euler integrate equations assuming 20Hz sampling rate 
-            //distToGoal = -kd*distToGoal*cos(alpha)*(1.0/20.0);
-            //alpha = (-kd*sin(alpha) - ka*alpha - kb*beta)*(1.0/20.0);
-            //beta = -kd*sin(alpha)*(1.0/20.0);
-
             cmd.trans_v = clamp_speed(kd*distToGoal);
-            cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.5);
+            cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.75);
             
-            if(distToGoal < .025){
+            if(distToGoal < .02){
                 cmd.trans_v = 0;
-                alpha = angle_diff(target.theta, pose.theta);
-                cmd.angular_v = clamp_speed(ka*alpha, .5);
-            }
-
-            if(!(abs(alpha) < M_PI_2)){
+                // alpha = angle_diff(target.theta, pose.theta);
+                cmd.angular_v = clamp_speed(ka*beta, .5);
+            }else if(!(abs(alpha) < M_PI_2)){
                 cmd.trans_v *= -1.0;
+                targetHeading = std::atan2(pose.y - target.y, pose.x - target.x);
+                cmd.angular_v = ka*angle_diff(targetHeading,pose.theta);
             }
         }
         
@@ -191,20 +186,20 @@ public:
     
 private:
     
-    enum State
-    {
-        TURN,
-        DRIVE,
-    };
+    // enum State
+    // {
+    //     TURN,
+    //     DRIVE,
+    // };
     
     pose_xyt_t odomToGlobalFrame_;      // transform to convert odometry into the global/map coordinates for navigating in a map
     PoseTrace  odomTrace_;              // trace of odometry for maintaining the offset estimate
     std::vector<pose_xyt_t> targets_;
     
     // Error terms for the current target
-    State state_;
-    double lastError_;      // for D-term
-    double totalError_;     // for I-term
+    // State state_;
+    // double lastError_;      // for D-term
+    // double totalError_;     // for I-term
 
     int64_t time_offset;
 
@@ -219,9 +214,9 @@ private:
 
     bool haveReachedTarget(void)
     {
-        const float kPosTolerance = 0.5f;
-	    const float kFinalPosTolerance = 0.025f;
-
+        const float kPosTolerance = 0.2f;
+	    const float kFinalPosTolerance = 0.01f;
+        float angle_tolerance = (targets_.size() == 1) ? 0.1f : 0.25f;
         //tolerance for intermediate waypoints can be more lenient
     	float tolerance = (targets_.size() == 1) ? kFinalPosTolerance : kPosTolerance;
         
@@ -243,7 +238,7 @@ private:
         float yError = std::abs(target.y - pose.y);
         float thetaError = std::abs(target.theta - pose.theta);
 
-        return (xError < tolerance) && (yError < tolerance) && (thetaError < 0.1);
+        return (xError < tolerance) && (yError < tolerance) && (thetaError < angle_tolerance);
     }
     
     bool assignNextTarget(void)
@@ -254,10 +249,10 @@ private:
             targets_.pop_back();
         }
         
-        // Reset all error terms when switching to a new target
-        lastError_ = 0.0f;
-        totalError_ = 0.0f;
-        state_ = TURN;
+        // // Reset all error terms when switching to a new target
+        // lastError_ = 0.0f;
+        // totalError_ = 0.0f;
+        // state_ = TURN;
         
         return !targets_.empty();
     }
