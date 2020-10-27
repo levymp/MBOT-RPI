@@ -171,9 +171,9 @@ robot_path_t search_for_path(pose_xyt_t start,
                              const ObstacleDistanceGrid& distances,
                              const SearchParams& params)
 {
-    std::cout << "START POSITION: " << "(" << start.x << ", " << start.y << ", " << start.theta << ")" << std::endl; 
-    std::cout << "GOAL POSITION: " << "(" << goal.x << ", " << goal.y << ", " << goal.theta << ")" << std::endl; 
-    std::cout << "MIN DISTANCE: " << params.minDistanceToObstacle << "\t" << std::endl;
+    std::cout << "A* GIVEN START POSITION: " << "(" << start.x << ", " << start.y << ", " << start.theta << ")" << std::endl; 
+    std::cout << "A* GIVEN GOAL POSITION: " << "(" << goal.x << ", " << goal.y << ", " << goal.theta << ")" << std::endl; 
+    std::cout << "A* MIN DISTANCE: " << params.minDistanceToObstacle << "\t" << std::endl;
 
     // setup stored_nodes
     std::vector<Grid_Astar> stored_nodes;
