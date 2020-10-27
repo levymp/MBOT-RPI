@@ -277,7 +277,7 @@ void OccupancyGridSLAM::updateLocalization(void)
 
             if(mode_ == localization_only && goHome < 10){
                 exploreRandom();
-                if(scatter > 120){
+                if(scatter > 100){
                     goHome++;
                 }
             }
