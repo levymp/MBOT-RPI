@@ -12,6 +12,12 @@
 class lidar_t;
 class OccupancyGrid;
 
+struct Pgreater
+    {
+        bool operator()(const particle_t lp, const particle_t rp){
+            return lp.weight < rp.weight;
+        }
+    };
 /**
 * ParticleFilter implements a standard SIR-based particle filter. The set of particles is initialized at some pose. Then
 * on subsequent calls to updateFilter, a new pose estimate is computed using the latest odometry and laser measurements
@@ -46,7 +52,7 @@ public:
     */
     void initializeFilterAtPose(const pose_xyt_t& pose);
     void initializeFilterAtPoseMap(const pose_xyt_t& pose, const OccupancyGrid& map);
-    int addNoise(const OccupancyGrid& map);
+    int addNoise(const OccupancyGrid& map, const lidar_t& laser);
 
     /**
     * updateFilter increments the state estimated by the particle filter. The filter update uses the most recent

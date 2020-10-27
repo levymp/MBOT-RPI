@@ -73,25 +73,27 @@ void ParticleFilter::initializeFilterAtPoseMap(const pose_xyt_t& pose, const Occ
 
 }
 
-int ParticleFilter::addNoise(const OccupancyGrid& map)
+int ParticleFilter::addNoise(const OccupancyGrid& map, const lidar_t& laser)
 {
-    std::vector<particle_t> noise;
+
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(0, emptyCells.size());
     std::uniform_int_distribution<int> rot(-3.14, 3.14);
     int scatter = std::ceil((mapscore+1)/9000);
     scatter = scatter*scatter+1;
+    int topOff = std::ceil(kNumParticles_/scatter);
     printf("scatter: %d\n", scatter);
+    std::sort(posterior_.begin(), posterior_.end(), Pgreater());
 
-    for(int i = 0; i<posterior_.size(); i++){
-        if(i%scatter == 0){
-            Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
-            posterior_[i].pose.x = empty.x;
-            posterior_[i].pose.y = empty.y;
-            posterior_[i].pose.theta = rot(gen);
-        }
+    for(int i = 0; i<topOff; i++){
+        Point<double> empty = grid_position_to_global_position(emptyCells[dist(gen)], map);
+        posterior_[i].pose.x = empty.x;
+        posterior_[i].pose.y = empty.y;
+        posterior_[i].pose.theta = rot(gen);
     }
+
+    posterior_ = computeNormalizedPosterior(proposal, laser, map);
     return scatter;
 }
 
