@@ -46,7 +46,8 @@ Exploration::Exploration(int32_t teamNumber,
     
     lcmInstance_->publish(EXPLORATION_STATUS_CHANNEL, &status);
 	goingHome = false;    
-    params_.robotRadius = 0.17;
+    params_.robotRadius = 0.14;
+    planner_.setParams(params_);
     std::cout << "RAIDUS FROM EXPLORATION: " << params_.robotRadius << std::endl; 
     planner_.setParams(params_);
 }
