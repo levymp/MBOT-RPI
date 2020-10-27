@@ -46,10 +46,17 @@ Exploration::Exploration(int32_t teamNumber,
     
     lcmInstance_->publish(EXPLORATION_STATUS_CHANNEL, &status);
 	goingHome = false;    
+<<<<<<< HEAD
     MotionPlannerParams params;
     // params.robotRadius = 0.2;
     params.robotRadius = 0.15;
     planner_.setParams(params);
+=======
+    params_.robotRadius = 0.14;
+    planner_.setParams(params_);
+    std::cout << "RAIDUS FROM EXPLORATION: " << params_.robotRadius << std::endl; 
+    planner_.setParams(params_);
+>>>>>>> test-a-star
 }
 
 
@@ -261,7 +268,7 @@ int8_t Exploration::executeExploringMap(bool initialize)
     
     if (!frontiers_.empty()) {
         if(currentPath_.path.size() < 1 || !planner_.isPathSafe(currentPath_) || distance_between_points(Point<double>(currentPose_.x, currentPose_.y), Point<double>(currentPath_.path.back().x, currentPath_.path.back().y)) < 2*kReachedPositionThreshold){
-            currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_);
+            currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_, params_);
             currentPath_.utime = utime_now();
         }
     }

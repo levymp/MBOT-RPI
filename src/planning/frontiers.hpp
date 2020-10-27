@@ -4,6 +4,7 @@
 #include <common/point.hpp>
 #include <lcmtypes/pose_xyt_t.hpp>
 #include <lcmtypes/robot_path_t.hpp>
+#include <planning/motion_planner.hpp>
 #include <vector>
 
 class MotionPlanner;
@@ -53,6 +54,7 @@ std::vector<frontier_t> find_map_frontiers(const OccupancyGrid& map,
 robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers, 
                                    const pose_xyt_t& robotPose,
                                    const OccupancyGrid& map,
-                                   const MotionPlanner& planner);
+                                   const MotionPlanner& planner,
+                                    const MotionPlannerParams& params);
 
 #endif // PLANNING_FRONTIERS_HPP
