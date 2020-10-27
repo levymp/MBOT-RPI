@@ -230,6 +230,9 @@ robot_path_t search_for_path(pose_xyt_t start,
 
     // check we found start and goal is in grid
     // check that start/goal aren't in an obstacle
+
+
+
     if(!goal_flg ||
         distances(goal_pos.x, goal_pos.y) <= params.minDistanceToObstacle){
         // return a path with just the start
@@ -244,7 +247,7 @@ robot_path_t search_for_path(pose_xyt_t start,
         path.utime = start.utime;
         path.path_length = 1;
         return path;
-    }else if(!start_flg || distances(start_pos.x, start_pos.y) <= params.minDistanceToObstacle + 0.1){
+    }else if(!start_flg || !distances(start_pos.x, start_pos.y)){
         std::cout << "START NOT IN GRID" << std::endl; 
         std::cout << "START " <<  start_pos << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
         std::cout << "GOAL " << goal_pos  << '\t' << "DISTANCE: " << distances(start_pos.x, start_pos.y) << std::endl;
