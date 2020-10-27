@@ -166,7 +166,7 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
 
                 Dis_to_frontierpoint = sqrtf((powf(Target_frontier_point.x - temp_point.x, 2) + powf(Target_frontier_point.y - temp_point.y, 2)));
                 
-                if (Dis_to_frontierpoint > params.robotRadius) { //robotradius 
+                // if (Dis_to_frontierpoint > params.robotRadius) { //robotradius 
                     ValidGoal_num++;
                 
                     if (Dis_to_frontierpoint < min_Dis_to_frontierpoint) {
@@ -175,7 +175,7 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
                         Target_point = temp_point;
                         Target_pose = temp_pose;
                     }
-                }
+                // }
 
                 /* Commented on 6:50pm 10/26/2020 -- Xun
                 // ValidGoal_num++;
