@@ -260,7 +260,10 @@ int8_t Exploration::executeExploringMap(bool initialize)
     frontiers_ = find_map_frontiers(currentMap_, currentPose_, 0.2);
     
     if (!frontiers_.empty()) {
-        if(currentPath_.path.size() < 1 || !planner_.isPathSafe(currentPath_) || distance_between_points(Point<double>(currentPose_.x, currentPose_.y), Point<double>(currentPath_.path.back().x, currentPath_.path.back().y)) < 2*kReachedPositionThreshold){
+        if(currentPath_.path.size() < 1 || !planner_.isPathSafe(currentPath_) || distance_between_points(Point<double>(currentPose_.x, currentPose_.y), Point<double>(currentPath_.path.back().x, currentPath_.path.back().y)) < 1.5*kReachedPositionThreshold){
+            // sleep for a second to get a better image
+            usleep(1e6);
+            // plan new path
             currentPath_ = plan_path_to_frontier(frontiers_, currentPose_, currentMap_, planner_, params_);
             currentPath_.utime = utime_now();
         }
