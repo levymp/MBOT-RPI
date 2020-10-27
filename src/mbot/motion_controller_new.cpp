@@ -214,7 +214,7 @@ private:
 
     bool haveReachedTarget(void)
     {
-        const float kPosTolerance = 0.2f;
+        const float kPosTolerance = 0.5f;
 	    const float kFinalPosTolerance = 0.01f;
         float angle_tolerance = (targets_.size() == 1) ? 0.1f : 0.25f;
         //tolerance for intermediate waypoints can be more lenient
