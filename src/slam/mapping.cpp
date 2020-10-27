@@ -60,8 +60,8 @@ void Mapping::scoreRay(const adjusted_ray_t &ray, OccupancyGrid &map){
         Point<int> rayEndCell;
 
         Point<float> rayEnd;
-        rayEnd.x = (ray.range * std::cos(ray.theta) + ray.origin.x)
-        rayEnd.y = (ray.range * std::cos(ray.theta) + ray.origin.x)
+        rayEnd.x = (ray.range * std::cos(ray.theta) + ray.origin.x);
+        rayEnd.y = (ray.range * std::cos(ray.theta) + ray.origin.y);
         rayEndCell = global_position_to_grid_cell(rayEnd, map);
         //rayEndCell.x = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + rayStart.x);
         //rayEndCell.y = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + rayStart.y);
