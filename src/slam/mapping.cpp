@@ -57,15 +57,15 @@ void Mapping::scoreRay(const adjusted_ray_t &ray, OccupancyGrid &map){
     if(ray.range < kMaxLaserDistance_){
         Point<float> rayStart = global_position_to_grid_position(ray.origin, map);
         Point<int> rayStartCell = global_position_to_grid_cell(ray.origin, map);
-        Point<float> rayEnd;
+        /*Point<float> rayEnd;
         rayEnd.x = ray.range * std::cos(ray.theta) + ray.origin.x;
         rayEnd.y = ray.range * std::cos(ray.theta) + ray.origin.y;
 
         Point<int> rayEndCell = global_position_to_grid_cell(rayEnd, map);
-
-
-        //rayEndCell.x = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + rayStart.x);
-       // rayEndCell.y = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + rayStart.y);
+        */
+        Point<int> rayEndCell;
+        rayEndCell.x = static_cast<int>((ray.range * std::cos(ray.theta) * map.cellsPerMeter()) + rayStart.x);
+        rayEndCell.y = static_cast<int>((ray.range * std::sin(ray.theta) * map.cellsPerMeter()) + rayStart.y);
 
         if(map.isCellInGrid(rayEndCell.x, rayEndCell.y)){
             int dx = std::abs(rayEndCell.x - rayStartCell.x);
