@@ -93,7 +93,7 @@ int ParticleFilter::addNoise(const OccupancyGrid& map, const lidar_t& laser)
         posterior_[i].pose.theta = rot(gen);
     }
 
-    posterior_ = computeNormalizedPosterior(proposal, laser, map);
+    posterior_ = computeNormalizedPosterior(posterior_, laser, map);
     return scatter;
 }
 
