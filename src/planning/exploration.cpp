@@ -403,7 +403,7 @@ int8_t Exploration::executeReturningHome(bool initialize)
     // double distToHome = distance_between_points(Point<float>(gPose.x, gPose.y), 
     //                                             Point<float>(currentPose_.x, currentPose_.y));
     // If we're within the threshold of home, then we're done.
-    if(distToHome <= kReachedPositionThreshold)
+    if(distToHome <= kReachedPositionThreshold && fabs(currentPose_.theta) <= 0.175)
     {
         std::cout << "For debugging: already closed to the home pose" << std::endl;
         status.status = exploration_status_t::STATUS_COMPLETE;

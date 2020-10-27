@@ -75,7 +75,7 @@ bool MotionPlanner::isValidGoal(const pose_xyt_t& goal) const
         // completely snuggle up against the walls in the motion plan
 
         // std::cout << "distances_(" << goalCell.x << " , " << goalCell.y << ") = " << distances_(goalCell.x, goalCell.y) << std::endl;
-        return distances_(goalCell.x, goalCell.y) > params_.robotRadius + .07;
+        return distances_(goalCell.x, goalCell.y) > params_.robotRadius + .01;
     }
     std::cout << "GOAL IS NOT IN THE GRID\n";
     
