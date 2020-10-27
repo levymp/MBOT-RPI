@@ -129,10 +129,10 @@ robot_path_t plan_path_to_frontier(const std::vector<frontier_t>& frontiers,
     }
 
     Point<float> Target_frontier_point;
-    Target_frontier_point.x = frontiers[Target_frontier_id].cells[Target_frontier_point_id].x;
-    Target_frontier_point.y = frontiers[Target_frontier_id].cells[Target_frontier_point_id].y;
-    // Target_frontier_point.x = frontiers[Target_frontier_id].cells[frontiers[Target_frontier_id].cells.size()/2].x;
-    // Target_frontier_point.y = frontiers[Target_frontier_id].cells[frontiers[Target_frontier_id].cells.size()/2].y;
+    // Target_frontier_point.x = frontiers[Target_frontier_id].cells[Target_frontier_point_id].x;
+    // Target_frontier_point.y = frontiers[Target_frontier_id].cells[Target_frontier_point_id].y;
+    Target_frontier_point.x = frontiers[Target_frontier_id].cells[frontiers[Target_frontier_id].cells.size()/2].x;
+    Target_frontier_point.y = frontiers[Target_frontier_id].cells[frontiers[Target_frontier_id].cells.size()/2].y;
     
     Point<int> Target_frontier_cell;
     Target_frontier_cell = global_position_to_grid_cell(Target_frontier_point, map);
