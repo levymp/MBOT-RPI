@@ -216,7 +216,7 @@ private:
     {
         const float kPosTolerance = 0.5f;
 	    const float kFinalPosTolerance = 0.01f;
-        float angle_tolerance = (targets_.size() == 1) ? 0.1f : 0.25f;
+        float angle_tolerance = (targets_.size() == 1) ? 0.1f : 0.5f;
         //tolerance for intermediate waypoints can be more lenient
     	float tolerance = (targets_.size() == 1) ? kFinalPosTolerance : kPosTolerance;
         
