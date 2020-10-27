@@ -125,7 +125,7 @@ public:
             //alpha = (-kd*sin(alpha) - ka*alpha - kb*beta)*(1.0/20.0);
             //beta = -kd*sin(alpha)*(1.0/20.0);
 
-            cmd.trans_v = clamp_speed(kd*distToGoal);
+            cmd.trans_v = clamp_speed(kd*distToGoal, .5);
             cmd.angular_v = clamp_speed(ka*alpha + kb*beta, 0.5);
             
             if(distToGoal < .025){
