@@ -82,7 +82,7 @@ public:
         //////////// TODO: Implement your feedback controller here. //////////////////////
         
         
-        const float kd = 0.5f; // distance coefficients
+        const float kd = 0.9f; // distance coefficients
         const float kb = -0.0f; // goal pose coefficient
         const float ka = 1.75*(2.0/3.14*kd - 1.66*kb); // heading coefficient
         
@@ -214,9 +214,9 @@ private:
 
     bool haveReachedTarget(void)
     {
-        const float kPosTolerance = 0.5f;
+        const float kPosTolerance = 0.1f;
 	    const float kFinalPosTolerance = 0.01f;
-        float angle_tolerance = (targets_.size() == 1) ? 0.1f : 0.5f;
+        float angle_tolerance = (targets_.size() == 1) ? 0.1f : 0.25f;
         //tolerance for intermediate waypoints can be more lenient
     	float tolerance = (targets_.size() == 1) ? kFinalPosTolerance : kPosTolerance;
         
@@ -236,7 +236,7 @@ private:
         
         float xError = std::abs(target.x - pose.x);
         float yError = std::abs(target.y - pose.y);
-        float thetaError = std::abs(target.theta - pose.theta);
+        float thetaError = std::abs(angle_diff(target.theta, pose.theta));
 
         return (xError < tolerance) && (yError < tolerance) && (thetaError < angle_tolerance);
     }
