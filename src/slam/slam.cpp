@@ -204,7 +204,11 @@ void OccupancyGridSLAM::runSLAMIteration(void)
     // Sanity check the laser data to see if rplidar_driver has lost sync
     if(currentScan_.num_ranges > 100)//250)
     {
+        auto start = std::high_resolution_clock::now(); 
         updateLocalization();
+        auto stop = std::high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        cout << "p_time: " << duration.count() << endl; 
         updateMap();
     }
     else 
@@ -281,7 +285,7 @@ void OccupancyGridSLAM::updateLocalization(void)
                     goHome++;
                 }
             }
-            std::cout << "gohome: " << goHome << "\n";
+            
             if(goHome == 10){
                 MotionPlanner planner_;
                 MotionPlannerParams params;

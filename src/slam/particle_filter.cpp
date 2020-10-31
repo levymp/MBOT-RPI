@@ -82,7 +82,6 @@ int ParticleFilter::addNoise(const OccupancyGrid& map)
     std::uniform_int_distribution<int> rot(-3.14, 3.14);
     int scatter = std::ceil((mapscore+1)*10/25000);
     scatter = scatter*scatter*2+1;
-    printf("scatter: %d\n", scatter);
 
     for(int i = 0; i<posterior_.size(); i++){
         if(i%scatter == 0){
@@ -283,7 +282,6 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     pavgy = pavgy/n;
 
     stability = ((float) j)/kNumParticles_;
-    printf("st: %f %f %f\n", stability, avg_range, mapscore);
 
     float avgt = atan2(avgvy,avgvx);
 
