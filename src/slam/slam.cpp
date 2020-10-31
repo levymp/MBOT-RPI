@@ -208,7 +208,7 @@ void OccupancyGridSLAM::runSLAMIteration(void)
         updateLocalization();
         auto stop = std::high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
-        cout << "p_time: " << duration.count() << endl; 
+        std::cout << "p_time: " << duration.count() << std::endl; 
         updateMap();
     }
     else 
@@ -285,7 +285,7 @@ void OccupancyGridSLAM::updateLocalization(void)
                     goHome++;
                 }
             }
-            
+
             if(goHome == 10){
                 MotionPlanner planner_;
                 MotionPlannerParams params;
