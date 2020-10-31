@@ -209,7 +209,7 @@ void OccupancyGridSLAM::runSLAMIteration(void)
         updateLocalization();
         auto stop = high_resolution_clock::now(); 
         auto duration = duration_cast<microseconds>(stop - start); 
-        cout << duration.count() << endl; 
+        std::cout << duration.count() << std::endl; 
         updateMap();
     }
     else 
