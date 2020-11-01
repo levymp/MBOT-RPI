@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <cassert>
 #include <chrono>
+using namespace std::chrono; 
 
 OccupancyGridSLAM::OccupancyGridSLAM(int         numParticles,
                                      int8_t      hitOddsIncrease,
@@ -204,7 +205,11 @@ void OccupancyGridSLAM::runSLAMIteration(void)
     // Sanity check the laser data to see if rplidar_driver has lost sync
     if(currentScan_.num_ranges > 100)//250)
     {
+        auto start = high_resolution_clock::now(); 
         updateLocalization();
+        auto stop = high_resolution_clock::now(); 
+        auto duration = duration_cast<microseconds>(stop - start); 
+        std::cout << duration.count() << std::endl; 
         updateMap();
     }
     else 
@@ -281,7 +286,7 @@ void OccupancyGridSLAM::updateLocalization(void)
                     goHome++;
                 }
             }
-            std::cout << "gohome: " << goHome << "\n";
+            
             if(goHome == 10){
                 MotionPlanner planner_;
                 MotionPlannerParams params;

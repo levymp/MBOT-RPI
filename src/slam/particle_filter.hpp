@@ -15,7 +15,7 @@ class OccupancyGrid;
 struct Pgreater
     {
         bool operator()(const particle_t lp, const particle_t rp){
-            return lp.weight < rp.weight;
+            return lp.weight > rp.weight;
         }
     };
 /**

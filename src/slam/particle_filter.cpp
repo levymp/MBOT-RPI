@@ -83,7 +83,7 @@ int ParticleFilter::addNoise(const OccupancyGrid& map, const lidar_t& laser)
     int scatter = std::ceil((mapscore+1)/9000);
     scatter = scatter*scatter+1;
     int topOff = std::ceil(kNumParticles_/scatter);
-    printf("scatter: %d\n", scatter);
+
     std::sort(posterior_.begin(), posterior_.end(), Pgreater());
 
     for(int i = 0; i<topOff; i++){
@@ -285,7 +285,6 @@ pose_xyt_t ParticleFilter::estimatePosteriorPose(const std::vector<particle_t>& 
     pavgy = pavgy/n;
 
     stability = ((float) j)/kNumParticles_;
-    printf("st: %f %f %f\n", stability, avg_range, mapscore);
 
     float avgt = atan2(avgvy,avgvx);
 
