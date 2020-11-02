@@ -12,40 +12,46 @@ int main(int argc, char** argv)
     std::cout << "Commanding robot to drive 1m, turn, and return back.\n";
     
     robot_path_t path;
-    path.path.resize(5);
+    path.path.resize(3);
     
     pose_xyt_t nextPose;
 
     nextPose.x = 1.0f;
     nextPose.y = 0.0f;
-    nextPose.theta = 0.0f;
+    nextPose.theta = -M_PI;
     path.path[0] = nextPose;
     
-    nextPose.x = 0.5f;
-    nextPose.y = 0.0f;
-    nextPose.theta = 0.0f;
-    path.path[1] = nextPose;
+    // nextPose.x = 0.5f;
+    // nextPose.y = 0.0f;
+    // nextPose.theta = 0.0f;
+    // path.path[1] = nextPose;
 
-    nextPose.x = 1.0f;
-    nextPose.y = 0.0f;
-    nextPose.theta = -M_PI;
-    path.path[2] = nextPose;
+    // nextPose.x = 1.0f;
+    // nextPose.y = 0.0f;
+    // nextPose.theta = 0.0f;
+    // path.path[1] = nextPose;
 
-    nextPose.x = 0.5f;
-    nextPose.y = 0.0f;
-    nextPose.theta = -M_PI;
-    path.path[3] = nextPose;
+    // nextPose.x = 1.0f;
+    // nextPose.y = 0.0f;
+    // nextPose.theta = -M_PI;
+    // path.path[3] = nextPose;
+
+    // nextPose.x = 0.5f;
+    // nextPose.y = 0.0f;
+    // nextPose.theta = -M_PI;
+    // path.path[4] = nextPose;
 
     nextPose.x = 0.0f;
     nextPose.y = 0.0f;
     nextPose.theta = 0.0f;
-    path.path[4] = nextPose;
+    path.path[1] = nextPose;
     
+
     nextPose.x = 0.0f;
     nextPose.y = 0.0f;
     nextPose.theta = 0.0f;
     path.path.insert(path.path.begin(), nextPose);
-
+    
     path.path_length = path.path.size();
     
     lcm::LCM lcmInstance(MULTICAST_URL);
